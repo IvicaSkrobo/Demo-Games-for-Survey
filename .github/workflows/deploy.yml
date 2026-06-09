@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'superbet-penalty/**'
+      - '.github/workflows/**'
 
 permissions:
   contents: read
@@ -32,7 +33,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: superbet-penalty
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
