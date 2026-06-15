@@ -2,13 +2,15 @@
 
 This repository hosts static WebGL game builds used by survey and study tools.
 
-Current build:
+Current builds:
 
 - `superbet-penalty/index.html`
+- `circle/index.html`
 
-Recommended iframe path:
+Recommended iframe paths:
 
 - `/superbet-penalty/index.html`
+- `/circle/index.html`
 
 Notes:
 
