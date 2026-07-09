@@ -1,0 +1,5 @@
+[
+  { "slotIndex": 1, "id": "mines_like", "label": "Concept A — Mines-style board" },
+  { "slotIndex": 2, "id": "free_shooting", "label": "Concept B — Free shooting" },
+  { "slotIndex": 3, "id": "plinko_like", "label": "Concept C — Plinko-style" }
+]
