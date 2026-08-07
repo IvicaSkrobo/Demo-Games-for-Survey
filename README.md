@@ -6,11 +6,13 @@ Current builds:
 
 - `superbet-penalty/index.html`
 - `circle/index.html`
+- `manager-spin/index.html`
 
 Recommended iframe paths:
 
 - `/superbet-penalty/index.html`
 - `/circle/index.html`
+- `/manager-spin/index.html`
 
 Notes:
 
