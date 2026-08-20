@@ -1,5 +1,0 @@
-[
-  { "slotIndex": 1, "id": "circle_classic_standard", "label": "Concept A — Classic (standard risk)" },
-  { "slotIndex": 2, "id": "circle_classic_arc_cashout", "label": "Concept B — Classic (daredevil risk)" },
-  { "slotIndex": 3, "id": "circle_timer_cashout", "label": "Concept C — Timer cashout" }
-]
