@@ -8,6 +8,7 @@ on:
       - 'superbet-penalty/**'
       - 'circle/**'
       - 'manager-spin/**'
+      - 'free2play-daily-spin/**'
       - 'index.html'
       - '.github/workflows/**'
 

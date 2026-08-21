@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Strike Spin — F2P prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@600;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #f4e9ef;
+        --dim: #b08b9c;
+        --panel: #1a0a12;
+        --line: #3a1626;
+        --accent: #e42d8a;
+        --debug-bar-height: 42px;
+        /* Width of the right-hand dock once the window is wide enough for one. */
+        --debug-side-width: min(360px, 32vw);
+        --debug-drawer-height: clamp(144px, 25vh, 190px);
+        /* The rendered game is the cropped 393×692 Figma band. Its last control
+           ends at y=656, leaving 116 authored pixels before the crop ends at 772.
+           Add that safe zone to any real bottom letterbox space: the drawer can
+           occupy exactly this band without covering or resizing the slot. */
+        --game-render-height: min(100vh, calc(100vw * 692 / 393));
+        --debug-free: calc(
+          (100vh - var(--game-render-height)) / 2 +
+          var(--game-render-height) * 116 / 692
+        );
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        height: 100vh;
+        background: #080406;
+        color: var(--ink);
+        font-family: Inter, system-ui, sans-serif;
+        overflow: hidden;
+      }
+
+      /* The game always owns the full viewport. Debug tools are an off-canvas
+         drawer and never resize, shift or crop the slot. */
+      body {
+        position: relative;
+      }
+
+      /* Full viewport, always. The drawer is an overlay: opening it must not
+         resize the canvas, because resizing it re-fits and re-scales the slot —
+         the game visibly jumped every time the tools were opened. */
+      #app {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        touch-action: manipulation;
+        transition: height 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      /* When the tools are open, give them a real strip below the canvas. Pixi's
+         ResizeObserver refits the 393px scene into this slightly shorter box, so
+         the whole slot stays visible instead of being covered or cropped. */
+      body.debug-open #app {
+        height: calc(100vh - var(--debug-drawer-height));
+      }
+
+      #app canvas {
+        display: block;
+      }
+
+      #boot {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--dim);
+        pointer-events: none;
+      }
+
+      /* --- debug panel: hidden tool drawer --- */
+      .debug {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        /* Ends exactly where the playable composition ends. The controls scroll
+           inside this space when the viewport is short. */
+        height: var(--debug-drawer-height);
+        display: flex;
+        flex-direction: column;
+        background: color-mix(in srgb, var(--panel) 96%, transparent);
+        backdrop-filter: blur(18px);
+        border-top: 1px solid var(--line);
+        box-shadow: 0 -24px 70px rgba(0, 0, 0, 0.48);
+        font-size: 11px;
+        z-index: 30;
+        transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .debug.collapsed {
+        transform: translateY(calc(100% - var(--debug-bar-height)));
+      }
+
+      .debug-handle {
+        position: relative;
+        flex: 0 0 var(--debug-bar-height) !important;
+        width: 100%;
+        min-width: 0 !important;
+        height: var(--debug-bar-height);
+        transform: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 0 16px !important;
+        border: 0 !important;
+        border-bottom: 1px solid var(--line) !important;
+        border-radius: 0 !important;
+        background: linear-gradient(90deg, #1b0912, #3a1224 50%, #1b0912) !important;
+        box-shadow: 0 -8px 28px rgba(228, 45, 138, 0.12);
+      }
+
+      .debug-handle span {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: #f2a5c9;
+        font-size: 9px;
+        font-weight: 800;
+      }
+
+      .debug-handle strong {
+        text-transform: uppercase;
+        letter-spacing: 0.16em;
+        color: var(--ink);
+        font-size: 10px;
+      }
+
+      .debug-handle:hover {
+        background: linear-gradient(180deg, #5a1734, #2d0d1b) !important;
+        border-color: var(--accent) !important;
+      }
+
+      .debug-handle:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -3px;
+      }
+
+      .debug .body {
+        padding: 8px 10px 12px;
+        display: block;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+
+      .debug-primary {
+        display: grid;
+        grid-template-columns: minmax(108px, 138px) minmax(0, 1fr);
+        gap: 8px;
+        align-items: start;
+      }
+
+      .debug-secondary {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid var(--line);
+      }
+
+      .debug-secondary .state-control {
+        grid-column: 1 / -1;
+      }
+
+      .debug label {
+        display: grid;
+        gap: 4px;
+        color: var(--dim);
+        text-transform: uppercase;
+        font-size: 9.5px;
+        letter-spacing: 0.1em;
+      }
+
+      .debug select,
+      .debug input[type='range'] {
+        width: 100%;
+      }
+
+      .debug select {
+        background: #250d18;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 5px 6px;
+        font: inherit;
+      }
+
+      .debug .concept-control select {
+        height: 25px;
+        padding: 3px 5px;
+        font-size: 10px;
+      }
+
+      .debug .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+
+      .debug [data-force] {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(36px, 1fr));
+        gap: 5px;
+      }
+
+      .debug button {
+        flex: 1 1 auto;
+        min-width: 58px;
+        background: #2c0f1c;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 5px 7px;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .debug-primary button {
+        min-width: 46px;
+        padding: 3px 5px;
+        font-size: 9px;
+        line-height: 1.15;
+      }
+
+      .debug-primary .symbol-button {
+        position: relative;
+        min-width: 36px;
+        height: 38px;
+        padding: 3px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 40%, rgba(228, 45, 138, 0.2), transparent 66%),
+          #210b16;
+      }
+
+      .debug-primary .symbol-button img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.58));
+        transition: transform 120ms ease, filter 120ms ease;
+        pointer-events: none;
+      }
+
+      .debug-primary .symbol-button:hover img,
+      .debug-primary .symbol-button:focus-visible img {
+        transform: translateY(-1px) scale(1.12);
+        filter: drop-shadow(0 0 6px rgba(228, 45, 138, 0.62));
+      }
+
+      .debug-primary .force-special button {
+        min-width: 76px;
+      }
+
+      .debug button:hover {
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      .debug fieldset {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 8px;
+        margin: 0;
+        display: grid;
+        gap: 6px;
+      }
+
+      .debug .force-control {
+        padding: 4px 6px 6px;
+        gap: 4px;
+      }
+
+      .debug legend {
+        padding: 0 4px;
+        color: var(--dim);
+        text-transform: uppercase;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+      }
+
+      .debug pre {
+        margin: 0;
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 10px;
+        line-height: 1.6;
+        color: var(--ink);
+        white-space: pre-wrap;
+      }
+
+      .debug output {
+        color: var(--ink);
+      }
+
+      /* --- desktop: dock the tools to the right edge and let the slot centre in
+             what is left. Below this width there is no room beside the game, so
+             the bottom drawer above stays as it is.
+
+             The dock takes width, never height. The game is height-limited on any
+             window wide enough to dock beside one, so narrowing `#app` re-centres
+             the slot without rescaling it. --- */
+      @media (min-width: 900px) {
+        #app {
+          width: calc(100vw - var(--debug-bar-height));
+          height: 100vh;
+          transition: width 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        body.debug-open #app {
+          width: calc(100vw - var(--debug-side-width));
+          height: 100vh;
+        }
+
+        .debug {
+          top: 0;
+          bottom: 0;
+          right: 0;
+          left: auto;
+          width: var(--debug-side-width);
+          height: 100%;
+          /* Handle strip first, body second, so the handle sits against the game
+             and stays on screen when the panel slides out. */
+          flex-direction: row;
+          border-top: 0;
+          border-left: 1px solid var(--line);
+          box-shadow: -24px 0 70px rgba(0, 0, 0, 0.48);
+        }
+
+        .debug.collapsed {
+          transform: translateX(calc(100% - var(--debug-bar-height)));
+        }
+
+        .debug-handle {
+          width: var(--debug-bar-height);
+          min-width: var(--debug-bar-height) !important;
+          height: 100%;
+          writing-mode: vertical-rl;
+          padding: 16px 0 !important;
+          border-bottom: 0 !important;
+          border-right: 1px solid var(--line) !important;
+          background: linear-gradient(180deg, #1b0912, #3a1224 50%, #1b0912) !important;
+          box-shadow: -8px 0 28px rgba(228, 45, 138, 0.12);
+        }
+
+        .debug .body {
+          flex: 1 1 auto;
+          min-width: 0;
+          height: 100%;
+          overflow-y: auto;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .debug,
+        #app {
+          transition: none;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .debug-primary {
+          grid-template-columns: 100px minmax(0, 1fr);
+        }
+
+        .debug-secondary {
+          grid-template-columns: 1fr;
+        }
+
+        .debug-secondary .state-control {
+          grid-column: auto;
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index-BoxTGXrB.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="boot">loading…</div>
+  </body>
+</html>
