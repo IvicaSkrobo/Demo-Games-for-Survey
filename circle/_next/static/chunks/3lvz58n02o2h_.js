@@ -1,1 +1,0 @@
-(globalThis.TURBOPACK||(globalThis.TURBOPACK=[])).push(["object"==typeof document?document.currentScript:void 0,92693,t=>{"use strict";let o=t=>`€${t.toFixed(2)}`;t.s(["formatEur",0,o,"formatStudyMoney",0,o])}]);
