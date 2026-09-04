@@ -10,6 +10,7 @@ on:
       - 'circle/**'
       - 'manager-spin/**'
       - 'free2play-daily-spin/**'
+      - 'ski-v4/**'
       - 'index.html'
       - '.github/workflows/**'
 

@@ -8,6 +8,7 @@ Current builds:
 - `circle/index.html`
 - `manager-spin/index.html`
 - `free2play-daily-spin/index.html`
+- `ski-v4/index.html`
 
 Recommended iframe paths:
 
@@ -15,6 +16,7 @@ Recommended iframe paths:
 - `/circle/index.html`
 - `/manager-spin/index.html`
 - `/free2play-daily-spin/index.html`
+- `/ski-v4/index.html`
 
 Notes:
 
