@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[363,744],{8744:(e,t,a)=>{a.r(t),a.d(t,{default:()=>n});var u=a(7987),r=a(4957);function n(e){return(0,u.jsx)(r.default,{...e,gravityModel:"anti-gravity"})}}}]);
