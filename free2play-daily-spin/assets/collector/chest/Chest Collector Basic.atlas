@@ -1,0 +1,65 @@
+Chest Collector Basic.png
+size:1967,1242
+filter:Linear,Linear
+Chest Bottom Behind
+bounds:1397,593,647,334
+offsets:1,1,651,337
+rotate:90
+Chest Front
+bounds:970,580,660,425
+offsets:5,1,668,427
+rotate:90
+Chest Light
+bounds:2,492,748,536
+offsets:2,1,770,583
+rotate:90
+Chest Top Closed
+bounds:2,49,678,441
+offsets:5,25,686,513
+Chest Top Opened 1
+bounds:682,142,681,416
+offsets:3,3,685,474
+Chest Top Opened 2
+bounds:540,560,680,428
+offsets:6,3,688,462
+rotate:90
+Coin 1
+bounds:1733,607,170,178
+offsets:4,5,178,185
+Coin 2
+bounds:2,5,42,178
+offsets:3,5,51,186
+rotate:90
+Coin 3
+bounds:921,23,117,178
+offsets:4,5,122,185
+rotate:90
+Coins Inside
+bounds:1365,73,505,320
+offsets:64,106,611,615
+rotate:90
+Light Particle 1
+bounds:1101,2,137,138
+offsets:7,6,151,150
+Light Particle 2
+bounds:1240,33,99,107
+offsets:1,4,106,117
+Lock Closed
+bounds:1733,787,194,232
+offsets:2,1,197,240
+rotate:90
+Lock Closed Shadow
+bounds:1687,17,211,241
+offsets:3,1,215,247
+rotate:90
+Lock Opened
+bounds:1733,983,257,230
+offsets:3,1,261,232
+rotate:90
+Lock Opened Shadow
+bounds:682,6,237,134
+offsets:1,10,239,145
+Shine
+bounds:1687,230,361,266
+offsets:6,4,370,276
+rotate:90
