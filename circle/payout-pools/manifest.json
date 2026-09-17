@@ -27,6 +27,12 @@
       "belowOne": 0.15,
       "one": 0.05,
       "aboveOne": 0.3
+    },
+    "validation": {
+      "samples": 2000000,
+      "seed": 42,
+      "sampledRtp": 0.9702135393425,
+      "deathCount": 999750
     }
   },
   {
