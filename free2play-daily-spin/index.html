@@ -89,6 +89,47 @@
         pointer-events: none;
       }
 
+      /* Persistent comparison control. It lives in the page chrome rather than
+         the Pixi scene, so switching collector versions never affects the
+         authored 393px game composition. */
+      .version-switch {
+        position: fixed;
+        top: max(12px, env(safe-area-inset-top));
+        right: calc(12px + var(--debug-bar-height));
+        z-index: 25;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        padding: 7px 11px;
+        border: 1px solid #75234a;
+        border-radius: 999px;
+        background: rgba(26, 10, 18, 0.92);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.36);
+        color: var(--ink);
+        font: 800 10px/1 Inter, system-ui, sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(12px);
+      }
+
+      .version-switch::after {
+        content: '→';
+        color: #f25aa0;
+        font-size: 13px;
+      }
+
+      .version-switch:hover {
+        border-color: var(--accent);
+        background: #321120;
+      }
+
+      .version-switch:focus-visible {
+        outline: 2px solid #ff85bc;
+        outline-offset: 3px;
+      }
+
       /* --- debug panel: hidden tool drawer --- */
       .debug {
         position: fixed;
@@ -388,6 +429,14 @@
       }
 
       @media (max-width: 520px) {
+        .version-switch {
+          top: max(8px, env(safe-area-inset-top));
+          right: 8px;
+          min-height: 30px;
+          padding: 6px 9px;
+          font-size: 9px;
+        }
+
         .debug-primary {
           grid-template-columns: 100px minmax(0, 1fr);
         }
@@ -401,7 +450,7 @@
         }
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-BWH-aUCf.js"></script>
+    <script type="module" crossorigin src="./assets/index-DlYCffVP.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
     <link rel="modulepreload" crossorigin href="./assets/index-BQT-NK1i.js">
     <link rel="modulepreload" crossorigin href="./assets/CanvasPool-CMvyNbp_.js">
@@ -413,5 +462,6 @@
   <body>
     <div id="app"></div>
     <div id="boot">loading…</div>
+    <button id="version-switch" class="version-switch" type="button">Switch version</button>
   </body>
 </html>
