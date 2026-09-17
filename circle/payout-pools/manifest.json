@@ -5,7 +5,19 @@
     "samples": 2000000,
     "payouts": 42,
     "rtp": 0.9699999999999999,
-    "file": "daredevil-codex.json.gz"
+    "file": "daredevil-codex.json.gz",
+    "tuning": {
+      "death": 0.5,
+      "belowOne": 0.15,
+      "one": 0.05,
+      "aboveOne": 0.3
+    },
+    "validation": {
+      "samples": 2000000,
+      "seed": 42,
+      "sampledRtp": 0.9706392213212499,
+      "deathCount": 999750
+    }
   },
   {
     "name": "daredevil-matej",
@@ -13,7 +25,19 @@
     "samples": 2000000,
     "payouts": 70,
     "rtp": 0.97,
-    "file": "daredevil-matej.json.gz"
+    "file": "daredevil-matej.json.gz",
+    "tuning": {
+      "death": 0.5,
+      "belowOne": 0.15,
+      "one": 0.05,
+      "aboveOne": 0.3
+    },
+    "validation": {
+      "samples": 2000000,
+      "seed": 42,
+      "sampledRtp": 0.97026096625895,
+      "deathCount": 999750
+    }
   },
   {
     "name": "daredevil-niki",
