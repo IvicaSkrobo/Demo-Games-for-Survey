@@ -84,13 +84,39 @@
     "fingerprint": "{\"speed\":480,\"gravity\":245,\"curve\":0,\"spin\":7.5,\"maxHits\":20,\"rebounce\":{\"enabled\":true,\"durationMs\":400,\"speedMultiplier\":1.8,\"randomTurnDeg\":42},\"primes\":[2,3],\"keyScale\":128,\"maxWin\":\"unbounded\",\"minPrize\":0,\"stepsPerDegree\":8,\"ringDegrees\":360,\"zones\":[[-32768,20],[null,25],[128,56],[0,23.999999999999982],[129,30.000000000000018],[-32768,19.99999999999998],[-128,45.00000000000002],[0,23.999999999999982],[1,45],[-256,30.000000000000018],[0,24.000000000000032],[257,16.99999999999996]]}",
     "samples": 10000000,
     "payouts": 133,
-    "rtp": 0.9699999999999999,
+    "rtp": 0.9699999999999998,
     "file": "daredevil-niki-rebounce.json.gz",
     "tuning": {
-      "death": 0.45,
-      "belowOne": 0.27,
-      "one": 0.05,
-      "aboveOne": 0.23
+      "bands": [
+        {
+          "label": "death",
+          "share": 55
+        },
+        {
+          "label": "0.05–0.5x",
+          "share": 7.8
+        },
+        {
+          "label": "0.5–1x",
+          "share": 11.7
+        },
+        {
+          "label": "1x",
+          "share": 4.5
+        },
+        {
+          "label": "1–5x",
+          "share": 17.8
+        },
+        {
+          "label": "5–20x",
+          "share": 2.7
+        },
+        {
+          "label": "20x+",
+          "share": 0.4
+        }
+      ]
     },
     "rebounce": {
       "enabled": true,
@@ -106,13 +132,35 @@
     "fingerprint": "{\"speed\":480,\"gravity\":245,\"curve\":0,\"spin\":7.5,\"maxHits\":20,\"rebounce\":{\"enabled\":true,\"durationMs\":400,\"speedMultiplier\":1.8,\"randomTurnDeg\":42},\"primes\":[2,3],\"keyScale\":128,\"maxWin\":\"unbounded\",\"minPrize\":0,\"stepsPerDegree\":8,\"ringDegrees\":360,\"zones\":[[null,29.999999999999996],[2,31],[-128,67],[128,60.00000000000001],[0,49.99999999999999],[-256,72],[1,49.99999999999999]]}",
     "samples": 10000000,
     "payouts": 171,
-    "rtp": 0.9699999999999999,
+    "rtp": 0.9700000000000002,
     "file": "standard-matej-rebounce.json.gz",
     "tuning": {
-      "death": 0,
-      "belowOne": 0.64,
-      "one": 0.06,
-      "aboveOne": 0.3,
+      "bands": [
+        {
+          "label": "0.05–0.5x",
+          "share": 27
+        },
+        {
+          "label": "0.5–1x",
+          "share": 33.8
+        },
+        {
+          "label": "1x",
+          "share": 6.8
+        },
+        {
+          "label": "1–5x",
+          "share": 31.7
+        },
+        {
+          "label": "5–20x",
+          "share": 0.7
+        },
+        {
+          "label": "20x+",
+          "share": 0.03
+        }
+      ],
       "classicMax": 205.031
     },
     "rebounce": {
