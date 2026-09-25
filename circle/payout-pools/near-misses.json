@@ -1,0 +1,6 @@
+[
+ {
+  "fingerprint": "{\"speed\":480,\"gravity\":245,\"curve\":0,\"spin\":7.5,\"maxHits\":20,\"rebounce\":{\"enabled\":true,\"durationMs\":400,\"speedMultiplier\":1.8,\"randomTurnDeg\":42},\"primes\":[2,3],\"keyScale\":128,\"maxWin\":\"unbounded\",\"minPrize\":0,\"stepsPerDegree\":8,\"ringDegrees\":360,\"zones\":[[-32768,20],[null,25],[128,56],[0,23.999999999999982],[129,30.000000000000018],[-32768,19.99999999999998],[-128,45.00000000000002],[0,23.999999999999982],[1,45],[-256,30.000000000000018],[0,24.000000000000032],[257,16.99999999999996]]}",
+  "file": "daredevil-niki-rebounce.near-misses.json"
+ }
+]
