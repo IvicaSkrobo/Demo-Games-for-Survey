@@ -1,1 +1,0 @@
-(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[68],{2326:(e,r,s)=>{Promise.resolve().then(s.bind(s,3831))},3831:(e,r,s)=>{"use strict";s.r(r),s.d(r,{default:()=>n});var u=s(4366);function n(){return(0,u.useEffect)(()=>{window.location.replace("/Demo-Games-for-Survey/circle/study/risk/")},[]),null}}},e=>{e.O(0,[641,456,358],()=>e(e.s=2326)),_N_E=e.O()}]);

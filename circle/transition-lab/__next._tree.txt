@@ -1,4 +1,4 @@
 :HL["/payout-pools/manifest.json","fetch",{"crossOrigin":"anonymous"}]
 :HL["/payout-pools/standard-matej.json.gz","fetch",{"crossOrigin":"anonymous"}]
 :HL["/payout-pools/daredevil-niki.json.gz","fetch",{"crossOrigin":"anonymous"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"transition-lab","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"8sBneodN9uTgVzXAGBfdO"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"transition-lab","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"JhTbp4ebz_SzHf4getBYT"}
