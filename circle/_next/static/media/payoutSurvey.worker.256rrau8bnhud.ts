@@ -28,7 +28,7 @@ self.onmessage = ({data}) => {
     for (let done = data.resume?.done ?? 0; done < data.samples; ) {
       const count = Math.min(CHUNK, data.samples - done)
       const from = done
-      const report = runPayoutSurvey(data.zones, count, n => self.postMessage({progress: from + n}), Boolean(data.rebounceEnabled), start + done, strength, duration, spread)
+      const report = runPayoutSurvey(data.zones, count, n => self.postMessage({progress: from + n}), Boolean(data.rebounceEnabled), start + done, strength, duration, spread, data.maxPathValue)
       merged = trimVariants(merged ? mergePayoutReports([merged, report]) : report)
       done += count
       if (done < data.samples) self.postMessage({checkpoint: {done, report: merged}})
