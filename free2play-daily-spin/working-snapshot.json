@@ -1,0 +1,6 @@
+{
+  "sourceCommit": "b185dfe",
+  "main": "./",
+  "prototypes": "./?view=prototypes",
+  "animationReference": "./money-machine-handoff/money.html"
+}
