@@ -1,0 +1,27 @@
+Lightning Effect 1.png
+size:1628,463
+filter:Linear,Linear
+pma:true
+L1
+bounds:1411,2,170,173
+offsets:6,6,181,184
+rotate:90
+L2
+bounds:788,263,198,660
+offsets:5,6,207,674
+rotate:90
+L3
+bounds:2,17,196,932
+offsets:5,7,207,946
+rotate:90
+L4
+bounds:2,215,246,784
+offsets:5,9,255,800
+rotate:90
+L5
+bounds:936,59,202,473
+offsets:5,8,212,488
+rotate:90
+L6
+bounds:1450,174,176,287
+offsets:6,7,188,301

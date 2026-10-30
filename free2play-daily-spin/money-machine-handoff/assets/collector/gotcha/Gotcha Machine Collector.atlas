@@ -1,0 +1,126 @@
+Gotcha Machine Collector.png
+size:2048,2047
+filter:Linear,Linear
+pma:true
+BaseFront
+bounds:1187,977,767,380
+offsets:1,1,770,382
+Blue Glow behind
+bounds:2,32,1030,943
+offsets:21,27,1072,997
+Candy Red
+bounds:283,999,131,119
+rotate:90
+Coin Golden
+bounds:739,1018,157,112
+Coin Silver
+bounds:1034,1009,146,121
+Coins Inside Pile
+bounds:1705,440,535,320
+rotate:90
+Gem Blue
+bounds:404,1004,122,126
+Glass Back
+bounds:1187,1359,770,686
+offsets:7,13,786,709
+Glass Front
+bounds:1034,2,766,642
+offsets:12,14,788,680
+rotate:90
+Opening
+bounds:2,988,279,142
+offsets:1,4,281,147
+Rays Of Light
+bounds:2,1132,1183,913
+offsets:7,1,1193,921
+Shard 13
+bounds:1034,770,143,237
+Shard 4
+bounds:1377,776,199,326
+rotate:90
+Shard 8
+bounds:528,1017,209,113
+Shard 9
+bounds:1678,17,421,313
+rotate:90
+Trigger Handle 1
+bounds:1179,775,196,200
+offsets:1,1,198,202
+Trigger Handle 2
+bounds:1959,1791,254,87
+offsets:1,1,256,89
+rotate:90
+Trigger Handle 4
+bounds:1959,1542,84,247
+offsets:28,2,139,252
+Trigger Hole Shadow
+bounds:1959,1181,359,39
+offsets:1,1,361,41
+rotate:90
+
+Gotcha Machine Collector_2.png
+size:1918,1811
+filter:Linear,Linear
+pma:true
+Base Behind
+bounds:2,306,747,389
+offsets:1,1,749,391
+rotate:90
+Blue Glow Front
+bounds:2,1055,754,681
+offsets:1,1,756,683
+rotate:90
+Cracks 1
+bounds:1017,317,745,393
+offsets:1,1,747,395
+rotate:90
+Cracks 3
+bounds:685,1064,745,618
+offsets:1,1,747,620
+rotate:90
+Cracks 4
+bounds:393,308,745,622
+offsets:1,1,747,624
+rotate:90
+Craks 2
+bounds:1305,1064,745,611
+offsets:1,2,747,614
+rotate:90
+Shard 1
+bounds:2,11,293,258
+rotate:90
+Shard 10
+bounds:1644,95,190,191
+rotate:90
+Shard 11
+bounds:1644,908,154,259
+rotate:90
+Shard 12
+bounds:262,18,259,286
+Shard 2
+bounds:1655,487,173,218
+rotate:90
+Shard 3
+bounds:752,40,444,266
+Shard 5
+bounds:1198,2,313,190
+rotate:90
+Shard 6
+bounds:1390,5,310,252
+rotate:90
+Shard 7
+bounds:523,26,280,227
+rotate:90
+Top Cover
+bounds:1412,576,486,219
+offsets:1,1,488,221
+rotate:90
+Trigger Handle 3
+bounds:1655,287,209,198
+offsets:1,1,211,200
+Trigger Hole
+bounds:1412,325,241,249
+offsets:1,1,243,251
+Trigger Lock
+bounds:1655,662,244,244
+offsets:1,1,246,246
