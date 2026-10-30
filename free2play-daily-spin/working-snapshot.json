@@ -1,6 +1,9 @@
 {
-  "sourceCommit": "b185dfe",
+  "sourceCommit": "f2bd4f2fbabbfd3b3b29b59a88bbc327e26166ae",
+  "runtimeBaseline": "e0c9e14",
+  "tag": "money-machine-combined-2026-10-30-r2",
   "main": "./",
   "prototypes": "./?view=prototypes",
-  "animationReference": "./money-machine-handoff/money.html"
+  "animationReference": "./money-machine-handoff/money.html",
+  "testsPassed": 108
 }
