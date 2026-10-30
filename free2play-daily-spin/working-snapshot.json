@@ -1,9 +1,10 @@
 {
-  "sourceCommit": "f2bd4f2fbabbfd3b3b29b59a88bbc327e26166ae",
-  "runtimeBaseline": "e0c9e14",
-  "tag": "money-machine-combined-2026-10-30-r2",
+  "sourceCommit": "d6dc1a99e4f90fd44159aa83853d9f743ba3233d",
+  "tag": "money-machine-combined-2026-10-30-r3",
+  "anteMergedThrough": "32642a3",
+  "spineRuntime": "assets/collector/money-94b28f8b",
   "main": "./",
   "prototypes": "./?view=prototypes",
   "animationReference": "./money-machine-handoff/money.html",
-  "testsPassed": 108
+  "testsPassed": 118
 }

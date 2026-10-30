@@ -4,12 +4,12 @@ Updated 30 October 2026. This is the deployment handoff for Ante, Patrik and any
 
 ## Which version to take
 
-Take the **whole repository**, including the combined main game, legacy prototypes, runtime assets and docs.
+For Ante/agents reproducing this prototype, take the **whole repository**, including the combined main game, legacy prototypes, runtime assets and docs. **Patrik develops F2P separately in his own codebase:** use this repo as a behavior/animation/asset reference and implement the agreed rules in his project; adopting this frontend or deploying it is not a requirement for his implementation.
 
 - Repository: https://github.com/IvicaSkrobo/f2p-daily-spin
 - Current working branch: `codex/compare-ante-and-original`
-- Reproducible release tag: `money-machine-combined-2026-10-30-r2`
-- Gameplay/source baseline in that release: `e0c9e14` (the tag also includes the updated release instructions).
+- Reproducible release tag: `money-machine-combined-2026-10-30-r3`
+- Merged Ante source in that release: through `32642a3`, with our combined gameplay retained (the tag also includes the updated release instructions).
 - Main public game: https://ivicaskrobo.github.io/Demo-Games-for-Survey/free2play-daily-spin/
 - Archived Blender/Chest: https://ivicaskrobo.github.io/Demo-Games-for-Survey/free2play-daily-spin/?view=prototypes
 - Preserved animation-only reference: https://ivicaskrobo.github.io/Demo-Games-for-Survey/free2play-daily-spin/money-machine-handoff/money.html
@@ -25,7 +25,7 @@ The older branch `codex/money-machine-collector-handoff`, commit `2673698`, and 
 Run in a new folder so local animation/source work is preserved:
 
 ```sh
-git clone --branch money-machine-combined-2026-10-30-r2 https://github.com/IvicaSkrobo/f2p-daily-spin.git f2p-money-machine-combined
+git clone --branch money-machine-combined-2026-10-30-r3 https://github.com/IvicaSkrobo/f2p-daily-spin.git f2p-money-machine-combined
 cd f2p-money-machine-combined
 git rev-parse HEAD
 npm ci
@@ -73,3 +73,11 @@ Read `docs/MONEY_MACHINE_HANDOFF.md` for current technical choreography, `docs/P
 ## Paying symbol artwork: Ante's Seven
 
 The 777 direct win uses Ante's existing Seven artwork, not a replacement symbol. Runtime asset: `public/assets/symbols/original-pngs-20261029/Seven.png`; design source copy: `design/Symbols/Original PNGs 2026-10-29/Seven.png`. Both are already present in Ante's original handoff commit `2673698` and have identical content. The catalog maps symbol id `seven` / label `Lucky 7` to file `Seven`; the main slot loads that PNG. Three instances form 777. Preserve its original canvas/whitespace and the slot's symbol treatment. No new Seven asset is needed in this repository. If Ante's separate working/export project lacks it, import his Seven asset from this pack and map it to `seven`; use his artwork consistently in the reel and any direct-win presentation. Do not substitute the Blender's older seven or use crown as the paying symbol.
+
+## Editable Spine project location
+
+See `spine-projects/README.md`. The only included editable project is `spine-projects/Money Machine - recovered 2026-10-27 2101.spine`, a historical recovery, not the confirmed source of the current runtime. The current playable 34-clip export is the complete JSON/atlas/PNG pack in `public/assets/collector/money-94b28f8b/`. Latest editable source/images must still come from Ante.
+
+## Pull the latest combined version in an existing checkout
+
+With local changes committed or safely stashed, run `git fetch origin`, `git switch codex/compare-ante-and-original`, then `git pull --ff-only origin codex/compare-ante-and-original`. Verify `git log -1`. Do not pull main or stay on the older animation-handoff branch when trying to continue this integration. R3 includes Ante's new 34-clip export and claim activation, preserving our server-settled 5% restart.
