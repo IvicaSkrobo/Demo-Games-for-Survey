@@ -11,6 +11,7 @@ on:
       - 'manager-spin/**'
       - 'free2play-daily-spin/**'
       - 'ski-v4/**'
+      - 'wheel/**'
       - 'index.html'
       - '.github/workflows/**'
 
