@@ -9,6 +9,7 @@ Current builds:
 - `manager-spin/index.html`
 - `free2play-daily-spin/index.html`
 - `ski-v4/index.html`
+- `wheel/index.html`
 
 Recommended iframe paths:
 
@@ -17,6 +18,7 @@ Recommended iframe paths:
 - `/manager-spin/index.html`
 - `/free2play-daily-spin/index.html`
 - `/ski-v4/index.html`
+- `/wheel/index.html`
 
 Notes:
 

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Wheel Prototype</title>
+    <script type="module" crossorigin src="./assets/index-W_hgpfK3.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-C--VxGxr.css">
+  </head>
+  <body>
+    <div id="app">
+      <header>
+        <div class="balance">Balance <b id="balance"></b></div>
+        <div class="wheel-total">Wheel <b id="wheel-total"></b></div>
+        <div class="players"><span class="dot"></span><span id="players"></span> playing</div>
+      </header>
+
+      <main class="layout">
+        <section class="play">
+          <div class="stage">
+            <canvas id="wheel"></canvas>
+            <div id="toast" class="toast"></div>
+          </div>
+          <div class="status">
+            <div class="bar"><div id="bar"></div></div>
+            <div id="status-text"></div>
+          </div>
+          <div id="history" class="history"></div>
+        </section>
+
+        <aside class="panel">
+          <div id="spots" class="spots"></div>
+          <div class="controls">
+            <div id="chips" class="chips"></div>
+            <div class="actions">
+              <button id="clear">Clear</button>
+              <button id="repeat">Repeat</button>
+              <button id="double">x2</button>
+              <button id="auto">Auto</button>
+            </div>
+          </div>
+          <div id="feed" class="feed"></div>
+        </aside>
+      </main>
+    </div>
+  </body>
+</html>
