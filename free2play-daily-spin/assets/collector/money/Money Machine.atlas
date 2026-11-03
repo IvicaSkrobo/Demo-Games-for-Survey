@@ -1,17 +1,18 @@
 Money Machine.png
-size:2016,1403
+size:2032,1403
 filter:Linear,Linear
 pma:true
 Arc 1
-bounds:1906,379,122,82
+bounds:1658,1151,122,82
 offsets:7,8,136,97
 rotate:90
 Arc 2
 bounds:1055,243,145,159
 offsets:8,9,158,174
 Arc 3
-bounds:1906,623,94,110
+bounds:1546,1179,94,110
 offsets:7,8,107,124
+rotate:90
 Base Behind
 bounds:851,972,429,196
 offsets:1,1,431,198
@@ -23,8 +24,9 @@ Cable Behind
 bounds:470,77,30,604
 rotate:90
 Candy Red
-bounds:1743,866,128,119
+bounds:1909,35,128,119
 offsets:4,1,133,121
+rotate:90
 Cap
 bounds:723,381,260,116
 offsets:1,36,262,153
@@ -36,9 +38,8 @@ Cap Glow 2
 bounds:900,5,79,34
 offsets:2,1,83,36
 Coin Golden
-bounds:1906,1248,153,107
+bounds:1450,7,153,107
 offsets:3,3,157,112
-rotate:90
 Coins 0
 bounds:202,31,266,76
 offsets:2,1,270,80
@@ -50,8 +51,9 @@ bounds:851,625,345,196
 offsets:1,2,347,221
 rotate:90
 Coins 3
-bounds:1617,47,358,264
+bounds:1743,1043,358,264
 offsets:1,6,360,294
+rotate:90
 Coins 4
 bounds:1049,632,359,329
 offsets:2,1,362,351
@@ -60,8 +62,9 @@ bounds:1202,255,375,361
 offsets:1,1,377,363
 rotate:90
 Cracks 1
-bounds:1546,987,331,259
+bounds:1743,710,331,259
 offsets:1,2,334,262
+rotate:90
 Cracks 2
 bounds:1410,675,331,286
 offsets:1,2,334,289
@@ -70,22 +73,21 @@ bounds:1565,313,360,339
 offsets:1,1,362,341
 rotate:90
 Gem Blue
-bounds:1873,839,113,111
+bounds:1906,462,113,111
 offsets:4,5,122,126
 Generator Cap Left
-bounds:1743,762,102,116
+bounds:1906,358,102,116
 offsets:3,3,134,149
 rotate:90
 Generator Cap Right
-bounds:1861,735,102,116
+bounds:1920,240,102,116
 offsets:29,3,134,149
-rotate:90
 Generator Glass Left
-bounds:1879,1100,146,135
+bounds:1772,11,146,135
 offsets:2,1,149,137
 rotate:90
 Generator Glass Right
-bounds:1879,952,146,135
+bounds:1783,165,146,135
 offsets:1,1,149,137
 rotate:90
 Generator Light Left
@@ -112,7 +114,7 @@ Lightning 2
 bounds:1096,433,88,197
 offsets:9,9,104,215
 Lightning 3
-bounds:1249,24,89,199
+bounds:1249,21,89,199
 offsets:7,10,103,217
 rotate:90
 Lightning 4
@@ -124,35 +126,35 @@ bounds:2,866,535,464
 offsets:5,3,544,470
 rotate:90
 Shard 1
-bounds:1276,124,178,129
+bounds:1126,112,178,129
 offsets:1,1,196,185
 Shard 10
-bounds:1450,5,165,117
+bounds:1605,10,165,117
 offsets:1,1,167,120
 Shard 11
 bounds:553,197,223,151
 offsets:10,4,240,161
 rotate:90
 Shard 2
-bounds:1119,115,126,155
+bounds:1546,1275,126,155
 offsets:33,5,160,168
 rotate:90
 Shard 3
-bounds:1710,1249,152,145
+bounds:1636,159,152,145
 offsets:28,1,182,147
 rotate:90
 Shard 4
 bounds:553,113,194,82
 offsets:1,27,196,110
 Shard 5
-bounds:953,113,164,124
+bounds:1470,129,164,124
 offsets:37,22,203,147
 Shard 6
-bounds:1546,1264,137,162
+bounds:1306,116,137,162
 offsets:1,1,139,207
 rotate:90
 Shard 7
-bounds:1076,5,106,171
+bounds:1076,3,106,171
 offsets:1,45,138,217
 rotate:90
 Shard 8
@@ -160,19 +162,21 @@ bounds:470,7,68,169
 offsets:1,13,99,183
 rotate:90
 Shard 9
-bounds:1456,129,124,133
+bounds:1906,575,124,133
 offsets:1,1,126,135
-rotate:90
 Shine
 bounds:2,399,465,464
 offsets:13,13,491,489
 rotate:90
+Shine Particle
+bounds:953,111,171,126
+offsets:3,3,176,132
 Spark 1
 bounds:775,15,60,123
 offsets:5,6,70,133
 rotate:90
 Spark 2
-bounds:1906,503,86,118
+bounds:1546,1059,86,118
 offsets:4,6,95,129
 Spark 3
 bounds:641,2,73,132

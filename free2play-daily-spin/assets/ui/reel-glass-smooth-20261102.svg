@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="323" viewBox="0 0 520 323" fill="none">
+  <defs>
+    <!-- A continuous light-only tint avoids the raster's hard clear/dark bands. -->
+    <linearGradient id="shine" x1="0" y1="0" x2="0.4" y2="1" gradientUnits="objectBoundingBox">
+      <stop stop-color="#F5FDFF" stop-opacity=".28"/>
+      <stop offset=".28" stop-color="#F5FDFF" stop-opacity=".14"/>
+      <stop offset=".58" stop-color="#F5FDFF" stop-opacity=".035"/>
+      <stop offset=".78" stop-color="#F5FDFF" stop-opacity=".04"/>
+      <stop offset="1" stop-color="#F5FDFF" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+  <g fill="url(#shine)">
+    <rect width="143" height="323"/>
+    <rect x="188" y="8" width="143" height="307"/>
+    <rect x="377" width="143" height="323"/>
+  </g>
+</svg>
