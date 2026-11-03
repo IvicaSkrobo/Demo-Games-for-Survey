@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Wheel Prototype</title>
-    <script type="module" crossorigin src="./assets/index-BTSxGA-C.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-C--VxGxr.css">
+    <script type="module" crossorigin src="./assets/index-Ben8b5MR.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BPh5RbGD.css">
   </head>
   <body>
     <div id="app">
       <header>
         <div class="balance">Balance <b id="balance"></b></div>
-        <div class="wheel-total">Wheel <b id="wheel-total"></b></div>
+        <div class="wheel-total">Riding <b id="wheel-total"></b></div>
         <div class="players"><span class="dot"></span><span id="players"></span> playing</div>
       </header>
 
@@ -21,10 +21,7 @@
             <canvas id="wheel"></canvas>
             <div id="toast" class="toast"></div>
           </div>
-          <div class="status">
-            <div class="bar"><div id="bar"></div></div>
-            <div id="status-text"></div>
-          </div>
+          <div class="status">Every bet rides on its own. At each arrow it's spat out with a random win, bitten by the skull, or rides on.</div>
           <div id="history" class="history"></div>
         </section>
 
@@ -33,13 +30,11 @@
           <div class="controls">
             <div id="chips" class="chips"></div>
             <div class="actions">
-              <button id="clear">Clear</button>
-              <button id="repeat">Repeat</button>
-              <button id="double">x2</button>
-              <button id="auto">Auto</button>
+              <button id="auto">Auto re-bet</button>
             </div>
           </div>
-          <div id="feed" class="feed"></div>
+          <div class="mybets-title">Your bets riding</div>
+          <div id="mybets" class="mybets"></div>
         </aside>
       </main>
     </div>
