@@ -7,6 +7,27 @@
     1,
     4
   ],
+  "deck": {
+    "single": 52,
+    "dual": 30,
+    "colour": 10,
+    "jokers": 4,
+    "total": 96,
+    "dualRanks": [
+      "A",
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
+    "colourRanks": [
+      "2",
+      "4",
+      "6",
+      "8",
+      "Q"
+    ]
+  },
   "instantMinimumPoints": 10,
   "payouts": [
     {
@@ -17,7 +38,7 @@
     {
       "label": "Win",
       "probability": 0.5,
-      "multiplier": 1.25
+      "multiplier": 1.1
     },
     {
       "label": "Bigger win",
@@ -31,7 +52,7 @@
     }
   ],
   "policyNote": "Auto-place now uses the same stronger routing as greedy-by-factor; the two named runs verify the same policy.",
-  "method": "uniform bust suit; fixed bet 10; finite 78-card deck; retained collectors; cent rounding; 500k per seed per policy",
+  "method": "uniform bust suit; fixed bet 10; finite shuffled custom deck; retained collectors; cent rounding; 500k per seed per policy",
   "results": [
     {
       "strategy": "autoPlace",
@@ -39,29 +60,29 @@
         {
           "seed": 713411,
           "draws": 500000,
-          "instantRtp": 0.4265145,
-          "collectorRtp": 0.496768
+          "instantRtp": 0.3323665,
+          "collectorRtp": 0.591356
         },
         {
           "seed": 951753,
           "draws": 500000,
-          "instantRtp": 0.4270895,
-          "collectorRtp": 0.48654
+          "instantRtp": 0.3328182,
+          "collectorRtp": 0.592258
         },
         {
           "seed": 441129,
           "draws": 500000,
-          "instantRtp": 0.427087,
-          "collectorRtp": 0.497038
+          "instantRtp": 0.3331564,
+          "collectorRtp": 0.588954
         },
         {
           "seed": 382017,
           "draws": 500000,
-          "instantRtp": 0.426266,
-          "collectorRtp": 0.494634
+          "instantRtp": 0.3332466,
+          "collectorRtp": 0.590328
         }
       ],
-      "rtp": 0.92048425
+      "rtp": 0.9236209249999999
     },
     {
       "strategy": "greedyByFactor",
@@ -69,29 +90,29 @@
         {
           "seed": 713411,
           "draws": 500000,
-          "instantRtp": 0.4265145,
-          "collectorRtp": 0.496768
+          "instantRtp": 0.3323665,
+          "collectorRtp": 0.591356
         },
         {
           "seed": 951753,
           "draws": 500000,
-          "instantRtp": 0.4270895,
-          "collectorRtp": 0.48654
+          "instantRtp": 0.3328182,
+          "collectorRtp": 0.592258
         },
         {
           "seed": 441129,
           "draws": 500000,
-          "instantRtp": 0.427087,
-          "collectorRtp": 0.497038
+          "instantRtp": 0.3331564,
+          "collectorRtp": 0.588954
         },
         {
           "seed": 382017,
           "draws": 500000,
-          "instantRtp": 0.426266,
-          "collectorRtp": 0.494634
+          "instantRtp": 0.3332466,
+          "collectorRtp": 0.590328
         }
       ],
-      "rtp": 0.92048425
+      "rtp": 0.9236209249999999
     }
   ],
   "limitations": "Estimated for tested policies. Not a certified or strategy-independent RTP."

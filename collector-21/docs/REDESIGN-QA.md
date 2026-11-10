@@ -23,3 +23,11 @@ Collector factors now Hearts ×3, Diamonds ×2, Clubs ×1, Spades ×4. Payout ta
 ## Points-only cards — 10 November 2026
 
 Dedicated BUST cards reduced to 10%. A–9 return €0 but remain normal cards: fixed points, correct suit routing and full original stake added to the pot. Non-bust 10/J/Q/K return ×1.25, ×1.5 or ×1.75; non-bust Jokers retain ×3 and one point. Strong collector factors unchanged. Improved auto-place chooses the largest exact-21 award, otherwise the strongest safe factor. Independent held-out estimate: 92.048425%; auto-place and greedy now share the same policy. The in-game rules and dated README describe the current version; earlier entries above record previous review states.
+
+## More choice and manual placement — 10 November 2026
+
+96-card deck: 52 single-suit, 30 dual-suit, ten colour cards, four Jokers. Colour faces have rank + RED/BLACK, no suit symbols. Click a valid collector to place any revealed card. Single-destination cards (including dedicated BUST cards) wait five seconds of inactivity; pointer/key activity restarts it, Rules pauses it, and manual placement cancels it. Multiple-destination cards and Jokers wait indefinitely for a choice. Animation fast-forward and reduced motion do not shorten the inactivity timer. Timer behavior is covered with a fake-clock regression suite.
+
+Smallest non-bust 10/J/Q/K return is now ×1.1; other returns and collector factors remain. Recalibrated with the expanded deck; current runs are in rtp-calibration.json. Browser control remains with the user; validation for this update uses the engine, timer and renderer/rules tests in Node.
+
+Controller integration test: the real draw/collector/card handlers run against lightweight controls and a fake clock, verifying immediate manual collection, full five-second idle waits under reduced motion, no timeout for dual suits, and manual placement of BUST cards. No browser control is required.
