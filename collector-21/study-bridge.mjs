@@ -1,5 +1,5 @@
 export const STUDY_CHANNEL='superbet.study.v1';
-export const STUDY_BUILD='collector-21-2026-11-10-redesign';
+export const STUDY_BUILD='collector-21-2026-11-10-strong-collectors';
 export const STUDY_VARIANTS=[{slotIndex:1,id:'collector21',label:'Collector 21'},{slotIndex:2,id:'suits',label:'Suit Society'}];
 const enabled=typeof document!=='undefined'&&document.body.dataset.study==='true';
 let context=null,origin=null,started=!enabled,sequence=0,outbox=[],rounds=0,completed=false,options={},retryTimer=null,storageKey=null;

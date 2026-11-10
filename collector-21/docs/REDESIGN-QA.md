@@ -15,3 +15,7 @@ Reviewed 10 November 2026 (Europe/Zagreb), against the signed-in Claude canvas a
 - [x] `node --test`: seeded RTP regression for both auto-place and greedy-by-factor; uniform bust suit; existing payout/routing and survey bridge checks.
 
 QA fixtures are outside the hosted distribution. `qa/build-scenarios.mjs` generates a local copy of the current renderer with scenario data; rebuild after UI edits. No QA routes, scenario selector or demo wallet are published.
+
+## Stronger collector update — 10 November 2026
+
+Collector factors now Hearts ×3, Diamonds ×2, Clubs ×1, Spades ×4. Payout table and chips read the engine constants. Instant outcomes rebalance to 40% bust / 25% ×0.5 / 30% ×1.5 / 5% ×2.5; non-bust Jokers remain ×3. Independent four-million-draw verification: auto-place 91.38915%, greedy-by-factor 92.72070%. No layout changes.

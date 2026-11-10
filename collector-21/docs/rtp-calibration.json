@@ -1,6 +1,6 @@
 {
   "date": "2026-11-10",
-  "bonusScale": 0.528,
+  "bonusScale": 1,
   "method": "uniform bust suit; fixed bet 10; finite 78-card deck; retained collectors; cent rounding; 500k per seed per policy",
   "results": [
     {
@@ -9,29 +9,29 @@
         {
           "seed": 713411,
           "draws": 500000,
-          "instantRtp": 0.8169,
-          "collectorRtp": 0.09332083199999763
+          "instantRtp": 0.756073,
+          "collectorRtp": 0.157108
         },
         {
           "seed": 951753,
           "draws": 500000,
-          "instantRtp": 0.818508,
-          "collectorRtp": 0.0939438719999977
+          "instantRtp": 0.757106,
+          "collectorRtp": 0.15535
         },
         {
           "seed": 441129,
           "draws": 500000,
-          "instantRtp": 0.819344,
-          "collectorRtp": 0.09452678399999755
+          "instantRtp": 0.755468,
+          "collectorRtp": 0.158464
         },
         {
           "seed": 382017,
           "draws": 500000,
-          "instantRtp": 0.820815,
-          "collectorRtp": 0.09527601599999787
+          "instantRtp": 0.758277,
+          "collectorRtp": 0.15772
         }
       ],
-      "rtp": 0.9131586259999976
+      "rtp": 0.9138915
     },
     {
       "strategy": "greedyByFactor",
@@ -39,29 +39,29 @@
         {
           "seed": 713411,
           "draws": 500000,
-          "instantRtp": 0.8169,
-          "collectorRtp": 0.10115582399999883
+          "instantRtp": 0.756073,
+          "collectorRtp": 0.17208
         },
         {
           "seed": 951753,
           "draws": 500000,
-          "instantRtp": 0.818508,
-          "collectorRtp": 0.10115793599999894
+          "instantRtp": 0.757106,
+          "collectorRtp": 0.168744
         },
         {
           "seed": 441129,
           "draws": 500000,
-          "instantRtp": 0.819344,
-          "collectorRtp": 0.10105761599999896
+          "instantRtp": 0.755468,
+          "collectorRtp": 0.17221
         },
         {
           "seed": 382017,
           "draws": 500000,
-          "instantRtp": 0.820815,
-          "collectorRtp": 0.10056763199999857
+          "instantRtp": 0.758277,
+          "collectorRtp": 0.16887
         }
       ],
-      "rtp": 0.9198765019999988
+      "rtp": 0.9272070000000001
     }
   ],
   "limitations": "Estimated for tested policies. Not a certified or strategy-independent RTP."

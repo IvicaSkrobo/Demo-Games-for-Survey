@@ -1,6 +1,6 @@
 {
   "channel": "superbet.study.v1",
-  "buildId": "collector-21-2026-11-10-redesign",
+  "buildId": "collector-21-2026-11-10-strong-collectors",
   "completionEvent": "round_completed",
   "minimumPerVariant": 10,
   "events": {

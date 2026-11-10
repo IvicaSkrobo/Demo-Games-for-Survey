@@ -22,10 +22,10 @@ Choose €1, €2, €5, €10, €20, €50 or €100 with the stepper. Every d
 
 | Regular-card outcome | Probability | Gross return |
 | --- | ---: | ---: |
-| Bust | 30% | €0 |
-| Small return | 40% | 0.5× bet |
-| Win | 20% | 1.5× bet |
-| Big win | 10% | 2.5× bet |
+| Bust | 40% | €0 |
+| Small return | 25% | 0.5× bet |
+| Win | 30% | 1.5× bet |
+| Big win | 5% | 2.5× bet |
 
 A non-bust Joker pays 3× bet and contributes one point. A bust becomes a dedicated zero-point BUST card. Its collector is chosen **uniformly and independently** among the four suits, avoiding the earlier first-suit bias on dual and colour identities.
 
@@ -41,21 +41,21 @@ Below 21 retains points and original stakes. Exactly 21 pays the sum of the orig
 
 | Collector | Factor |
 | --- | ---: |
-| Spades | 1.584× |
-| Hearts | 1.056× |
-| Diamonds | 0.792× |
-| Clubs | 0.528× |
+| Spades | 4× |
+| Hearts | 3× |
+| Diamonds | 2× |
+| Clubs | 1× |
 
-Changing the bet affects future cards only. Hearts assembled from bets €1 + €2 + €5 + €10 pays `€18 × 1.056 = €19.01`, rounded to cents. All engine awards round to cents. The wallet and collector state reset on page refresh.
+Changing the bet affects future cards only. Hearts assembled from bets €1 + €2 + €5 + €10 pays `€18 × 3 = €54`, rounded to cents. All engine awards round to cents. The wallet and collector state reset on page refresh.
 
 ## RTP calibration
 
-The theoretical instant layer remains 81.9231% including the Joker uplift. Collector factors are the original `[2, 1.5, 1, 3]` scaled by **0.528**. After correcting uniform bust selection, calibration targets the better of the tested fixed-bet strategies near 92%.
+The theoretical instant layer is **75.6410%** including the Joker uplift. Collectors now use clean, stronger factors `[3, 2, 1, 4]`. Bust probability is 40%, small returns 25%, wins 30% and big wins 5%. More reward comes from completing collectors; busts are more frequent. The tested strategies remain inside the 91–93% prototype band around the 92% target.
 
 Independent verification: four seeds × 500,000 draws per strategy (four million draws total), fixed bet €10, retained collectors, finite shuffled deck and cent rounding:
 
-- Auto-place: **91.31586%** observed total RTP.
-- Greedy by factor, prioritising exact-21 award: **91.98765%**.
+- Auto-place: **91.38915%** observed total RTP.
+- Greedy by factor, prioritising exact-21 award: **92.72070%**.
 
 `docs/rtp-calibration.json` contains the runs. Reproduce with `node calibrate-collector21.mjs --heldout`. Both policies have a seeded regression test that fails outside 91–93%. These are policy-specific simulation estimates, not certified or strategy-independent guarantees. Adaptive bets, manual choices, finite play and abandoned collectors can change results.
 

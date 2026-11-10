@@ -1,12 +1,12 @@
-export const C21_BONUS_SCALE=.528;
+export const C21_BONUS_SCALE=1;
 export const C21_TARGET_RTP=.92;
 export const C21_TARGET=21;
 export const C21_BETS=[1,2,5,10,20,50,100];
 export const C21_JOKER_POINTS=1;
 export const C21_JOKER_MULTIPLIER=3;
-export const C21_PAYOUTS=[{label:'Bust',probability:.3,multiplier:0},{label:'Small return',probability:.4,multiplier:.5},{label:'Win',probability:.2,multiplier:1.5},{label:'Big win',probability:.1,multiplier:2.5}];
+export const C21_PAYOUTS=[{label:'Bust',probability:.4,multiplier:0},{label:'Small return',probability:.25,multiplier:.5},{label:'Win',probability:.3,multiplier:1.5},{label:'Big win',probability:.05,multiplier:2.5}];
 export const C21_DECK={single:52,dual:18,colour:4,jokers:4,total:78,dualRanks:['3','5','7'],colourRanks:['4','Q']};
-export const C21_FACTORS=[2,1.5,1,3].map(f=>f*C21_BONUS_SCALE);
+export const C21_FACTORS=[3,2,1,4];
 export const CARD_RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
 export function cardPoints(rank){if(!CARD_RANKS.includes(rank))throw Error('Unknown rank');return rank==='A'?1:['J','Q','K'].includes(rank)?10:Number(rank)}
 export function shuffle21(rng=Math.random){
