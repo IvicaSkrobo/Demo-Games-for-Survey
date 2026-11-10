@@ -45,3 +45,6 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # The full multi-game artifact exceeded the default ten-minute sync window.
+          timeout: 1200000
