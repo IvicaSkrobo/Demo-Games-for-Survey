@@ -2,45 +2,115 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Wheel Prototype</title>
-    <script type="module" crossorigin src="./assets/index-Bh8hYMLo.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-IF-AXEcU.css">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Wheel · v4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="./assets/index-Dol3OIzn.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DCSgr9JK.css">
   </head>
   <body>
     <div id="app">
       <header>
-        <div class="balance">Balance <b id="balance"></b></div>
-        <div class="wheel-total">Riding <b id="wheel-total"></b></div>
-        <div id="mode" class="mode" title="How the arrow decides when to fire (the result is random either way)">
-          <span>Hits</span><button data-mode="random">Random</button><button data-mode="heat">Heat</button>
+        <div class="brand">
+          <span class="brand-wheel">✳</span> Wheel <small>V4 PROTOTYPE</small>
         </div>
-        <div class="players"><span class="dot"></span><span id="players"></span> playing</div>
+        <div class="balance">Balance <b id="balance"></b></div>
+        <div class="wheel-total">You're riding <b id="wheel-total"></b></div>
+        <div class="players">
+          <span class="dot"></span><b id="players"></b> simulated players
+        </div>
+        <div id="mode" class="mode" role="group" aria-label="Shot timing">
+          <span>Hits</span><button data-mode="random">Random</button
+          ><button data-mode="heat">Heat</button>
+        </div>
       </header>
-
       <main class="layout">
         <section class="play">
-          <div class="stage">
-            <canvas id="wheel"></canvas>
-            <div id="toast" class="toast"></div>
-          </div>
-          <div class="status">A colour bet covers every field of its colour; a number bet sits on one field. The arrow fires at random: death kills the bets it hits, a cash-out pays colour bets, number bets get x2 on a number hit or keep riding.</div>
-          <div id="history" class="history"></div>
-        </section>
-
-        <aside class="panel">
-          <div id="spots" class="spots"></div>
-          <div class="numbers-title">Numbers · x2 on a number hit · only death kills</div>
-          <div id="numbers" class="numbers"></div>
-          <div class="controls">
-            <div id="chips" class="chips"></div>
-            <div class="actions">
-              <button id="auto">Auto re-bet</button>
+          <div class="table">
+            <div class="wheel-column">
+              <div class="stage">
+                <canvas
+                  id="wheel"
+                  aria-label="Continuously rotating wheel. Use the number buttons below to place an exact bet."
+                ></canvas>
+                <div id="jackpot-banner">JACKPOT SPIN · ×5</div>
+                <div id="toast" role="status"></div>
+              </div>
+              <div class="history-line">
+                <span>YOUR LAST</span>
+                <div id="history" class="history"></div>
+              </div>
             </div>
+            <aside class="arrow-column">
+              <div class="eyebrow" id="hit-label">JUST HIT</div>
+              <div id="result" class="result">
+                <b>—</b
+                ><span>Every field shows its pay.<br />Watch the arrow.</span>
+              </div>
+              <div id="next-section">
+                <div class="eyebrow">NEXT UP <span>HEAT MODE</span></div>
+                <div id="next-up"></div>
+              </div>
+              <div class="live">
+                <div class="eyebrow">LIVE CASH-OUTS <span>SIMULATED</span></div>
+                <div id="stream"></div>
+              </div>
+            </aside>
           </div>
-          <div class="mybets-title">Your bets riding</div>
+        </section>
+        <aside class="panel" aria-label="Bet slip">
+          <div class="eyebrow">CHIP <span>SELECT YOUR STAKE</span></div>
+          <div id="chips" class="chips"></div>
+          <div class="eyebrow">
+            BET A COLOUR <span>COVERS ALL ITS FIELDS</span>
+          </div>
+          <div id="spots" class="spots"></div>
+          <div class="eyebrow">OR A NUMBER <span>ONE EXACT FIELD</span></div>
+          <div id="numbers" class="numbers"></div>
+          <button id="riding-toggle" aria-expanded="false">
+            Riding <b id="riding-summary"></b><span>⌄</span>
+          </button>
           <div id="mybets" class="mybets"></div>
+          <button id="auto" aria-pressed="false">
+            Auto re-bet <span>OFF</span>
+          </button>
         </aside>
+        <details class="game-rules">
+          <summary>Rules <span>How to play</span></summary>
+          <div class="rules-content">
+            <p>
+              A colour bet pays when a field of that colour is hit at the arrow.
+              Your token and amount appear on its colour button. A number bet
+              covers one exact field. Each field prints its base payout.
+            </p>
+            <p>
+              Every shot your bet survives grows its multiplier by 10%. A skull
+              sweeps every riding bet. A jackpot shot multiplies winning payouts
+              by five.
+            </p>
+            <p id="number-pays"></p>
+            <p>
+              Bets start riding immediately. If a shot is already revealing, new
+              bets join after it lands. Pump adds fresh stake at base pay; the
+              existing stake keeps its growth.
+            </p>
+            <p>
+              Heat mode shows the next fields expected to fire. During fast
+              surges, the arrow holds fire.
+            </p>
+            <p class="prototype-note">
+              Play-money visual prototype. Other players are simulated. Entry
+              timing affects outcomes; 95% RTP is not established for this mode.
+            </p>
+          </div>
+        </details>
       </main>
     </div>
   </body>
