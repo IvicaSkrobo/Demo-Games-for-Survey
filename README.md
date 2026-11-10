@@ -27,6 +27,6 @@ Notes:
 
 ## Collector 21
 
-Playable custom-card prototype at `collector-21/`. Each draw settles an instant return, then winning cards build matching collectors toward 21. Estimated RTP ≈92% under fixed-bet automatic placement. Virtual credits only.
+Playable custom-card prototype at `collector-21/`. Each draw settles an instant return, then winning cards build matching collectors toward 21. Recalibrated against automatic and greedy placement: seeded returns 91.32% and 91.99%. Virtual credits only.
 
 Survey build: `collector-21/study/`; two manifest slots (Collector 21 / Suit Society), ten resolved bets per slot. Import `collector-21/study-blueprint.json` into a new draft in SurveyTool. See `collector-21/docs/SURVEY-INTEGRATION.md` and the dated game reference for rules and limitations.

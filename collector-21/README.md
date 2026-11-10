@@ -1,104 +1,72 @@
 # Collector 21 — current game reference
 
-**Updated:** 10 November 2026 (Europe/Zagreb)  
-**Status:** playable virtual-credit prototype; demo and survey integration build  
-**Source folder:** `/Users/ivicaskrobo/Documents/ChatGPT/wheel porject/card-lab`  
-**Demo repository checkout:** `/Users/ivicaskrobo/Documents/ChatGPT/wheel porject/demo-games-survey`  
-**Main game:** `dist/collector21.mjs` · **Maths:** `dist/collector21-engine.mjs`
+**Updated:** 10 November 2026 (Europe/Zagreb)
+**Status:** playable redesign, virtual euros only
+**Source:** `/Users/ivicaskrobo/Documents/ChatGPT/wheel porject/card-lab`
+**Demo checkout:** `/Users/ivicaskrobo/Documents/ChatGPT/wheel porject/demo-games-survey`
 
-## Play and publication
+## Play
 
-- Prototype lab: https://gamio-card-lab.bravegiant2049.chatgpt.site/#collector21
-- Focused standalone page: `dist/collector-21.html`
-- Public demo path: https://ivicaskrobo.github.io/Demo-Games-for-Survey/collector-21/
-- Survey iframe build: https://ivicaskrobo.github.io/Demo-Games-for-Survey/collector-21/study/
-- Survey handshake rehearsal: `dist/survey-preview.html`
-- Local preview: `python3 -m http.server 4174 --directory dist`
-- Checks: `node --test engine.test.mjs collector21.test.mjs study-bridge.test.mjs`
+- Main prototype: https://gamio-card-lab.bravegiant2049.chatgpt.site/collector-21/
+- Public demo: https://ivicaskrobo.github.io/Demo-Games-for-Survey/collector-21/
+- Survey iframe: https://ivicaskrobo.github.io/Demo-Games-for-Survey/collector-21/study/
+- Source UI: `dist/collector21.mjs`; maths: `dist/collector21-engine.mjs`; styles: `dist/style.css`.
+- Local preview: `python3 -m http.server 4174 --directory dist`.
+- Tests: `node --test`.
 
-The public demo repository is the distribution copy. Edit the source here, then copy `dist/` to that repository's `collector-21/` directory (use `collector-21.html` as its `index.html`). The Sites source workflow separately stages, commits, pushes and deploys this source checkout.
+The root and Collector 21 routes show only this game. The public game has no prototype navigation, reset, demo mode or explanatory paragraphs. Rules are in a three-tab dialog, shown as a bottom sheet on phones. Euros are the display unit for a simulated wallet; no real money is involved.
 
 ## One bet, two layers
 
-Choose 1, 2, 5, 10, 20, 50 or 100 virtual credits. Every draw is a new bet. The instant return is paid first; then a non-bust card contributes its fixed points and original stake to a valid collector. A pending placement must finish before the next bet.
-
-**Return includes any returned stake.** Bet 10, return 15 means net +5. Bet 10, return 5 means net −5. The instant-return panel shows bet, net result, gross return and current balance together. A receipt remains visible after the card has been collected.
-
-### Instant returns
+Choose €1, €2, €5, €10, €20, €50 or €100 with the stepper. Every draw charges one bet and settles an instant **gross return**, including any returned stake. For example, bet €10 and receive €15 means net +€5; receive €5 means net −€5. The instant prize is independent of the card's rank.
 
 | Regular-card outcome | Probability | Gross return |
 | --- | ---: | ---: |
-| Bust | 30% | 0 |
+| Bust | 30% | €0 |
 | Small return | 40% | 0.5× bet |
 | Win | 20% | 1.5× bet |
-| Larger win | 10% | 2.5× bet |
+| Big win | 10% | 2.5× bet |
 
-A non-bust **Joker has 1 point and pays 3× bet**. If the outcome is a bust, it is rendered as a dedicated **0-point BUST card**, not a numbered card or Joker. Its one suit determines which collector is cleared. Instant outcome is random independently of rank; fixed rank values do not imply fixed cash prizes.
+A non-bust Joker pays 3× bet and contributes one point. A bust becomes a dedicated zero-point BUST card. Its collector is chosen **uniformly and independently** among the four suits, avoiding the earlier first-suit bias on dual and colour identities.
 
-## Our custom 78-card deck
+## Our 78-card deck
 
-This is a game-specific deck, not a poker rules implementation:
+52 single-suit cards (A, 2–10, J, Q, K per suit); 18 dual-suit cards (every suit pair at 3, 5 and 7); four colour cards (red and black 4/Q); four one-point Jokers. Draw without replacement; reshuffle when empty. A = 1, numbers = printed value, J/Q/K = 10. A dual 7 is one seven-point card, not fourteen points.
 
-- 52 single-suit rank cards: A, 2–10, J, Q, K in each suit.
-- 18 dual-suit cards: every pair of suits at ranks 3, 5 and 7.
-- 4 colour-only cards: red 4/Q and black 4/Q, without suit symbols.
-- 4 Jokers: one point each; all collectors allowed.
+Single suits route to their matching collector. Dual suits permit either printed suit. Red colour cards permit Hearts or Diamonds; black permit Clubs or Spades. Jokers permit any collector. Invalid collectors are disabled. Tap the card or Auto-place to choose: exact 21 first, stronger multiplier breaks ties; otherwise highest safe total, then smallest overshoot. Tap a moving card or its receiving collector to speed up.
 
-The deck shuffles, draws without replacement, and reshuffles when empty. A = 1; numbers = printed value; J/Q/K = 10. A dual 5♦/5♣ is **one 5-point card**, not ten points. Each half shows its rank and suit separately. Individual hearts/diamonds are red; clubs/spades are black. Colour-only cards show a coloured rank and colour label, no suit symbols. Jokers have rainbow styling.
+## Collectors
 
-## Valid collectors and controls
-
-- Single suit: automatically goes only to its matching collector.
-- Dual suit: choose either printed suit; wrong collectors are disabled.
-- Red colour card: Hearts or Diamonds. Black: Clubs or Spades.
-- Joker: any collector.
-- Clicking a choice card auto-places it: exact 21 first (strongest factor breaks ties), otherwise the highest safe valid total, otherwise the smallest overshoot.
-- Clicking the card or its highlighted receiving collector during travel speeds up the animation. It cannot place twice or charge again.
-- The receiving collector stays highlighted during the preview, travel and landing.
-- Collected cards remain visible as proportional miniatures and wrap within their collector.
-
-## Collector resolution
-
-Below 21: keep the collector's points, cards and original stakes.  
-Exactly 21: pay a separate collector award and clear that collector.  
-Above 21: show **BUST → 0 / 21** and clear only that collector, without a collector award. Instant returns already paid are retained.  
-Bust card: fly into its matching collector, then clear its points and stored stakes. Other collectors stay. The bust label remains until the next draw.
-
-Current collector awards multiply the **sum of original bets stored in that collector**:
+Below 21 retains points and original stakes. Exactly 21 pays the sum of the original bets in that collector × its factor, then clears it. Above 21 clears only that collector. A bust card flies into its independently chosen collector and clears it. Already-paid instant returns remain yours.
 
 | Collector | Factor |
 | --- | ---: |
-| Spades | 1.6596× |
-| Hearts | 1.1064× |
-| Diamonds | 0.8298× |
-| Clubs | 0.5532× |
+| Spades | 1.584× |
+| Hearts | 1.056× |
+| Diamonds | 0.792× |
+| Clubs | 0.528× |
 
-Changing the bet affects only future cards. Example: Hearts formed from bets 1 + 2 + 5 + 10 pays `18 × 1.1064 = 19.92` credits, rounded to cents. It does not multiply all cards by the latest bet. Collector 21 state currently resets on page refresh; it is not a persistent wallet.
+Changing the bet affects future cards only. Hearts assembled from bets €1 + €2 + €5 + €10 pays `€18 × 1.056 = €19.01`, rounded to cents. All engine awards round to cents. The wallet and collector state reset on page refresh.
 
-## RTP — what is and is not established
+## RTP calibration
 
-- Regular-card instant layer: 75% theoretical return.
-- With the 4 non-bust Joker uplifts in the 78-card mix: **81.9231% theoretical instant-layer RTP**.
-- Collector factors were multiplied by **0.5532** to target a combined return near **92% using fixed-bet auto-placement**.
-- Calibration used four seeds × 500,000 draws at bet 10. Mean simulated collector return: **10.07687%**. Added to theoretical instant return: **91.99995%**. These are calibration runs; see `docs/rtp-calibration.json` for held-out verification too.
-- Independent verification: four new seeds × 500,000 draws returned **92.00234% observed total RTP** (theoretical instant layer + simulated collector layer: **92.02482%**).
-- This is an **estimated benchmark RTP**, not a certified or strategy-independent mathematical guarantee. Manual choices, adaptive betting, finite sessions, rounding and abandoned collections can change observed returns. Do not advertise it as guaranteed 92% for every strategy.
-- The separate Suit Society prototype has different rules and a 92% long-run fixed-rules model. Do not mix its payout table with Collector 21.
+The theoretical instant layer remains 81.9231% including the Joker uplift. Collector factors are the original `[2, 1.5, 1, 3]` scaled by **0.528**. After correcting uniform bust selection, calibration targets the better of the tested fixed-bet strategies near 92%.
 
-## Survey setup
+Independent verification: four seeds × 500,000 draws per strategy (four million draws total), fixed bet €10, retained collectors, finite shuffled deck and cent rounding:
 
-See `docs/SURVEY-INTEGRATION.md`. The build uses the platform's `superbet.study.v1` handshake and framing protocol. Manifest slots: 1 Collector 21, 2 Suit Society. An importable participant-free blueprint is included for the existing survey platform. No participants, live study or responses are created by the repository update.
+- Auto-place: **91.31586%** observed total RTP.
+- Greedy by factor, prioritising exact-21 award: **91.98765%**.
 
-A resolved paid bet emits `round_completed`: after bust-card animation, or after a winning card is placed and its collector result settles. Free examples do not count. Configure the platform's event-count unlock to `round_completed`, 10 bets per variant. The game emits completion lifecycle events at ten resolved paid bets. The survey host owns study order, unlock and survey screens.
+`docs/rtp-calibration.json` contains the runs. Reproduce with `node calibrate-collector21.mjs --heldout`. Both policies have a seeded regression test that fails outside 91–93%. These are policy-specific simulation estimates, not certified or strategy-independent guarantees. Adaptive bets, manual choices, finite play and abandoned collectors can change results.
 
-## Files and validation
+## Design and validation
 
-- `dist/collector21-engine.mjs`: card deck, fixed values, return draws, collector rules and valid targets.
-- `dist/collector21.mjs`: presentation, placement, receipts and bet state.
-- `dist/study-bridge.mjs`: origin-checked parent handshake, event queue/retries, version selection and framing.
-- `dist/style.css`: card visuals, responsive layout, proportional collector cards.
-- `collector21.test.mjs`: mathematical/routing regressions.
-- `study-bridge.test.mjs`: event contract and protocol regressions.
-- `calibrate-collector21.mjs`: reproducible RTP simulation.
+The approved Claude canvas and `design/COLLECTOR21_HANDOFF.md` define the redesign. The old `design/collector21-redesign.html` is a timing reference only. The implementation uses the artboard's measured dimensions, including equal-sized deck/card: 70×98 on phone, 108×151 on desktop, reduced on short phones. No collector glow; states use borders, tint and progress previews. Joker and BUST styling follows the approved artboards.
 
-This reference describes the implementation on the date above. Future rule changes should update the deck composition, event contract, RTP benchmark and this document together.
+See `docs/REDESIGN-QA.md` for the dated acceptance review. Local visual fixtures are under `qa/`, outside deployed `dist/`; generate them with `node qa/build-scenarios.mjs`, serve this source folder on port 4175 and open `qa/viewport.html?width=390&height=844&state=choose`. These fixtures use the production renderer and are not a playable demo mode.
+
+## Survey integration
+
+See `docs/SURVEY-INTEGRATION.md`. The host-controlled iframe retains two assigned slots (Collector 21 and Suit Society) for the existing comparison blueprint; the public game exposes only Collector 21. One resolved paid bet emits `round_completed`, with ten per variant. Rules, bets and rendering are isolated from the legacy comparison stylesheet. `dist/legacy.css` serves the existing Suit Society slot only.
+
+The blueprint and manifests are included; no live study, participants or responses are created by a code deployment. Import `dist/study-blueprint.json` into a new draft and rehearse in the target survey environment before activating it.

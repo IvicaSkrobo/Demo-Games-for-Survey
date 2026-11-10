@@ -1,37 +1,68 @@
 {
   "date": "2026-11-10",
-  "sample": "independent held-out verification",
-  "method": "fixed bet 10; autoLane21; retained lanes; independent instant outcomes; finite shuffled 78-card deck; cent rounding; 500,000 draws per seed",
-  "bonusScale": 0.5532,
-  "instantTheoretical": 0.8192307692307692,
-  "runs": [
+  "bonusScale": 0.528,
+  "method": "uniform bust suit; fixed bet 10; finite 78-card deck; retained collectors; cent rounding; 500k per seed per policy",
+  "results": [
     {
-      "seed": 713411,
-      "draws": 500000,
-      "instantRtp": 0.818064,
-      "collectorRtp": 0.10121141599999965
+      "strategy": "autoPlace",
+      "runs": [
+        {
+          "seed": 713411,
+          "draws": 500000,
+          "instantRtp": 0.8169,
+          "collectorRtp": 0.09332083199999763
+        },
+        {
+          "seed": 951753,
+          "draws": 500000,
+          "instantRtp": 0.818508,
+          "collectorRtp": 0.0939438719999977
+        },
+        {
+          "seed": 441129,
+          "draws": 500000,
+          "instantRtp": 0.819344,
+          "collectorRtp": 0.09452678399999755
+        },
+        {
+          "seed": 382017,
+          "draws": 500000,
+          "instantRtp": 0.820815,
+          "collectorRtp": 0.09527601599999787
+        }
+      ],
+      "rtp": 0.9131586259999976
     },
     {
-      "seed": 951753,
-      "draws": 500000,
-      "instantRtp": 0.818466,
-      "collectorRtp": 0.10044339200000019
-    },
-    {
-      "seed": 441129,
-      "draws": 500000,
-      "instantRtp": 0.818519,
-      "collectorRtp": 0.10001810999999991
-    },
-    {
-      "seed": 382017,
-      "draws": 500000,
-      "instantRtp": 0.820975,
-      "collectorRtp": 0.10239676400000008
+      "strategy": "greedyByFactor",
+      "runs": [
+        {
+          "seed": 713411,
+          "draws": 500000,
+          "instantRtp": 0.8169,
+          "collectorRtp": 0.10115582399999883
+        },
+        {
+          "seed": 951753,
+          "draws": 500000,
+          "instantRtp": 0.818508,
+          "collectorRtp": 0.10115793599999894
+        },
+        {
+          "seed": 441129,
+          "draws": 500000,
+          "instantRtp": 0.819344,
+          "collectorRtp": 0.10105761599999896
+        },
+        {
+          "seed": 382017,
+          "draws": 500000,
+          "instantRtp": 0.820815,
+          "collectorRtp": 0.10056763199999857
+        }
+      ],
+      "rtp": 0.9198765019999988
     }
   ],
-  "meanCollectorRtp": 0.10101742049999995,
-  "estimatedCombinedRtp": 0.9202481897307692,
-  "empiricalCombinedRtp": 0.9200234204999997,
-  "limitations": "Simulation estimate for this policy only. Manual routing, adaptive bets, finite sessions, rounding and abandoned collections can change returns. Not certified."
+  "limitations": "Estimated for tested policies. Not a certified or strategy-independent RTP."
 }

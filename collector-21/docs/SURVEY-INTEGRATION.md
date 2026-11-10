@@ -6,7 +6,7 @@ Updated 10 November 2026 (Europe/Zagreb).
 
 1. Import `dist/study-blueprint.json` using the existing SurveyTool admin **Import study → Create a new draft** screen. No live study has been created by this code change.
 2. Slot 1 is Collector 21; slot 2 is Suit Society. Both use `https://ivicaskrobo.github.io/Demo-Games-for-Survey/collector-21/study/`. The manifest is served at `study/StreamingAssets/variants.json` (also at the game root).
-3. Use event-count unlock: `round_completed`, minimum **10** for each variant. One resolved paid bet counts once, after placement/bust settles. Free examples are hidden in study mode and never count.
+3. Use event-count unlock: `round_completed`, minimum **10** for each variant. One resolved paid bet counts once, after placement/bust settles. Collector 21 has no demo mode; the legacy comparison excludes its free examples.
 4. Review the draft questions and copy, then rehearse a participant attempt through both variants before activating a study.
 5. For a developer-only smoke check, open `survey-preview.html`. This mock parent starts the iframe, counts resolved bets, switches variants and sends optional event acknowledgements. It does not collect real responses.
 
