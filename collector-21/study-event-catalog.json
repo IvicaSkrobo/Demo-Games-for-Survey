@@ -1,0 +1,19 @@
+{
+  "channel": "superbet.study.v1",
+  "buildId": "collector-21-2026-11-10",
+  "completionEvent": "round_completed",
+  "minimumPerVariant": 10,
+  "events": {
+    "session_started": "First handshake in a study attempt.",
+    "variant_order_assigned": "Host-provided variant plan.",
+    "version_started": "Variant selected by assigned slot.",
+    "round_completed": "One resolved paid bet; free examples excluded.",
+    "placement_made": "Collector 21 winning card placed.",
+    "collector_completed": "Exact 21 collector award.",
+    "collector_busted": "Bust card or total above 21 cleared one collector.",
+    "version_completed": "Ten resolved paid bets in this variant.",
+    "all_versions_completed": "Last assigned variant reached threshold.",
+    "session_completed": "Last assigned variant reached threshold.",
+    "study_completed": "Game portion completed; host still owns questionnaires."
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-10",
+  "sample": "independent held-out verification",
+  "method": "fixed bet 10; autoLane21; retained lanes; independent instant outcomes; finite shuffled 78-card deck; cent rounding; 500,000 draws per seed",
+  "bonusScale": 0.5532,
+  "instantTheoretical": 0.8192307692307692,
+  "runs": [
+    {
+      "seed": 713411,
+      "draws": 500000,
+      "instantRtp": 0.818064,
+      "collectorRtp": 0.10121141599999965
+    },
+    {
+      "seed": 951753,
+      "draws": 500000,
+      "instantRtp": 0.818466,
+      "collectorRtp": 0.10044339200000019
+    },
+    {
+      "seed": 441129,
+      "draws": 500000,
+      "instantRtp": 0.818519,
+      "collectorRtp": 0.10001810999999991
+    },
+    {
+      "seed": 382017,
+      "draws": 500000,
+      "instantRtp": 0.820975,
+      "collectorRtp": 0.10239676400000008
+    }
+  ],
+  "meanCollectorRtp": 0.10101742049999995,
+  "estimatedCombinedRtp": 0.9202481897307692,
+  "empiricalCombinedRtp": 0.9200234204999997,
+  "limitations": "Simulation estimate for this policy only. Manual routing, adaptive bets, finite sessions, rounding and abandoned collections can change returns. Not certified."
+}

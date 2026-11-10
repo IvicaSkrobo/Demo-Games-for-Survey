@@ -12,6 +12,7 @@ on:
       - 'free2play-daily-spin/**'
       - 'ski-v4/**'
       - 'wheel/**'
+      - 'collector-21/**'
       - 'index.html'
       - '.github/workflows/**'
 
