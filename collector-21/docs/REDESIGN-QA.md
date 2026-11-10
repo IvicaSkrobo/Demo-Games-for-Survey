@@ -19,3 +19,7 @@ QA fixtures are outside the hosted distribution. `qa/build-scenarios.mjs` genera
 ## Stronger collector update — 10 November 2026
 
 Collector factors now Hearts ×3, Diamonds ×2, Clubs ×1, Spades ×4. Payout table and chips read the engine constants. Instant outcomes rebalance to 40% bust / 25% ×0.5 / 30% ×1.5 / 5% ×2.5; non-bust Jokers remain ×3. Independent four-million-draw verification: auto-place 91.38915%, greedy-by-factor 92.72070%. No layout changes.
+
+## Points-only cards — 10 November 2026
+
+Dedicated BUST cards reduced to 10%. A–9 return €0 but remain normal cards: fixed points, correct suit routing and full original stake added to the pot. Non-bust 10/J/Q/K return ×1.25, ×1.5 or ×1.75; non-bust Jokers retain ×3 and one point. Strong collector factors unchanged. Improved auto-place chooses the largest exact-21 award, otherwise the strongest safe factor. Independent held-out estimate: 92.048425%; auto-place and greedy now share the same policy. The in-game rules and dated README describe the current version; earlier entries above record previous review states.
