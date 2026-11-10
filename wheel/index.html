@@ -12,8 +12,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <script type="module" crossorigin src="./assets/index-IauNuQcO.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DM5-lfej.css">
+    <script type="module" crossorigin src="./assets/index-C8WQ3E75.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DLmaYgT3.css">
   </head>
   <body>
     <div id="app">
@@ -78,8 +78,10 @@
             BET A COLOUR <span>COVERS ALL ITS FIELDS</span>
           </div>
           <div id="spots" class="spots"></div>
-          <div class="eyebrow">OR A NUMBER <span>ONE EXACT FIELD</span></div>
-          <div id="numbers" class="numbers"></div>
+          <details class="exact-numbers">
+            <summary>Exact numbers <span>Choose a single field</span></summary>
+            <div id="numbers" class="numbers"></div>
+          </details>
           <button id="riding-toggle" aria-expanded="false">
             Riding <b id="riding-summary"></b><span>⌄</span>
           </button>
@@ -97,15 +99,16 @@
               covers one exact field. Each field prints its base payout.
             </p>
             <p>
-              Every shot your bet survives grows its multiplier by 10%. A skull
-              sweeps every riding bet. A jackpot shot multiplies winning payouts
-              by five.
+              Payouts stay fixed while bets ride. A skull sweeps every riding
+              bet. A jackpot shot multiplies winning payouts by five. The payout
+              on each colour button is the total normal return, including your
+              stake.
             </p>
             <p id="number-pays"></p>
             <p>
               Bets start riding immediately. If a shot is already revealing, new
-              bets join after it lands. Pump adds fresh stake at base pay; the
-              existing stake keeps its growth.
+              bets join after it lands. Pump adds fresh stake at the same fixed
+              payout.
             </p>
             <p>
               Heat mode shows the next fields expected to fire. During fast
