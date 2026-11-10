@@ -72,3 +72,5 @@ See `docs/REDESIGN-QA.md` for the dated acceptance review. Local visual fixtures
 See `docs/SURVEY-INTEGRATION.md`. The host-controlled iframe retains two assigned slots (Collector 21 and Suit Society) for the existing comparison blueprint; the public game exposes only Collector 21. One resolved paid bet emits `round_completed`, with ten per variant. Rules, bets and rendering are isolated from the legacy comparison stylesheet. `dist/legacy.css` serves the existing Suit Society slot only.
 
 The blueprint and manifests are included; no live study, participants or responses are created by a code deployment. Import `dist/study-blueprint.json` into a new draft and rehearse in the target survey environment before activating it.
+
+Desktop size update, 10 November 2026: collectors are now at least 250px tall; bottom bet/draw controls are about 78px high. The action also repeats the live balance on both phone and desktop.

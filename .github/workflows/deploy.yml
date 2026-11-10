@@ -47,5 +47,5 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
         with:
-          # The full multi-game artifact exceeded the default ten-minute sync window.
-          timeout: 1200000
+          # deploy-pages caps its timeout at ten minutes.
+          timeout: 600000
