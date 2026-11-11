@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Circle Star Bonus Comparison</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 20px; background: #100910; color: #f6eaf4; font: 16px system-ui, sans-serif; }
+    h1 { margin: 0 0 20px; font-size: clamp(24px, 4vw, 36px); }
+    main { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 12px; background: #21101e; }
+    h2 { margin: 0; font-size: 16px; }
+    a { color: #ffade5; }
+    section { border: 1px solid #59344d; border-radius: 10px; overflow: hidden; }
+    iframe { display: block; width: 100%; height: max(740px, 80vh); border: 0; }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Circle Star Bonus Comparison</h1>
+  <main>
+    <section>
+      <header>
+        <h2>Previous Bonus Lab · 78d0a13</h2>
+        <a href="previous/bonuslab/?bonus=journeystars" target="_blank" rel="noopener">Open full size</a>
+      </header>
+      <iframe title="Previous Spinning Stars" src="previous/bonuslab/?bonus=journeystars"></iframe>
+    </section>
+    <section>
+      <header>
+        <h2>Niki’s Star Bonus</h2>
+        <a href="../circle/bonuslab/?bonus=journeystars" target="_blank" rel="noopener">Open full size</a>
+      </header>
+      <iframe title="Niki’s Spinning Stars" src="../circle/bonuslab/?bonus=journeystars"></iframe>
+    </section>
+  </main>
+</body>
+</html>

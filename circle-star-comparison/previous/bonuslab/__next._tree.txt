@@ -1,0 +1,6 @@
+:HL["/Demo-Games-for-Survey/circle-star-comparison/previous/_next/static/media/7101c88ff3e1637e-s.p.1b5esfx9ym4i2.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/Demo-Games-for-Survey/circle-star-comparison/previous/_next/static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/payout-pools/manifest.json","fetch",{"crossOrigin":"anonymous"}]
+:HL["/payout-pools/standard-matej.json.gz","fetch",{"crossOrigin":"anonymous"}]
+:HL["/payout-pools/daredevil-niki.json.gz","fetch",{"crossOrigin":"anonymous"}]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"bonuslab","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"3v07icuRnau26NgTXh9Sc"}

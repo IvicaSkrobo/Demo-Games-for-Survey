@@ -1,0 +1,1352 @@
+{
+  "generatedAt": "2026-09-11T11:33:10.053Z",
+  "sampleDirections": 2000000,
+  "phases": 360,
+  "aims": 12,
+  "aimStep": 30,
+  "excludedBoundaryDirections": 0,
+  "incompleteTraces": 0,
+  "seconds": 174.699846333,
+  "physics": {
+    "speed": 480,
+    "gravity": 245,
+    "curve": 0,
+    "spin": 7.5,
+    "maxHits": 20
+  },
+  "fingerprint": "{\"speed\":480,\"gravity\":245,\"curve\":0,\"spin\":7.5,\"maxHits\":20,\"primes\":[2,3],\"keyScale\":128,\"maxWin\":1024,\"minPrize\":0.0009765625,\"stepsPerDegree\":8,\"ringDegrees\":360,\"zones\":[[null,18],[-32768,20],[1,44],[0,30],[-256,64],[2,26],[-32768,20],[128,54],[0,30],[-128,54]]}",
+  "layout": [
+    {
+      "value": 1,
+      "width": 18,
+      "type": "cashout"
+    },
+    {
+      "value": 0,
+      "width": 20,
+      "type": "death"
+    },
+    {
+      "value": 3,
+      "width": 44,
+      "type": "multiplier"
+    },
+    {
+      "value": 1,
+      "width": 30,
+      "type": "multiplier"
+    },
+    {
+      "value": 0.25,
+      "width": 64,
+      "type": "multiplier"
+    },
+    {
+      "value": 9,
+      "width": 26,
+      "type": "multiplier"
+    },
+    {
+      "value": 0,
+      "width": 20,
+      "type": "death"
+    },
+    {
+      "value": 2,
+      "width": 54,
+      "type": "multiplier"
+    },
+    {
+      "value": 1,
+      "width": 30,
+      "type": "multiplier"
+    },
+    {
+      "value": 0.5,
+      "width": 54,
+      "type": "multiplier"
+    }
+  ],
+  "caveat": "Sampled reachability only. Not a payout table, odds guarantee, or proof that unsampled trajectories do not exist. Uses Nik physics, 12 discrete aims and whole-degree ring phases.",
+  "results": [
+    {
+      "width": 30,
+      "universalPositiveCount": 0,
+      "universalLoss": false,
+      "minPayout": null,
+      "maxPayout": null,
+      "nikPrizesCovered": 0,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 0,
+        "phaseDegrees": 68,
+        "nikPrizesFound": 0
+      },
+      "missingExample": {
+        "payout": 0.5625,
+        "aimDegrees": 0,
+        "phaseDegrees": 0
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        }
+      ],
+      "positivePayouts": []
+    },
+    {
+      "width": 60,
+      "universalPositiveCount": 0,
+      "universalLoss": true,
+      "minPayout": null,
+      "maxPayout": null,
+      "nikPrizesCovered": 0,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 0,
+        "phaseDegrees": 104,
+        "nikPrizesFound": 0
+      },
+      "missingExample": {
+        "payout": 0.5625,
+        "aimDegrees": 0,
+        "phaseDegrees": 0
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 10,
+          "nikPrizes": 10
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 1,
+          "nikPrizes": 1
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        }
+      ],
+      "positivePayouts": []
+    },
+    {
+      "width": 90,
+      "universalPositiveCount": 0,
+      "universalLoss": true,
+      "minPayout": null,
+      "maxPayout": null,
+      "nikPrizesCovered": 0,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 0,
+        "phaseDegrees": 308,
+        "nikPrizesFound": 0
+      },
+      "missingExample": {
+        "payout": 0.5625,
+        "aimDegrees": 0,
+        "phaseDegrees": 0
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 1,
+          "nikPrizes": 1
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 32,
+          "nikPrizes": 24
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 8,
+          "nikPrizes": 8
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 19,
+          "nikPrizes": 16
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 18,
+          "nikPrizes": 12
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        }
+      ],
+      "positivePayouts": []
+    },
+    {
+      "width": 120,
+      "universalPositiveCount": 0,
+      "universalLoss": true,
+      "minPayout": null,
+      "maxPayout": null,
+      "nikPrizesCovered": 0,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 240,
+        "phaseDegrees": 29,
+        "nikPrizesFound": 0
+      },
+      "missingExample": {
+        "payout": 0.5625,
+        "aimDegrees": 0,
+        "phaseDegrees": 0
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 1,
+          "nikPrizes": 1
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 32,
+          "nikPrizes": 22
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 39,
+          "nikPrizes": 28
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 41,
+          "nikPrizes": 26
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 50,
+          "nikPrizes": 30
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 37,
+          "nikPrizes": 26
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 4,
+          "nikPrizes": 2
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 1,
+          "nikPrizes": 1
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 1,
+          "nikPrizes": 1
+        }
+      ],
+      "positivePayouts": []
+    },
+    {
+      "width": 150,
+      "universalPositiveCount": 0,
+      "universalLoss": true,
+      "minPayout": null,
+      "maxPayout": null,
+      "nikPrizesCovered": 0,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 300,
+        "phaseDegrees": 67,
+        "nikPrizesFound": 12
+      },
+      "missingExample": {
+        "payout": 0.5625,
+        "aimDegrees": 210,
+        "phaseDegrees": 14
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 31,
+          "nikPrizes": 26
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 50,
+          "nikPrizes": 32
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 58,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 67,
+          "nikPrizes": 36
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 67,
+          "nikPrizes": 34
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 57,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 51,
+          "nikPrizes": 28
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 14,
+          "nikPrizes": 6
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 0,
+          "nikPrizes": 0
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 4,
+          "nikPrizes": 4
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 25,
+          "nikPrizes": 18
+        }
+      ],
+      "positivePayouts": []
+    },
+    {
+      "width": 180,
+      "universalPositiveCount": 1,
+      "universalLoss": true,
+      "minPayout": 45.5625,
+      "maxPayout": 45.5625,
+      "nikPrizesCovered": 1,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 240,
+        "phaseDegrees": 14,
+        "nikPrizesFound": 20
+      },
+      "missingExample": {
+        "payout": 0.5625,
+        "aimDegrees": 240,
+        "phaseDegrees": 14
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 56,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 55,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 62,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 68,
+          "nikPrizes": 36
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 70,
+          "nikPrizes": 35
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 67,
+          "nikPrizes": 35
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 62,
+          "nikPrizes": 31
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 46,
+          "nikPrizes": 24
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 3,
+          "nikPrizes": 1
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 23,
+          "nikPrizes": 19
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 11,
+          "nikPrizes": 11
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 33,
+          "nikPrizes": 25
+        }
+      ],
+      "positivePayouts": [
+        45.5625
+      ]
+    },
+    {
+      "width": 210,
+      "universalPositiveCount": 15,
+      "universalLoss": true,
+      "minPayout": 0.0175781,
+      "maxPayout": 45.5625,
+      "nikPrizesCovered": 11,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 240,
+        "phaseDegrees": 30,
+        "nikPrizesFound": 38
+      },
+      "missingExample": {
+        "payout": 0.5625,
+        "aimDegrees": 270,
+        "phaseDegrees": 23
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 57,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 61,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 72,
+          "nikPrizes": 38
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 72,
+          "nikPrizes": 38
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 71,
+          "nikPrizes": 36
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 74,
+          "nikPrizes": 37
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 67,
+          "nikPrizes": 34
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 59,
+          "nikPrizes": 29
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 31,
+          "nikPrizes": 16
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 30,
+          "nikPrizes": 24
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 34,
+          "nikPrizes": 26
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 40,
+          "nikPrizes": 28
+        }
+      ],
+      "positivePayouts": [
+        0.0175781,
+        0.0351563,
+        0.0527344,
+        0.105469,
+        0.210938,
+        0.421875,
+        0.632813,
+        0.84375,
+        1.26563,
+        2.53125,
+        5.0625,
+        6.75,
+        10.125,
+        15.1875,
+        45.5625
+      ]
+    },
+    {
+      "width": 240,
+      "universalPositiveCount": 38,
+      "universalLoss": true,
+      "minPayout": 0.000976563,
+      "maxPayout": 1024,
+      "nikPrizesCovered": 28,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 300,
+        "phaseDegrees": 33,
+        "nikPrizesFound": 42
+      },
+      "missingExample": {
+        "payout": 40.5,
+        "aimDegrees": 240,
+        "phaseDegrees": 195
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 61,
+          "nikPrizes": 35
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 64,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 73,
+          "nikPrizes": 38
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 74,
+          "nikPrizes": 38
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 72,
+          "nikPrizes": 36
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 80,
+          "nikPrizes": 39
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 73,
+          "nikPrizes": 37
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 65,
+          "nikPrizes": 31
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 65,
+          "nikPrizes": 33
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 43,
+          "nikPrizes": 31
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 40,
+          "nikPrizes": 29
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 56,
+          "nikPrizes": 33
+        }
+      ],
+      "positivePayouts": [
+        0.000976563,
+        0.0175781,
+        0.0263672,
+        0.0351563,
+        0.0527344,
+        0.0703125,
+        0.0791016,
+        0.105469,
+        0.140625,
+        0.158203,
+        0.210938,
+        0.316406,
+        0.421875,
+        0.474609,
+        0.5625,
+        0.632813,
+        0.84375,
+        1.125,
+        1.26563,
+        1.6875,
+        1.89844,
+        2.53125,
+        3.375,
+        3.79688,
+        5.0625,
+        6.75,
+        7.59375,
+        10.125,
+        11.3906,
+        15.1875,
+        20.25,
+        22.7813,
+        30.375,
+        45.5625,
+        81,
+        91.125,
+        182.25,
+        1024
+      ]
+    },
+    {
+      "width": 270,
+      "universalPositiveCount": 39,
+      "universalLoss": true,
+      "minPayout": 0.000976563,
+      "maxPayout": 1024,
+      "nikPrizesCovered": 29,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 300,
+        "phaseDegrees": 31,
+        "nikPrizesFound": 45
+      },
+      "missingExample": {
+        "payout": 40.5,
+        "aimDegrees": 270,
+        "phaseDegrees": 195
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 64,
+          "nikPrizes": 35
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 76,
+          "nikPrizes": 39
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 78,
+          "nikPrizes": 39
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 75,
+          "nikPrizes": 38
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 83,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 81,
+          "nikPrizes": 39
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 76,
+          "nikPrizes": 39
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 69,
+          "nikPrizes": 35
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 67,
+          "nikPrizes": 34
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 57,
+          "nikPrizes": 34
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 43,
+          "nikPrizes": 30
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 59,
+          "nikPrizes": 35
+        }
+      ],
+      "positivePayouts": [
+        0.000976563,
+        0.0175781,
+        0.0263672,
+        0.0351563,
+        0.0527344,
+        0.0703125,
+        0.0791016,
+        0.105469,
+        0.140625,
+        0.158203,
+        0.210938,
+        0.316406,
+        0.421875,
+        0.474609,
+        0.5625,
+        0.632813,
+        0.84375,
+        1.125,
+        1.26563,
+        1.6875,
+        1.89844,
+        2.53125,
+        3.375,
+        3.79688,
+        5.0625,
+        5.69531,
+        6.75,
+        7.59375,
+        10.125,
+        11.3906,
+        15.1875,
+        20.25,
+        22.7813,
+        30.375,
+        45.5625,
+        81,
+        91.125,
+        182.25,
+        1024
+      ]
+    },
+    {
+      "width": 300,
+      "universalPositiveCount": 51,
+      "universalLoss": true,
+      "minPayout": 0.000976563,
+      "maxPayout": 1024,
+      "nikPrizesCovered": 31,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 270,
+        "phaseDegrees": 31,
+        "nikPrizesFound": 51
+      },
+      "missingExample": {
+        "payout": 40.5,
+        "aimDegrees": 270,
+        "phaseDegrees": 195
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 66,
+          "nikPrizes": 35
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 79,
+          "nikPrizes": 40
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 82,
+          "nikPrizes": 40
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 78,
+          "nikPrizes": 39
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 83,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 82,
+          "nikPrizes": 40
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 84,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 79,
+          "nikPrizes": 40
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 69,
+          "nikPrizes": 35
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 69,
+          "nikPrizes": 36
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 72,
+          "nikPrizes": 40
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 64,
+          "nikPrizes": 35
+        }
+      ],
+      "positivePayouts": [
+        0.000976563,
+        0.00439453,
+        0.0175781,
+        0.0263672,
+        0.0351563,
+        0.0527344,
+        0.0703125,
+        0.0791016,
+        0.09375,
+        0.105469,
+        0.140625,
+        0.158203,
+        0.1875,
+        0.210938,
+        0.28125,
+        0.316406,
+        0.421875,
+        0.474609,
+        0.5625,
+        0.632813,
+        0.84375,
+        0.949219,
+        1.125,
+        1.26563,
+        1.6875,
+        1.89844,
+        2.25,
+        2.53125,
+        3.375,
+        3.79688,
+        4.5,
+        5.0625,
+        5.69531,
+        6.75,
+        7.59375,
+        10.125,
+        11.3906,
+        13.5,
+        15.1875,
+        20.25,
+        22.7813,
+        30.375,
+        45.5625,
+        60.75,
+        81,
+        91.125,
+        121.5,
+        182.25,
+        243,
+        364.5,
+        1024
+      ]
+    },
+    {
+      "width": 330,
+      "universalPositiveCount": 57,
+      "universalLoss": true,
+      "minPayout": 0.000976563,
+      "maxPayout": 1024,
+      "nikPrizesCovered": 32,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 270,
+        "phaseDegrees": 31,
+        "nikPrizesFound": 51
+      },
+      "missingExample": {
+        "payout": 136.688,
+        "aimDegrees": 210,
+        "phaseDegrees": 61
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 80,
+          "nikPrizes": 42
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 85,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 84,
+          "nikPrizes": 42
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 84,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 86,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 85,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 82,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 76,
+          "nikPrizes": 41
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 78,
+          "nikPrizes": 39
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 80,
+          "nikPrizes": 42
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 70,
+          "nikPrizes": 36
+        }
+      ],
+      "positivePayouts": [
+        0.000976563,
+        0.00439453,
+        0.00878906,
+        0.0131836,
+        0.0175781,
+        0.0234375,
+        0.0263672,
+        0.0351563,
+        0.0527344,
+        0.0703125,
+        0.0791016,
+        0.09375,
+        0.105469,
+        0.140625,
+        0.158203,
+        0.1875,
+        0.210938,
+        0.25,
+        0.28125,
+        0.316406,
+        0.375,
+        0.421875,
+        0.474609,
+        0.5625,
+        0.632813,
+        0.84375,
+        0.949219,
+        1.125,
+        1.26563,
+        1.6875,
+        1.89844,
+        2.25,
+        2.53125,
+        3.375,
+        3.79688,
+        4.5,
+        5.0625,
+        5.69531,
+        6.75,
+        7.59375,
+        10.125,
+        11.3906,
+        13.5,
+        15.1875,
+        20.25,
+        22.7813,
+        30.375,
+        40.5,
+        45.5625,
+        60.75,
+        81,
+        91.125,
+        121.5,
+        182.25,
+        243,
+        364.5,
+        1024
+      ]
+    },
+    {
+      "width": 360,
+      "universalPositiveCount": 87,
+      "universalLoss": true,
+      "minPayout": 0.000976563,
+      "maxPayout": 1024,
+      "nikPrizesCovered": 43,
+      "nikPrizesTotal": 80,
+      "worstCell": {
+        "aimDegrees": 0,
+        "phaseDegrees": 36,
+        "nikPrizesFound": 56
+      },
+      "missingExample": {
+        "payout": 691.98,
+        "aimDegrees": 0,
+        "phaseDegrees": 6
+      },
+      "perAim": [
+        {
+          "aimDegrees": 0,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 30,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 60,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 90,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 120,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 150,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 180,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 210,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 240,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 270,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 300,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        },
+        {
+          "aimDegrees": 330,
+          "universalPositive": 87,
+          "nikPrizes": 43
+        }
+      ],
+      "positivePayouts": [
+        0.000976563,
+        0.00109863,
+        0.00146484,
+        0.00219727,
+        0.00390625,
+        0.00439453,
+        0.00585938,
+        0.0078125,
+        0.00878906,
+        0.0117188,
+        0.0131836,
+        0.0175781,
+        0.0234375,
+        0.0263672,
+        0.03125,
+        0.0351563,
+        0.0395508,
+        0.046875,
+        0.0527344,
+        0.0593262,
+        0.0703125,
+        0.0791016,
+        0.09375,
+        0.105469,
+        0.118652,
+        0.140625,
+        0.158203,
+        0.1875,
+        0.210938,
+        0.25,
+        0.28125,
+        0.316406,
+        0.375,
+        0.421875,
+        0.474609,
+        0.5625,
+        0.632813,
+        0.75,
+        0.84375,
+        0.949219,
+        1,
+        1.125,
+        1.26563,
+        1.42383,
+        1.6875,
+        1.89844,
+        2.25,
+        2.53125,
+        2.84766,
+        3,
+        3.375,
+        3.79688,
+        4.5,
+        5.0625,
+        5.69531,
+        6.75,
+        7.59375,
+        9,
+        10.125,
+        11.3906,
+        13.5,
+        15.1875,
+        17.0859,
+        20.25,
+        22.7813,
+        27,
+        30.375,
+        34.1719,
+        40.5,
+        45.5625,
+        54,
+        60.75,
+        68.3438,
+        81,
+        91.125,
+        108,
+        121.5,
+        136.688,
+        162,
+        182.25,
+        205.031,
+        243,
+        273.375,
+        364.5,
+        486,
+        546.75,
+        1024
+      ]
+    }
+  ]
+}
