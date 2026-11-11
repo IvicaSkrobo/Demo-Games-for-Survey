@@ -23,18 +23,12 @@
   color: #111918;
 }
 
+body:has(.c21-version-rtp) .c21-app { min-height: 0; }
 .c21-version-rtp {
-  margin: 8px 8px 0;
+  margin: 0;
+  padding: 8px 16px 16px;
   color: #a9b7ae;
   text-align: center;
   font: 600 12px/1.35 Manrope, system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
-}
-.c21-version-rtp strong { color: #eee8d8; }
-
-.c21-version-description {
-  margin: 8px 12px 0;
-  color: #eee8d8;
-  text-align: center;
-  font: 700 13px/1.35 Manrope, system-ui, sans-serif;
 }
