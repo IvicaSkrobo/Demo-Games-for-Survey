@@ -23,11 +23,19 @@
   color: #111918;
 }
 
-body:has(.c21-version-rtp) .c21-app { min-height: 0; }
+body:has(.c21-version-rtp) .c21-app {
+  min-height: 0;
+  padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+}
 .c21-version-rtp {
+  position: fixed;
+  inset: auto 0 0;
+  z-index: 2;
   margin: 0;
-  padding: 8px 16px 16px;
-  color: #a9b7ae;
+  padding: 8px 16px calc(8px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid #ffffff20;
+  background: #151d1a;
+  color: #e2e8e3;
   text-align: center;
   font: 600 12px/1.35 Manrope, system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
