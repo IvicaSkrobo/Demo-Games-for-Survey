@@ -1,0 +1,24 @@
+.c21-version-switcher {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 12px 8px 0;
+  font: 700 12px/1.2 Manrope, system-ui, sans-serif;
+}
+.c21-version-switcher a {
+  border: 1px solid #4b4c3c;
+  border-radius: 7px;
+  padding: 7px 9px;
+  color: #eee8d8;
+  text-decoration: none;
+}
+.c21-version-switcher a:hover,
+.c21-version-switcher a:focus-visible {
+  border-color: #d6ba79;
+}
+.c21-version-switcher a[aria-current="page"] {
+  background: #d6ba79;
+  border-color: #d6ba79;
+  color: #111918;
+}
