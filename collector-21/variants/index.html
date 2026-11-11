@@ -1,8 +1,29 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111918"><title>Collector 21 · Free Placement</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="../versions.css"></head><body data-game="collector21" data-default-variant="free"><div class="c21-version-switcher" role="navigation" aria-label="Collector 21 versions">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111918"><title>Collector 21 · Free Placement</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="../versions.css"><link rel="stylesheet" href="felt-table.css"></head><body data-game="collector21" data-default-variant="free"><div class="c21-version-switcher" role="navigation" aria-label="Collector 21 versions">
   <a href="../">V1 · Mixed Deck</a>
   <a href="../variants/?version=free" aria-current="page">V3 · Free Placement</a>
 </div>
 <div data-collector21></div>
-<footer class="c21-version-rtp">RTP = 94.23%</footer>
+<footer class="c21-version-rtp c21-appearance">
+  <span>RTP = 94.23%</span>
+  <button type="button" class="c21-skin-toggle" aria-pressed="false">Felt Table</button>
+</footer>
+<script>
+  (() => {
+    const url = new URL(location.href);
+    const toggle = document.querySelector('.c21-skin-toggle');
+    function setSkin(felt) {
+      document.body.dataset.skin = felt ? 'felt' : 'original';
+      toggle.setAttribute('aria-pressed', String(felt));
+    }
+    setSkin(url.searchParams.get('skin') === 'felt');
+    toggle.addEventListener('click', () => {
+      const felt = toggle.getAttribute('aria-pressed') !== 'true';
+      setSkin(felt);
+      if (felt) url.searchParams.set('skin', 'felt');
+      else url.searchParams.delete('skin');
+      history.replaceState(history.state, '', url);
+    });
+  })();
+</script>
 <script type="module" src="collector21.mjs"></script></body></html>

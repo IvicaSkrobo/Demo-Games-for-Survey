@@ -1,0 +1,62 @@
+/* Design pass informed by Unslop by Damir Sokolovsky (CC BY 4.0).
+   https://github.com/heydamir/unslop */
+.c21-appearance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.c21-skin-toggle {
+  border: 1px solid #4b4c3c;
+  border-radius: 7px;
+  padding: 6px 9px;
+  background: transparent;
+  color: #eee8d8;
+  font: inherit;
+  cursor: pointer;
+}
+.c21-skin-toggle[aria-pressed="true"] {
+  border-color: #d6ba79;
+  color: #d6ba79;
+}
+body[data-skin="felt"] {
+  --bg: #121715;
+  --panel: #1b2420;
+  --line: #ffffff20;
+  --gold-light: #e0c694;
+  background: var(--bg);
+}
+[data-skin="felt"] .c21-app { gap: 16px; }
+[data-skin="felt"] .c21-collector {
+  border-radius: 12px;
+  padding-inline: 8px;
+}
+[data-skin="felt"] .c21-stage {
+  background: #1c3129;
+  border-radius: 12px;
+}
+[data-skin="felt"] .deck-front {
+  background: #203a30;
+  outline: 1px solid #dbc18c80;
+  outline-offset: -6px;
+  filter: none;
+}
+[data-skin="felt"] .deck-front > small,
+[data-skin="felt"] .deck-count,
+[data-skin="felt"] .game-brand h1 { letter-spacing: .07em; }
+[data-skin="felt"] .collector-pot { color: #e8e4d7; }
+[data-skin="felt"] .c21-collector.has-suit-boost {
+  box-shadow: none !important;
+  border-color: #a9dcb0;
+  background: #23382e;
+}
+[data-skin="felt"] .has-suit-boost .factor-chip {
+  background: #cae8cb;
+  box-shadow: none;
+}
+[data-skin="felt"] .c21-action { border-radius: 8px; }
+[data-skin="felt"] .c21-status { border-radius: 8px; }
+@media (min-width: 900px) {
+  [data-skin="felt"] .c21-app { gap: 24px; }
+  [data-skin="felt"] .c21-collector { padding-inline: 20px; }
+}
