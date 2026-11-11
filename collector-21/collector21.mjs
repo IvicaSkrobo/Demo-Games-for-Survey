@@ -24,7 +24,7 @@ export function cardFace(c){
 export function rulesContent(){return `<div class="sheet-handle"></div><div class="sheet-heading"><h2 id="rules-title">How it works</h2><button class="rules-close" aria-label="Close rules">✕</button></div><div class="rules-tabs" role="tablist" aria-label="Game rules">${[['play','How to play'],['pay','Payouts'],['deck','The deck']].map(([id,label],i)=>`<button role="tab" id="tab-${id}" aria-controls="panel-${id}" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-tab="${id}">${label}</button>`).join('')}</div><div class="sheet-body">
 <section role="tabpanel" id="panel-play" aria-labelledby="tab-play" data-panel="play"><ol class="rules-steps">
  <li><span><b>Draw a card</b>Each draw costs one bet. Some cards pay instantly. See the Payouts tab for amounts.</span></li>
- <li><span><b>Choose a collector</b>Pick a highlighted collector. The card’s suit or colour shows where it fits. A Joker fits anywhere. The card adds its points and the full bet to that collector’s pot.</span></li>
+ <li><span><b>Choose a collector</b>Pick a highlighted collector. The card’s suit or colour shows where it fits. A Joker fits anywhere. Its points count toward 21. The full bet goes into the pot.</span></li>
  <li><span><b>Aim for exactly ${C21_TARGET}</b>At ${C21_TARGET}, the collector pays out and resets. Going over ${C21_TARGET} clears that collector’s pot.</span></li>
 </ol>
 <h3>Collector payouts at ${C21_TARGET}</h3>
