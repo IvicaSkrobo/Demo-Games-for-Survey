@@ -31,3 +31,10 @@
   font-variant-numeric: tabular-nums;
 }
 .c21-version-rtp strong { color: #eee8d8; }
+
+.c21-version-description {
+  margin: 8px 12px 0;
+  color: #eee8d8;
+  text-align: center;
+  font: 700 13px/1.35 Manrope, system-ui, sans-serif;
+}

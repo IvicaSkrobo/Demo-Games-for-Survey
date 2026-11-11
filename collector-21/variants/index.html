@@ -4,6 +4,7 @@
   <a href="../variants/" data-variant="second-suit">V2 · Second Suit</a>
   <a href="../variants/?version=free" data-variant="free">V3 · Free Placement</a>
 </div>
+<p class="c21-version-description">A second suit can appear on a draw, giving you another collector to choose.</p>
 <p class="c21-version-rtp">Simulated RTP · <strong>94.21%</strong> auto-place · <strong>94.61%</strong> best tested</p>
 <div data-collector21></div><script type="module" src="collector21.mjs"></script><script type="module">
   const version = new URLSearchParams(location.search).get('version') === 'free' ? 'free' : 'second-suit';
@@ -11,6 +12,7 @@
   if (version === 'free') {
     document.title = 'Collector 21 · Free Placement';
     const [auto, best] = document.querySelectorAll('.c21-version-rtp strong');
+    document.querySelector('.c21-version-description').textContent = 'Place any non-bust card in any collector. A quarter of the bet goes into the pot.';
     auto.textContent = '94.38%';
     best.textContent = '95.99%';
   }
