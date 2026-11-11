@@ -4,8 +4,14 @@
   <a href="../variants/" data-variant="second-suit">V2 · Second Suit</a>
   <a href="../variants/?version=free" data-variant="free">V3 · Free Placement</a>
 </div>
+<p class="c21-version-rtp">Simulated RTP · <strong>94.21%</strong> auto-place · <strong>94.61%</strong> best tested</p>
 <div data-collector21></div><script type="module" src="collector21.mjs"></script><script type="module">
   const version = new URLSearchParams(location.search).get('version') === 'free' ? 'free' : 'second-suit';
   document.querySelector('[data-variant="' + version + '"]').setAttribute('aria-current', 'page');
-  if (version === 'free') document.title = 'Collector 21 · Free Placement';
+  if (version === 'free') {
+    document.title = 'Collector 21 · Free Placement';
+    const [auto, best] = document.querySelectorAll('.c21-version-rtp strong');
+    auto.textContent = '94.38%';
+    best.textContent = '95.99%';
+  }
 </script></body></html>

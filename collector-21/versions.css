@@ -22,3 +22,12 @@
   border-color: #d6ba79;
   color: #111918;
 }
+
+.c21-version-rtp {
+  margin: 8px 8px 0;
+  color: #a9b7ae;
+  text-align: center;
+  font: 600 12px/1.35 Manrope, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.c21-version-rtp strong { color: #eee8d8; }
