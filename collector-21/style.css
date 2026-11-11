@@ -27,3 +27,50 @@ body[data-game="collector21"]:has(#playfield)>header,body[data-game="collector21
 .c21-action{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:8px 12px}.action-label{display:block}.action-balance{display:block;font:600 10px/1.2 Manrope,sans-serif;opacity:.8;font-variant-numeric:tabular-nums}
 @media(min-width:900px){.c21-collector{min-height:250px;padding-top:24px;padding-bottom:20px;gap:10px}.collector-total b{font-size:50px}.bet-stepper button{width:50px;height:76px}.bet-stepper>span{min-width:60px}.bet-stepper b{font-size:26px}.c21-action{min-height:78px;font-size:18px;gap:6px}.action-balance{font-size:12px}.c21-status{min-height:78px}}
 @media(min-width:900px) and (max-height:800px){.c21-app{--card-w:96px;--card-h:134.4px;gap:16px;padding-top:20px;padding-bottom:20px}.c21-collector{min-height:220px;padding-top:18px;padding-bottom:16px;gap:6px}.c21-stage{min-height:195px;padding-top:24px;padding-bottom:28px}.c21-pay{padding-top:16px;padding-bottom:16px}.pay-amount{font-size:44px}.deck-count{bottom:-22px}}
+
+.c21-collector { min-height: 151px; }
+.collector-cards {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 3px;
+  width: 100%;
+  height: 53px;
+  flex: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.collector-card {
+  display: grid;
+  place-content: center;
+  flex: 0 0 19px;
+  height: 25px;
+  border-radius: 3px;
+  background: #eee9da;
+  color: #18221d;
+  font: 800 10px/1 Manrope, sans-serif;
+  text-align: center;
+}
+.collector-card small { font-size: 8px; line-height: 1; white-space: nowrap; }
+.mini-red { color: #b62c38; }
+.mini-black { color: #191c1a; }
+.mini-wild { color: #7045a1; }
+@media (min-width: 900px) {
+  .c21-collector { min-height: 291px; }
+  .collector-cards { height: 77px; gap: 5px; }
+  .collector-card { flex-basis: 26px; height: 36px; font-size: 14px; }
+  .collector-card small { font-size: 10px; }
+}
+
+.collector-pot {
+  color: var(--gold-light);
+  font-size: 14px;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.collector-hint { min-height: 15px; margin-top: 0; }
+@media (min-width: 900px) {
+  .collector-pot { font-size: 23px; }
+  .c21-collector { min-height: 318px; }
+}
