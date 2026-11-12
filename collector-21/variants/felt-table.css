@@ -19,44 +19,61 @@
   border-color: #d6ba79;
   color: #d6ba79;
 }
+/* Plinko palette on the original Collector 21 layout. */
 body[data-skin="felt"] {
-  --bg: #121715;
-  --panel: #1b2420;
-  --line: #ffffff20;
-  --gold-light: #e0c694;
+  --bg: #130d11;
+  --panel: #20171d;
+  --line: #f8e8f222;
+  --ink: #f8eef4;
+  --muted: #c1a8b6;
+  --gold-light: #eaa0c9;
+  --accent: #ef63ad !important;
+  --mint: #59d47c;
+  --bust: #f790a6;
+  --felt-win: #f0c77d;
   background: var(--bg);
 }
-[data-skin="felt"] .c21-app { gap: 16px; }
-[data-skin="felt"] .c21-collector {
-  border-radius: 12px;
-  padding-inline: 8px;
+[data-skin="felt"] .c21-version-rtp {
+  background: var(--panel);
+  border-color: var(--line);
+  color: var(--ink);
 }
-[data-skin="felt"] .c21-stage {
-  background: #1c3129;
-  border-radius: 12px;
+[data-skin="felt"] .c21-version-switcher a,
+[data-skin="felt"] .c21-skin-toggle { border-color: var(--line); }
+[data-skin="felt"] .c21-version-switcher a[aria-current="page"] {
+  background: #30202c;
+  border-color: #a65b87;
+  color: var(--ink);
 }
-[data-skin="felt"] .deck-front {
-  background: #203a30;
-  outline: 1px solid #dbc18c80;
-  outline-offset: -6px;
-  filter: none;
-}
-[data-skin="felt"] .deck-front > small,
-[data-skin="felt"] .deck-count,
-[data-skin="felt"] .game-brand h1 { letter-spacing: .07em; }
-[data-skin="felt"] .collector-pot { color: #e8e4d7; }
+[data-skin="felt"] .c21-skin-toggle[aria-pressed="true"] { color: var(--gold-light); }
+[data-skin="felt"] .deck-back { border-color: #87506f; }
+[data-skin="felt"] .deck-front { background: #301c29; border-color: #a65b87; }
+[data-skin="felt"] .deck-front:hover { border-color: #fa95c8; filter: none; }
+[data-skin="felt"] .c21-action { background: #53d575; color: #0b2312; }
+[data-skin="felt"] .c21-action.auto { background: #84e19d; }
+[data-skin="felt"] .c21-collector[data-state="valid"] { background: #2d202a; }
+[data-skin="felt"] .c21-collector:is([data-state="over"], [data-state="bust"]) { background: #39212a; }
 [data-skin="felt"] .c21-collector.has-suit-boost {
+  background: #233128;
+  box-shadow: inset 0 0 16px #92d7a31a, 0 0 10px #92d7a322 !important;
+}
+[data-skin="felt"] .has-suit-boost .factor-chip { box-shadow: 0 0 10px #92d7a333; }
+[data-skin="felt"] .c21-status .status-dot { box-shadow: none; }
+[data-skin="felt"] .c21-rules { border-color: var(--line); }
+[data-skin="felt"] .c21-collector:is([data-state="exact"], [data-state="win"]) {
+  border-color: var(--felt-win);
+  background: #34291c;
   box-shadow: none !important;
-  border-color: #a9dcb0;
-  background: #23382e;
 }
-[data-skin="felt"] .has-suit-boost .factor-chip {
-  background: #cae8cb;
+[data-skin="felt"] .c21-collector:is([data-state="exact"], [data-state="win"]) .collector-hint,
+[data-skin="felt"] .c21-pay[data-tone="win"] .pay-amount,
+[data-skin="felt"] .collector-burst { color: var(--felt-win); }
+[data-skin="felt"] .c21-collector[data-state="exact"] .bar-preview,
+[data-skin="felt"] .c21-collector[data-state="win"] .bar-fill,
+[data-skin="felt"] .c21-status[data-tone="win"] .status-dot { background: var(--felt-win); }
+[data-skin="felt"] .c21-collector[data-state="exact"].has-suit-boost .factor-chip {
+  background: var(--felt-win);
+  border-color: var(--felt-win);
+  color: #25190b;
   box-shadow: none;
-}
-[data-skin="felt"] .c21-action { border-radius: 8px; }
-[data-skin="felt"] .c21-status { border-radius: 8px; }
-@media (min-width: 900px) {
-  [data-skin="felt"] .c21-app { gap: 24px; }
-  [data-skin="felt"] .c21-collector { padding-inline: 20px; }
 }
