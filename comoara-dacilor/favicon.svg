@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Slot Platform">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="30%" r="85%">
+      <stop offset="0" stop-color="#3c2378" />
+      <stop offset="1" stop-color="#0b0a1d" />
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff0b8" />
+      <stop offset="0.5" stop-color="#ffd24a" />
+      <stop offset="1" stop-color="#e8a417" />
+    </linearGradient>
+  </defs>
+  <rect x="1.5" y="1.5" width="29" height="29" rx="8" fill="url(#bg)" stroke="url(#gold)" stroke-width="1.6" />
+  <circle cx="16" cy="15" r="8.5" fill="#ffd24a" opacity="0.16" />
+  <text x="16" y="23.2" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="21" font-weight="800" fill="url(#gold)">7</text>
+  <circle cx="25.5" cy="7" r="1.5" fill="#fff3c4" />
+  <circle cx="6.5" cy="24.5" r="1.1" fill="#fff3c4" />
+</svg>
