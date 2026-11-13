@@ -1,0 +1,433 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#11080d"><title>Classic Blackjack</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#11080d;color:#edf4ee;font:15px system-ui,sans-serif}main{max-width:460px;margin:auto;padding:0 16px 20px}header{height:68px;display:flex;align-items:center;justify-content:space-between}strong{letter-spacing:.17em;font-size:12px}header span{background:#401628;padding:9px 12px;border-radius:8px;color:#d5edff;font-weight:800}.table{position:relative;text-align:center;overflow:hidden;border:1px solid #361225;border-radius:22px;background:radial-gradient(ellipse at 50% 36%,#1a0913,#1a0913 75%);padding:18px 12px;box-shadow:inset 0 0 40px #0004}.table:before{content:"";position:absolute;inset:8px;border:1px solid #6fa9cb26;border-radius:16px;pointer-events:none}h1{margin:0;font:italic bold clamp(34px,10vw,52px) Georgia,serif;letter-spacing:-.06em;color:#eef7ff}.rule,.label{font-size:10px;letter-spacing:.16em;font-weight:750;color:#a6c3d7}.label{margin:12px 0 7px}.row{min-height:78px;display:flex;align-items:center;justify-content:center;padding:0 9px}.card{position:relative;flex:0 1 56px;min-width:30px;height:76px;border-radius:7px;background:#fcfdff;color:#142a3a;box-shadow:0 4px 8px #0005;margin:0 3px;display:grid;place-items:center;font:32px Georgia}.card b{position:absolute;top:5px;left:6px;font:bold 13px system-ui}.red{color:#e31246}.back{border:4px solid #f7fbff;background:repeating-linear-gradient(45deg,#941658 0 3px,#c31870 3px 6px);color:#e4f4ff}.empty{opacity:.5;background:transparent;border:1px dashed #a6c3d7;color:#a6c3d7;box-shadow:none}.status{margin:12px 0 0;min-height:20px;color:#e3f3ff;font-weight:700}.controls{margin-top:12px;background:#28121c;border-radius:15px;padding:12px}.caption{display:flex;justify-content:space-between;color:#becdc4;font-size:12px;margin-bottom:7px}.bets,.actions{display:flex;gap:7px}button{flex:1;min-height:44px;border:1px solid #35536a;border-radius:8px;background:#39232d;color:#f2f6ef;font:inherit;font-weight:700;cursor:pointer}button[aria-pressed=true]{color:#d5edff;border-color:#e1549c}button:disabled{opacity:.42;cursor:default}.actions{margin-top:9px}.primary{background:#50d573;color:#fff;border-color:transparent}.hidden{display:none}details{margin-top:12px;color:#adbbb2;font-size:12px}summary{cursor:pointer}details p{line-height:1.6}button:focus-visible,summary:focus-visible{outline:2px solid white;outline-offset:2px}
+
+.table{padding:23px 12px 17px;--deck-x:clamp(83px,25vw,150px)}
+h1{font:800 clamp(29px,9vw,42px) system-ui,sans-serif;letter-spacing:-.065em}
+.shoe{position:absolute;top:20px;right:21px;width:37px;height:51px;border:3px solid white;border-radius:6px;background:repeating-linear-gradient(45deg,#941658 0 3px,#c31870 3px 6px);color:white;display:grid;place-items:center;box-shadow:0 3px #d4e4ef,0 6px #acbfce,0 9px #839bad,0 12px 14px #0006;transform:rotate(8deg)}
+.table h1{padding:0 44px}.row{min-height:98px;padding-top:3px}.card{height:84px;flex-basis:57px;margin:0;justify-items:start;padding-left:8px;padding-top:12px;font:36px Georgia}.card+.card{margin-left:-10px}.card b{font:800 17px system-ui}.card.back,.card.empty{justify-items:center;padding:0}.label{margin-top:11px}.status{min-height:24px}.actions button{min-height:50px}.hand{--deck-y:-87px}.player{--deck-y:-250px}.rule{margin:9px auto 2px;background:#234052;border-radius:4px;width:max-content;padding:5px 10px}
+.card.arrive{animation:deal-in 260ms cubic-bezier(.19,.73,.25,1) both}.card.flip{animation:flip-in 235ms ease-out both}.shoe.pulse{animation:shoe-tap 240ms ease-out}
+@keyframes deal-in{from{transform:translate(var(--deck-x),var(--deck-y)) rotate(13deg) scale(.6);opacity:.3}to{transform:none;opacity:1}}
+@keyframes flip-in{from{transform:perspective(350px) rotateY(-90deg);filter:brightness(.65)}to{transform:perspective(350px) rotateY(0)}}
+@keyframes shoe-tap{50%{transform:translateY(3px) rotate(5deg)}}
+@media(prefers-reduced-motion:reduce){.card.arrive,.card.flip,.shoe.pulse{animation:none}}
+
+header h1{font-size:18px}
+.table{background:#1a0913}
+.card.empty{opacity:1;background:#371a2a;border:1px solid #8b536f;color:#9a6d84;font-size:18px}
+.card.back{font-size:18px}
+.card.empty+.card.empty{margin-left:8px}
+#deal{background:#50d573;color:#102117;border-radius:999px}
+
+[hidden]{display:none!important}
+.hands,.choices{display:flex;gap:8px}
+
+.hands>div{flex:1;min-width:0;border:1px solid transparent;border-radius:8px}
+.hands.split .active{border-color:#e1549c}
+.hands.split .card{min-width:24px}
+.actions{display:grid;grid-template-columns:1fr 1fr}
+.actions #deal{grid-column:1/-1}
+.special{margin:12px 0 0;padding:12px;background:#28121c;border-radius:8px}
+.special p{margin:0 0 8px}.choices{flex-wrap:wrap}
+
+.mode-bar{display:flex;justify-content:flex-start;margin:-4px 0 8px}
+.mode-switch{display:inline-flex;align-items:center;gap:7px;min-height:44px;font-size:13px;cursor:pointer}
+.mode-switch input{appearance:none;width:30px;height:18px;margin:0;border:1px solid #9a6d84;border-radius:99px;background:#371a2a;cursor:inherit}
+.mode-switch input::before{content:"";display:block;width:12px;height:12px;margin:2px;border-radius:50%;background:#ffe4f2;transition:transform .15s}
+.mode-switch input:checked{background:#941658;border-color:#e1549c}
+.mode-switch input:checked::before{transform:translateX(12px)}
+.mode-switch:has(:disabled){opacity:.55;cursor:default}
+.daredevil .special{background:#34101c;border:1px solid #9a3548}
+.daredevil .shoe,.daredevil .card.back{background:#501221;color:#ffe3ce;border-color:#d9707e}
+.daredevil .shoe{box-shadow:0 3px #a74555,0 6px #742534,0 9px #42131e,0 12px 14px #0006}
+.daredevil .card.empty{background:#341620;border-color:#874152;color:#b77380}
+.daredevil .hands.split .active{border-color:#e66a70}
+.devil-mark,.daredevil .spade-mark{display:none}
+.daredevil .devil-mark{
+  display:block;position:relative;width:24px;height:23px;background:currentColor;
+  clip-path:polygon(0 0,24% 27%,50% 19%,76% 27%,100% 0,94% 52%,83% 77%,50% 100%,17% 77%,6% 52%);
+}
+.devil-eyes{position:absolute;inset:0;background:#501221;
+  clip-path:polygon(15% 43%,44% 56%,37% 63%,20% 57%,15% 43%,85% 43%,80% 57%,63% 63%,56% 56%,85% 43%)}
+.shoe{min-height:51px;min-width:44px;padding:0;font:16px Georgia}
+.shoe:disabled{opacity:1}
+.shoe:not(:disabled):hover{filter:brightness(1.2)}
+.test-cards{margin:12px 0;color:#e6cbd9}
+.test-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+.test-actions button{font-size:13px}
+
+.table .label{display:flex;align-items:center;justify-content:center;gap:8px;color:#f7edf2;font-size:13px;letter-spacing:0}
+#playerLabel,#secondLabel{color:#ffb9df}
+.hand-total{min-width:24px;padding:2px 5px;border-radius:8px;background:#401628;color:#fff5fa;font-variant-numeric:tabular-nums}
+.table .payout-ribbon{width:max-content;margin:8px auto;padding:4px 12px;border:1px solid #70254c;border-radius:5px;background:#401628;color:#f5c6df;letter-spacing:.04em}
+.daredevil .card.empty .devil-mark{transform:scale(.75)}
+</style>
+<main><header><h1>Classic Blackjack</h1><span id="balance"></span></header>
+<div class="mode-bar"><label class="mode-switch"><input id="modeSwitch" type="checkbox" role="switch"> Daredevil</label></div><section class="table"><button type="button" class="shoe" id="shoe" aria-label="Hit" title="Hit" disabled><span class="spade-mark">♠</span><span class="devil-mark"><span class="devil-eyes"></span></span></button><div class="label" id="dealerLabel"></div><div class="row hand" id="dealerCards"></div><div class="rule payout-ribbon">Blackjack pays 3 to 2</div><div class="hands" id="hands"><div id="first"><div class="label" id="playerLabel"></div><div class="row player" id="playerCards"></div></div><div id="second" hidden><div class="label" id="secondLabel"></div><div class="row player" id="secondCards"></div></div></div><div class="special" id="special" hidden><p id="specialText"></p><div class="choices" id="choices"></div></div><div class="status" id="status" role="status"></div></section>
+<section class="controls" aria-label="Game controls"><div class="caption"><span>BET</span><span>PLAY CHIPS</span></div><div class="bets" id="bets"></div><div class="actions"><button id="hit">Hit</button><button id="stand">Stand</button><button id="split">Split</button><button id="double">Double</button><button class="primary" id="deal">Deal</button></div></section>
+<details class="test-cards" id="testCards" hidden><summary>Test special cards</summary><p>Deal a hand, then choose a card to test.</p><div class="test-actions" id="testActions"></div></details><details><summary>Table rules</summary><p>Beat the dealer without going over 21. Aces count as 1 or 11. The dealer stands on all 17s. Double your bet on your first two cards to draw exactly one more card. Ties return your bet. Split matching ranks once with an equal bet. Split aces get one card each. In Daredevil, tap Hit for a chance to draw Blind Bet, Minus One Joker, Expose, Devil’s Due, or Red or Black. Guess the next card’s color. A correct guess lets you keep or discard it. A wrong guess forces you to keep it. Then you stand. Blind Bet pays 5 to 1 on a win if you take the hidden card. Expose reveals the dealer’s hidden card. Five copies of Devil’s Due can force two draws in a row. At most one special card activates per round.</p></details></main>
+<script>
+const byId = id => document.getElementById(id);
+const bets = [5, 10, 25, 50, 100];
+const suits = ['♠', '♥', '♣', '♦'];
+const ranks = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+let balance = 1000, bet = 25, stake = 0, deck = [], dealer = [], player = [];
+let mode = 'classic', second = null, active = 0, exposed = false, usedSpecial = false;
+let wagers = [], multipliers = [], altered = [];
+const specialCards = ['Blind Bet', "Minus One Joker", "Expose", "Devil's Due", "Red or Black"];
+const currentHand = () => active ? second : player;
+let phase = 'ready', message = 'Choose a bet to begin';
+const chips = value => value.toLocaleString('en-US');
+function score(hand) {
+  let total = hand.reduce((sum, card) => sum + (card.value ?? Math.min(ranks.indexOf(card.rank) + 1, 10)), 0);
+  if (total <= 11 && hand.some(card => card.rank === 'A')) total += 10;
+  return total;
+}
+function blackjack(hand) { return hand.length === 2 && score(hand) === 21; }
+function newDeck() {
+  const cards = suits.flatMap(suit => ranks.map(rank => ({suit, rank})));
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  return cards;
+}
+function finish() {
+  const d = score(dealer);
+  const results = (second ? [player, second] : [player]).map((hand, i) => {
+    const total = score(hand), wager = wagers[i];
+    const natural = !second && !altered[i] && blackjack(hand);
+    if (total > 21) return 'Bust · −' + chips(wager);
+    if (blackjack(dealer) && !natural) return 'Dealer blackjack · −' + chips(wager);
+    if (natural && !blackjack(dealer)) {
+      balance += wager * 2.5;
+      return 'Blackjack · +' + chips(wager * 1.5);
+    }
+    if (total === d) {
+      balance += wager;
+      return 'Push';
+    }
+    if (d > 21 || total > d) {
+      const profit = wager * multipliers[i];
+      balance += wager + profit;
+      return 'Win · +' + chips(profit);
+    }
+    return 'Loss · −' + chips(wager);
+  });
+  message = second ? results.map((result, i) => 'Hand ' + (i + 1) + ' ' + result).join(' / ') : results[0];
+  phase = 'done';
+  if (balance >= bets[0] && bet > balance) bet = bets.filter(value => value <= balance).at(-1);
+  render();
+}
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const pause = ms => new Promise(resolve => setTimeout(resolve, reducedMotion.matches ? 0 : ms));
+function takeNumberCard() {
+  const index = deck.findLastIndex(card => !card.special);
+  return deck.splice(index, 1)[0];
+}
+function draw(hand, card = takeNumberCard()) {
+  hand.push(card);
+  const shoe = byId('shoe');
+  shoe.classList.remove('pulse');
+  void shoe.offsetWidth;
+  shoe.classList.add('pulse');
+  render();
+}
+function advance() {
+  if (second && active === 0) {
+    active = 1;
+    message = 'Play hand 2';
+    render();
+    if (score(second) === 21) advance();
+    return;
+  }
+  if (score(player) > 21 && (!second || score(second) > 21)) finish();
+  else dealerTurn();
+}
+async function dealerTurn() {
+  phase = 'dealer';
+  message = 'Dealer’s turn';
+  render();
+  await pause(260);
+  while (score(dealer) < 17) {
+    draw(dealer);
+    await pause(300);
+  }
+  finish();
+}
+async function deal() {
+  if (phase !== 'ready' && phase !== 'done') return;
+  second = null;
+  active = 0;
+  exposed = false;
+  usedSpecial = false;
+  if (balance < bets[0]) {
+    balance = 1000;
+    bet = 25;
+    phase = 'ready';
+    dealer = [];
+    player = [];
+    message = 'Choose a bet to begin';
+    render();
+    return;
+  }
+  if (bet > balance) return;
+  stake = bet;
+  balance -= stake;
+  wagers = [stake];
+  multipliers = [1];
+  altered = [false];
+  deck = newDeck();
+  player = [];
+  dealer = [];
+  phase = 'dealing';
+  message = 'Dealing…';
+  for (const hand of [player, dealer, player, dealer]) {
+    draw(hand);
+    await pause(175);
+  }
+  if (mode === 'daredevil') {
+    const specialDeck = [...specialCards, ...Array(4).fill("Devil's Due")];
+    for (const special of specialDeck) {
+      deck.splice(Math.floor(Math.random() * (deck.length + 1)), 0, {special});
+    }
+  }
+  phase = 'playing';
+  message = 'Your move';
+  if (blackjack(player) || blackjack(dealer)) finish();
+  else render();
+}
+function canSplit() {
+  return phase === 'playing' && !second && !altered[0] && player.length === 2 &&
+    player[0].rank === player[1].rank && balance >= stake;
+}
+async function split() {
+  if (!canSplit()) return;
+  const original = Array.from(byId('playerCards').children, card => card.getBoundingClientRect());
+  balance -= stake;
+  wagers.push(stake);
+  multipliers.push(1);
+  altered.push(false);
+  second = [player.pop()];
+  phase = 'splitting';
+  message = 'Splitting…';
+  render();
+  if (!reducedMotion.matches) {
+    [byId('playerCards').firstElementChild, byId('secondCards').firstElementChild].forEach((card, i) => {
+      card.classList.remove('arrive');
+      const target = card.getBoundingClientRect();
+      const offset = 'translate(' + (original[i].x - target.x) + 'px,' + (original[i].y - target.y) + 'px)';
+      card.animate([{transform: offset}, {transform: 'none'}], {duration: 320, easing: 'ease-out'});
+    });
+    await pause(320);
+  }
+  draw(player);
+  await pause(220);
+  draw(second);
+  await pause(220);
+  if (player[0].rank === 'A') {
+    dealerTurn();
+    return;
+  }
+  phase = 'playing';
+  message = 'Play hand 1';
+  render();
+  if (score(player) === 21) advance();
+}
+function showSpecial(text, options) {
+  phase = 'special';
+  byId('specialText').textContent = text;
+  byId('choices').replaceChildren();
+  for (const [label, action] of options) {
+    const button = document.createElement('button');
+    button.textContent = label;
+    button.onclick = () => {
+      if (phase !== 'special') return;
+      phase = 'playing';
+      message = 'Your move';
+      action();
+      render();
+    };
+    byId('choices').append(button);
+  }
+  render();
+}
+async function drawDevilsDue(hand) {
+  phase = 'forced-draw';
+  message = 'Devil’s Due · Draw two cards';
+  draw(hand);
+  await pause(300);
+  draw(hand);
+  await pause(300);
+  phase = 'playing';
+  if (score(hand) >= 21) advance();
+  else render();
+}
+function resolveSpecial(special, hand) {
+  usedSpecial = true;
+  if (special === "Devil's Due") {
+    drawDevilsDue(hand);
+    return;
+  }
+  if (special === 'Red or Black') {
+    const guess = red => {
+      const card = takeNumberCard();
+      const isRed = card.suit === '♥' || card.suit === '♦';
+      if (red !== isRed) {
+        draw(hand, card);
+        advance();
+        return;
+      }
+      showSpecial('Correct · ' + card.rank + card.suit + ' · Keep or discard, then stand.', [
+        ['Keep and stand', () => { draw(hand, card); advance(); }],
+        ['Discard and stand', advance],
+      ]);
+    };
+    showSpecial('Red or Black · Guess the next card’s color.', [
+      ['Red ♥ ♦', () => guess(true)],
+      ['Black ♠ ♣', () => guess(false)],
+    ]);
+    return;
+  }
+  if (special === 'Blind Bet') {
+    showSpecial('Blind Bet · Take one hidden card and stand. A win pays 5 to 1.', [
+      ['Take and stand', () => { multipliers[active] = 5; draw(hand); advance(); }],
+      ['Burn and stand', () => { takeNumberCard(); advance(); }],
+    ]);
+    return;
+  }
+  if (special === 'Minus One Joker') {
+    const options = hand.flatMap((card, i) => {
+      if (card.rank === 'A') return [];
+      const value = Math.min(ranks.indexOf(card.rank) + 1, 10) - 1;
+      return [[card.rank + card.suit + ' → ' + value, () => {
+        hand[i] = {...card, value};
+        altered[active] = true;
+      }]];
+    });
+    showSpecial('Minus One Joker · Lower one non-ace card by one.', [...options, ['Skip', () => {}]]);
+    return;
+  }
+  exposed = true;
+  message = 'Expose · Dealer card revealed';
+  render();
+}
+function hit() {
+  const hand = currentHand();
+  if (!usedSpecial && deck.at(-1)?.special) {
+    resolveSpecial(deck.pop().special, hand);
+    return;
+  }
+  draw(hand);
+  if (score(hand) >= 21) advance();
+}
+function cardMarkup(card, hidden) {
+  if (hidden) return '<span class="card back" aria-label="Face-down card"><span class="spade-mark" aria-hidden="true">♠</span><span class="devil-mark" aria-hidden="true"><span class="devil-eyes"></span></span></span>';
+  if (!card) return '<span class="card empty" aria-hidden="true"><span class="spade-mark">♠</span><span class="devil-mark"><span class="devil-eyes"></span></span></span>';
+  const red = ['♥','♦'].includes(card.suit);
+  return '<span class="card ' + (red ? 'red' : '') + '"><b>' + (card.value ?? card.rank) + card.suit + '</b>' + card.suit + '</span>';
+}
+function renderHand(id, hand, hide = false) {
+  const row = byId(id);
+  const cards = phase === 'ready' ? [null, null] : hand;
+  cards.forEach((card, i) => {
+    const hidden = Boolean(card) && hide && i === 1;
+    const key = hidden ? 'back' : card ? (card.value ?? card.rank) + card.suit : 'empty';
+    const previous = row.children[i];
+    if (previous?.dataset.key === key) return;
+    const template = document.createElement('template');
+    template.innerHTML = cardMarkup(card, hidden);
+    const node = template.content.firstElementChild;
+    node.dataset.key = key;
+    if (card) node.classList.add(previous?.dataset.key === 'back' ? 'flip' : 'arrive');
+    if (previous) previous.replaceWith(node);
+    else row.append(node);
+  });
+  while (row.children.length > cards.length) row.lastElementChild.remove();
+}
+for (const value of bets) {
+  const button = document.createElement('button');
+  button.textContent = value;
+  button.onclick = () => { bet = value; render(); };
+  byId('bets').append(button);
+}
+function renderLabel(id, title, hand) {
+  const label = byId(id);
+  label.textContent = title;
+  if (!hand.length) return;
+  const badge = document.createElement('span');
+  badge.className = 'hand-total';
+  badge.textContent = score(hand);
+  label.append(badge);
+}
+function render() {
+  const playing = phase === 'playing';
+  const idle = phase === 'ready' || phase === 'done';
+  const hideDealer = !exposed && ['dealing', 'playing', 'splitting', 'special', 'forced-draw'].includes(phase);
+  byId('balance').textContent = chips(balance) + ' chips';
+  renderLabel('dealerLabel', 'Dealer’s hand', hideDealer ? dealer.slice(0, 1) : dealer);
+  renderLabel('playerLabel', second ? 'Your hand 1' : 'Your hand', player);
+  byId('second').hidden = !second;
+  byId('hands').classList.toggle('split', Boolean(second));
+  byId('first').classList.toggle('active', active === 0 && playing);
+  byId('second').classList.toggle('active', active === 1 && playing);
+  if (second) {
+    renderLabel('secondLabel', 'Your hand 2', second);
+    renderHand('secondCards', second);
+  } else byId('secondCards').replaceChildren();
+  renderHand('dealerCards', dealer, hideDealer);
+  renderHand('playerCards', player);
+  byId('status').textContent = phase === 'special' ? '' : message;
+  byId('special').hidden = phase !== 'special';
+  byId('modeSwitch').disabled = !idle;
+  Array.from(byId('bets').children).forEach((button, i) => {
+    button.disabled = !idle || bets[i] > balance;
+    button.setAttribute('aria-pressed', bets[i] === bet);
+  });
+  byId('hit').disabled = !playing;
+  byId('shoe').disabled = !playing;
+  byId('testCards').hidden = mode !== 'daredevil';
+  for (const button of byId('testActions').children) {
+    button.disabled = !playing || usedSpecial;
+  }
+  byId('stand').disabled = !playing;
+  byId('split').disabled = !canSplit();
+  byId('double').disabled = !playing || currentHand().length !== 2 || altered[active] || balance < wagers[active];
+  byId('deal').hidden = !idle;
+  byId('deal').textContent = balance < bets[0] ? 'Reset chips' : 'Deal · ' + bet;
+}
+byId('modeSwitch').onchange = event => {
+  mode = event.target.checked ? 'daredevil' : 'classic';
+  document.body.classList.toggle('daredevil', event.target.checked);
+  phase = 'ready';
+  message = '';
+  player = [];
+  dealer = [];
+  second = null;
+  document.querySelector('h1').textContent = event.target.checked ? 'Daredevil Blackjack' : 'Classic Blackjack';
+  render();
+};
+byId('deal').onclick = deal;
+byId('hit').onclick = hit;
+byId('shoe').onclick = hit;
+for (const special of specialCards) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = special;
+  button.onclick = () => {
+    if (mode === 'daredevil' && phase === 'playing' && !usedSpecial) {
+      resolveSpecial(special, currentHand());
+    }
+  };
+  byId('testActions').append(button);
+}
+byId('stand').onclick = advance;
+byId('split').onclick = split;
+byId('double').onclick = () => {
+  balance -= wagers[active];
+  wagers[active] *= 2;
+  draw(currentHand());
+  advance();
+};
+render();
+</script></html>
