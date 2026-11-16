@@ -1,6 +1,8 @@
 # Money Machine — animation handoff for Patrik
 
-Preserved reference, 30 October 2026. Owner of frontend handoff: Patrik Vulinec. Animation author: Ante / Antonio.
+Updated reference, 16 November 2026. Owner of frontend handoff: Patrik Vulinec. Animation author: Ante / Antonio.
+
+This hosted route now follows the current merged game at `e754ea2`, including Ante's latest animation work from `e5fd693`, the agreed three-free-spin reward rules, and the responsive test-controls drawer. The detailed notes below preserve the original choreography review context; where old prototype economy notes conflict with the current game, the current game specification wins.
 
 ## Start here
 

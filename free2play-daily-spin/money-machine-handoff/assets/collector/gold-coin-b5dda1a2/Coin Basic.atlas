@@ -1,0 +1,12 @@
+Coin Basic.png
+size:337,182
+filter:Linear,Linear
+Coin 1
+bounds:2,2,170,178
+offsets:4,5,178,185
+Coin 2
+bounds:293,2,42,178
+offsets:3,5,51,186
+Coin 3
+bounds:174,2,117,178
+offsets:4,5,122,185

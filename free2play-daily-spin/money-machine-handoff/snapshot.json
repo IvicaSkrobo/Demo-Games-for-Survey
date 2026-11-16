@@ -1,7 +1,7 @@
 {
   "source": "https://github.com/IvicaSkrobo/f2p-daily-spin",
-  "commit": "2c02450",
-  "anteHandoff": "2673698",
-  "date": "2026-10-30",
-  "purpose": "Preserved animation route; prototype economy is not production approved"
+  "commit": "e754ea2",
+  "anteHandoff": "e5fd693",
+  "date": "2026-11-16",
+  "purpose": "Latest merged Ante animation route with current game rules and responsive test controls"
 }

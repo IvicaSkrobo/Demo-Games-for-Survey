@@ -2,9 +2,11 @@
 <html lang="hr">
   <head>
     <meta charset="UTF-8" />
+    <meta name="color-scheme" content="dark" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>F2P · Usporedba verzija</title>
+    <title>F2P · Money Machine</title>
     <style>
+      :root { color-scheme: dark; color-scheme: only dark; background: #10070c; color: #fff; }
       * { box-sizing: border-box; }
       body { margin: 0; background: #10070c; color: #fff; font-family: system-ui, sans-serif; }
       header { height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 18px; border-bottom: 1px solid #573245; background: #1a0a12; }
@@ -15,19 +17,20 @@
       a:hover { border-color: #ef74ad; }
       a:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
       iframe { display: block; width: 100%; height: calc(100dvh - 58px); border: 0; background: #10070c; }
-      @media (max-width: 520px) { header { padding: 8px; gap: 6px; } strong { font-size: 10px; } a { padding: 10px 8px; font-size: 11px; } }
+      @media (max-width: 520px) { header { padding: 8px; gap: 6px; } strong { font-size: 10px; } a { padding: 10px 6px; font-size: 10px; } }
     </style>
-    <script type="module" crossorigin src="./assets/index-CH_j2IIh.js"></script>
+    <script type="module" crossorigin src="./assets/index-CYoAj7uT.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/modulepreload-polyfill-B5Qt9EMX.js">
   </head>
   <body>
     <header>
-      <strong>F2P / VERZIJE</strong>
-      <nav aria-label="Odabir prototipa">
-        <a href="?version=ours" data-version="ours">Naša verzija</a>
-        <a href="?version=ante" data-version="ante">Ante · Money Machine</a>
+      <strong>F2P</strong>
+      <nav aria-label="Igra i reference">
+        <a href="?view=game" data-view="game">Glavna igra</a>
+        <a href="?view=prototypes" data-view="prototypes">Prototipovi</a>
+        <a href="https://ivicaskrobo.github.io/Demo-Games-for-Survey/free2play-daily-spin/money-machine-handoff/money.html" target="_blank" rel="noopener">Animacijski demo ↗</a>
       </nav>
     </header>
-    <iframe id="prototype" title="F2P prototip" allow="autoplay; fullscreen"></iframe>
+    <iframe id="prototype" title="F2P prototip" allow="autoplay; fullscreen"></iframe>
   </body>
 </html>
