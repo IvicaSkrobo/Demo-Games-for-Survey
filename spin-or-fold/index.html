@@ -33,14 +33,14 @@ h1 small{font-size:.55em;color:var(--accent);padding:0 .12em}
 .table{position:relative;text-align:center;border:1px solid var(--table-line);border-radius:22px;background:var(--table);padding:12px 12px 12px;box-shadow:inset 0 0 40px #0004;overflow:hidden}
 .table:before{content:"";position:absolute;inset:8px;border:1px solid #6fa9cb26;border-radius:16px;pointer-events:none}
 
-.players{position:relative;display:flex;gap:4px;overflow-x:auto;padding:9px 8px 5px;margin:-5px -4px 0;scrollbar-width:none}
+.players{position:relative;display:flex;gap:2px;overflow-x:auto;padding:9px 8px 5px;margin:-5px -4px 0;scrollbar-width:none}
 .players::-webkit-scrollbar{display:none}
-.pl{flex:0 0 46px;display:grid;justify-items:center;gap:2px;font-size:10.5px;line-height:1.15;min-width:0}
+.pl{flex:1 0 36px;display:grid;justify-items:center;gap:2px;font-size:10.5px;line-height:1.15;min-width:0}
 .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:800 11px system-ui,sans-serif;color:#fff;background:var(--chip);border:2px solid var(--accent-dark);transition:border-color .2s,box-shadow .2s}
 .pl.me .av{border-color:var(--accent);background:var(--accent-deep)}
 .pl.betting .av{border-color:var(--accent)}
 .pl.won .av{border-color:var(--win);box-shadow:0 0 8px var(--win)}
-.pl .nm{max-width:46px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.pl .nm{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .pl .amt{color:var(--text-cool);font-weight:700;font-variant-numeric:tabular-nums;min-height:12px}
 .pl.won .amt{color:var(--win)}
 .pl.lost .amt{color:var(--muted)}
@@ -428,16 +428,11 @@ const setW = (a) => rot.setAttribute('transform', `rotate(${a})`);
 setW(wAng);
 
 // ---------------------------------------------------------------- players at the table (simulated, no backend)
-const NAMES = ['Ana', 'Marko', 'Iva', 'Luka', 'Petra', 'Nikola', 'Sara', 'Tomo', 'Maja', 'Filip', 'Lea', 'Ivan', 'Dora', 'Karlo', 'Ema', 'Josip', 'Mia', 'Leon'];
+// Fixed table, in this order after You. ini = the 2 letters on the avatar and on the bonus ball.
+const SEATS = [['Marko', 'Mk'], ['Ivica', 'Iv'], ['Borna', 'Bo'], ['Nik', 'Ni'], ['Patrik', 'Pa'], ['Ante', 'An'], ['Matea', 'Mt']];
 const BOT_TYPES = [['color', 30], ['suit', 20], ['high', 12], ['rank', 12], ['card', 14], ['joker', 12]];
 const me = { name: 'You', me: true, bets: new Map(), result: null };
-let bots = [];
-function newBot() {
-  const used = new Set(bots.map((b) => b.name));
-  const free = NAMES.filter((n) => !used.has(n));
-  return { name: pick(free), bets: new Map(), result: null, style: Math.random(), fresh: true, plan: [] };
-}
-for (let i = 0; i < 7; i++) bots.push(newBot());
+const bots = SEATS.map(([name, ini]) => ({ name, ini, bets: new Map(), result: null, plan: [] }));
 function botBet() {
   let w = Math.random() * 100, type = 'color';
   for (const [t, p] of BOT_TYPES) { if ((w -= p) < 0) { type = t; break; } }
@@ -462,17 +457,14 @@ function runBotPlans(elapsed) {
   }
   if (changed) { renderPlayers(); renderCrowd(); }
 }
-function rotateSeats() { // now and then someone leaves and someone new sits down
-  if (Math.random() < 0.35 && bots.length > 5) bots.splice(rnd(bots.length), 1);
-  if (Math.random() < 0.45 && bots.length < 9) bots.push(newBot());
-}
+
 const sum = (m) => { let t = 0; for (const v of m.values()) t += v; return t; };
 function renderPlayers() {
   const all = [me, ...bots];
   $('tableCount').textContent = all.length + ' players · demo';
   $('players').innerHTML = all.map((p) => {
     const bet = sum(p.bets);
-    let cls = 'pl' + (p.me ? ' me' : '') + (p.fresh ? ' new' : '');
+    let cls = 'pl' + (p.me ? ' me' : '');
     let amt = bet ? fmt(bet) : '';
     if (st.phase === 'bonus' || st.phase === 'bonusResult') {
       const bo = p.bonus;
@@ -483,9 +475,8 @@ function renderPlayers() {
     }
     else if (p.result != null && bet) { cls += p.result > 0 ? ' won' : ' lost'; amt = p.result > 0 ? '+' + fmt(p.result) : '−' + fmt(bet); }
     else if (bet) cls += ' betting';
-    return `<div class="${cls}"><span class="av">${p.me ? 'You' : p.name.slice(0, 2)}</span><span class="nm">${p.name}</span><span class="amt">${amt}</span></div>`;
+    return `<div class="${cls}"><span class="av">${p.me ? 'You' : p.ini}</span><span class="nm">${p.name}</span><span class="amt">${amt}</span></div>`;
   }).join('');
-  bots.forEach((b) => (b.fresh = false));
 }
 function renderCrowd() { // how many other players sit on each bet
   const count = new Map();
@@ -632,7 +623,7 @@ let anim = null, roundStart = 0, resultUntil = 0;
 
 function openBetting(now) {
   st.phase = 'bet'; roundStart = now; st.closesAt = now + BET_SECONDS * 1000;
-  clearMarks(); rotateSeats(); planBots();
+  clearMarks(); planBots();
   for (const p of [me, ...bots]) p.hole = M.dealHole(); // 2 hidden cards each round (used by bonus v3)
   for (const b of bots) b.result = null; me.result = null;
   $('timer').className = 'timer';
@@ -815,7 +806,7 @@ function startBonus(now) {
     if (q.p.me) el('circle', { r: 11, class: 'ring' }, g);
     el('circle', { r: q.p.me ? 11 : 8, class: 'core' }, g);
     if (q.p.me) el('text', { class: 'you', y: -20 }, g).textContent = 'YOU';
-    else el('text', { class: 'ini' }, g).textContent = q.p.name.slice(0, 2);
+    else el('text', { class: 'ini' }, g).textContent = q.p.ini;
     return { q, r, outer, g, L, end, stack, istack, spin: (3 + (i % 3)) * 360 + Math.random() * 360, landed: false, final: false };
   });
   bonus = { mode, D, t0: now + 900 * sp, w0: D.a0, W: 2 * 360, T: T + 0.5 * sp, items };
