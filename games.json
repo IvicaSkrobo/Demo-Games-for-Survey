@@ -121,6 +121,14 @@
       "section": "In progress",
       "owner": "Niki",
       "source": "game-discovery/prototypes/2026-11-spin-or-fold"
+    },
+    {
+      "path": "remi-51/",
+      "title": "Remi 51",
+      "sub": "Solo rummy · meld 51 in 6 draws · Ruka jackpot",
+      "section": "Card games",
+      "owner": "Ivica",
+      "source": "game-discovery/prototypes/2026-11-remi-51"
     }
   ]
 }
