@@ -16,6 +16,12 @@
     a.card .title { font-size: 1.05rem; font-weight: 600; }
     a.card .sub { font-size: 0.8rem; color: #a8a8a8; margin-top: 0.4rem; line-height: 1.35; }
     a.card .owner { font-size: 0.7rem; color: #8a8a8a; margin-top: 0.8rem; }
+    h2.team-heading { color: #68e0ce; border-left: 3px solid #35bca6; padding-left: 0.75rem; }
+    .team-games a.card { background: #142a27; border-color: #296057; }
+    .team-games a.card:hover, .team-games a.card:focus-visible { background: #193730; border-color: #68e0ce; }
+    .team-games a.card .title { color: #b0f5e9; }
+    .team-games a.card .sub { color: #b3c9c4; }
+    .team-games a.card .owner { color: #80c7b9; }
     .error { color: #f99; text-align: center; }
   </style>
 </head>
@@ -45,7 +51,8 @@
           .map((section) => {
             const list = shown.filter((g) => (g.section || "Other") === section);
             if (!list.length) return "";
-            return `<h2>${esc(section)}</h2><div class="games">${list
+            const isTeam = section === "Team prototypes";
+            return `<h2${isTeam ? ' class="team-heading"' : ""}>${esc(section)}</h2><div class="games${isTeam ? " team-games" : ""}">${list
               .map((g) => `<a class="card" href="${esc(g.path)}"><div class="title">${esc(g.title)}</div><div class="sub">${esc(g.sub)}</div>${g.owner ? `<div class="owner">${esc(g.owner)}</div>` : ""}</a>`)
               .join("")}</div>`;
           })
