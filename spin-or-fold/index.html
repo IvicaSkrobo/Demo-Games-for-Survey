@@ -233,40 +233,32 @@ svg.v2 .pocket.t-rank{stroke:var(--accent);stroke-width:3.5}
 .pk.hole{box-shadow:0 0 0 2px var(--gold),0 2px 5px #0007;animation:flip-in .4s ease-out both}
 .pk.back{background:repeating-linear-gradient(45deg,var(--accent-dark) 0 3px,var(--accent-deep) 3px 6px);border:2px solid var(--card)}
 .pk-name{flex-basis:100%;font-weight:800;color:var(--gold);font-size:13px;margin-top:2px}
-/* ---------- bet layout 2: chips + betting board ---------- */
-.controls:not(.layout2) .felt{display:none}
-.controls.layout2 > .caption:first-child{display:none}
-.controls.layout2 .tabs,.controls.layout2 [data-panel]{display:none!important}
-.felt-note{font-size:11px;color:var(--muted);line-height:1.35}
-.felt-note b{color:var(--text)}
-.felt{display:grid;grid-template-columns:24px repeat(13,minmax(0,1fr));gap:2px;background:var(--table);border:1px solid var(--table-line);border-radius:10px;padding:4px}
-.f{position:relative;border:1px solid #ffffff21;border-radius:4px;background:#ffffff09;padding:0;min-width:0;color:var(--text);font-weight:800;display:grid;place-items:center;align-content:center;line-height:1}
-.f:hover{border-color:var(--accent)}
-.f.red,.f.red b{color:#ff7a99}
-.fout{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr 1.45fr;gap:3px;margin-bottom:2px}
-.fo{height:34px;gap:2px;font-size:12px;letter-spacing:.04em}
-.fo small{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:0}
-.fo.jk{background:repeating-linear-gradient(45deg,#941658cc 0 3px,#c31870cc 3px 6px);border-color:var(--accent)}
-.fo.jk small{color:var(--card)}
-.fcorner{font-size:8px;color:var(--muted);font-weight:700}
-.fh{height:18px;font-size:11px;color:var(--muted)}
-.fs{font-size:16px}
-.fcard{height:24px}
-.fcard .r{font:11px Georgia,serif}
-.fcard .s{font-size:9px}
-.f.on{border-color:var(--accent);background:#e1549c1c}
-.f.won{border-color:var(--win);background:#50d57340;box-shadow:0 0 0 2px var(--win),0 0 12px #50d57399;z-index:1}
-.f.lost{opacity:.5}
-.fcard.landed:after,.fo.landed:after{content:"";position:absolute;inset:-2px;border:2px dashed var(--accent);border-radius:5px;pointer-events:none}
-.f.crowd:before{content:"";position:absolute;top:2px;left:2px;width:5px;height:5px;border-radius:50%;background:var(--accent-deep)}
+/* ---------- bet layout 2: bet straight on a big wheel, chips in a column beside it ---------- */
+.side-chips{display:none}
+body.l2 .wheel-row{display:grid;grid-template-columns:minmax(0,1fr) 50px;gap:6px;align-items:center;margin-top:6px}
+body.l2 .wheel{width:100%;max-width:360px;margin:0 auto}
+body.l2 .side-chips{display:flex;align-items:center;justify-content:center}
+body.l2 .side-chips .chips{flex-direction:column;gap:9px}
+.controls.layout2 .board{display:none}
+svg.l2:not(.gold) .pocket,svg.l2:not(.gold) .band{cursor:pointer}
+svg.l2:not(.gold) .pocket:hover,svg.l2:not(.gold) .band:hover{filter:brightness(1.35)}
+svg.l2 .p-txt{font-size:15px}
+svg.l2 .p-txt.sym{font-size:13px}
+.l2-out{display:none}
+.controls.layout2 .l2-out{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.wchip{pointer-events:none}
+.wchip circle{stroke:#fff;stroke-width:2.5;stroke-dasharray:4 3;filter:drop-shadow(0 1px 2px #000c)}
+.wchip text{font:800 10px system-ui,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.wchip.c1 circle{fill:#6b7280} .wchip.c5 circle{fill:#c62a3a} .wchip.c10 circle{fill:#2563eb} .wchip.c25 circle{fill:#15803d} .wchip.c100 circle{fill:#16161a;stroke:var(--gold)}
+.wchip.won circle{stroke:var(--win);stroke-width:3.5;stroke-dasharray:none;filter:drop-shadow(0 0 7px var(--win))}
+.wchip.lost{opacity:.45}
+svg.gold .wchips{display:none}
 /* round casino chips (layout 2) and chips placed on the board */
 .chips button[data-v="1"]{--cc:#6b7280} .chips button[data-v="5"]{--cc:#c62a3a} .chips button[data-v="10"]{--cc:#2563eb} .chips button[data-v="25"]{--cc:#15803d} .chips button[data-v="100"]{--cc:#16161a}
-.controls.layout2 .chips{justify-content:space-around}
-.controls.layout2 .chips button{flex:0 0 44px;width:44px;height:44px;min-height:44px;border-radius:50%;border:3px dashed #ffffffaa;background:radial-gradient(circle,var(--cc) 55%,#0000 56%),var(--cc);color:#fff;font-size:13px;box-shadow:inset 0 0 0 4px var(--cc),inset 0 0 0 5px #fff6,0 3px 6px #0008;transition:transform .12s}
-.controls.layout2 .chips button[aria-pressed=true]{transform:translateY(-4px) scale(1.08);outline:3px solid var(--accent);outline-offset:2px;color:#fff}
+body.l2 .chips button{flex:0 0 44px;width:44px;height:44px;min-height:44px;border-radius:50%;border:3px dashed #ffffffaa;background:radial-gradient(circle,var(--cc) 55%,#0000 56%),var(--cc);color:#fff;font-size:13px;box-shadow:inset 0 0 0 4px var(--cc),inset 0 0 0 5px #fff6,0 3px 6px #0008;transition:transform .12s}
+body.l2 .chips button[aria-pressed=true]{transform:translateY(-4px) scale(1.08);outline:3px solid var(--accent);outline-offset:2px;color:#fff}
 .tok{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:19px;height:19px;padding:0 2px;border-radius:10px;border:2px dashed #ffffffb0;background:var(--cc);color:#fff;font:800 8.5px/15px system-ui,sans-serif;text-align:center;box-shadow:0 1px 4px #000c;z-index:2;pointer-events:none}
 .tok.c1{--cc:#6b7280} .tok.c5{--cc:#c62a3a} .tok.c10{--cc:#2563eb} .tok.c25{--cc:#15803d} .tok.c100{--cc:#16161a;border-color:var(--gold)}
-.fo .tok{left:auto;right:3px;top:3px;transform:none}
 /* bonus version switch */
 .modes{margin-top:12px;background:var(--panel);border-radius:15px;padding:12px;display:grid;gap:8px}
 .mode-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
@@ -290,7 +282,7 @@ svg.v2 .pocket.t-rank{stroke:var(--accent);stroke-width:3.5}
       <div class="timer-row"><span id="phaseText">Place your bets</span><b id="timeText">7s</b></div>
       <div class="track"><i id="timeBar"></i></div>
     </div>
-    <div class="wheel"><svg id="wheel" viewBox="-250 -250 500 500" role="img" aria-label="Wheel with 52 cards and a Joker"></svg><div class="hand" id="hand" aria-label="Cards dealt by the balls"></div><div class="banner" id="banner" hidden></div></div>
+    <div class="wheel-row"><div class="wheel"><svg id="wheel" viewBox="-250 -250 500 500" role="img" aria-label="Wheel with 52 cards and a Joker"></svg><div class="hand" id="hand" aria-label="Cards dealt by the balls"></div><div class="banner" id="banner" hidden></div></div><div class="side-chips" id="sideChips"></div></div>
     <div class="poker" id="poker" hidden></div>
     <div class="status" id="status" role="status">A new round starts every 7 seconds.</div>
     <ul class="lines" id="lines"></ul>
@@ -309,8 +301,8 @@ svg.v2 .pocket.t-rank{stroke:var(--accent);stroke-width:3.5}
       <div class="g-suits" data-panel="suit" id="gSuits" hidden></div>
       <div class="g-ranks" data-panel="rank" id="gRanks" hidden></div>
       <div class="g-cards" data-panel="card" id="gCards" hidden></div>
-      <div class="felt" id="felt"></div>
     </div>
+    <div class="l2-out" id="l2Out"></div>
     <div class="hint" id="hint">Every ball on your pick counts: <b>more balls, bigger win.</b> Any <b>Joker</b> opens the Bonus for everyone who bet.</div>
     <div class="bar">
       <div class="chips" id="chips" aria-label="Chip value"></div>
@@ -367,6 +359,7 @@ const r2 = (x) => Math.round(x * 100) / 100;
 const fmt = (x) => r2(x).toLocaleString('en-US', { maximumFractionDigits: 2 });
 const rnd = (n) => Math.floor(Math.random() * n);
 const pick = (a) => a[rnd(a.length)];
+const chipClass = (amt) => 'c' + ([100, 25, 10, 5].find((v) => amt >= v) || 1);
 
 const BET_SECONDS = 7, RESULT_SECONDS = 3;
 // phase: 'bet' (window open) -> 'spin' (balls rolling) -> 'result' (showing wins) -> 'bet' ...
@@ -392,9 +385,20 @@ el('circle', { r: 249, class: 'w-rim' }, svg);
 el('circle', { r: 243, class: 'w-rim-line' }, svg);
 el('circle', { r: 238, class: 'w-track' }, svg);
 const rot = el('g', {}, svg);
+// Bet layout 2: tap the wheel itself (pockets = cards, bands = suits, Joker pocket). Red / Black / 10-A sit under the wheel.
+function wheelBet(node, key) {
+  node.addEventListener('click', () => {
+    if (st.layout !== 2 || svg.classList.contains('gold')) return;
+    const [type, target] = key.split(':');
+    $('hint').innerHTML = INFO[type](target);
+    place(key, st.chip);
+  });
+  return node;
+}
+const pocketIndex = Object.fromEntries(M.POCKETS.map((p, i) => [p.id, i]));
 const pockets = M.POCKETS.map((p, i) => {
   const a = i * STEP;
-  const path = el('path', { d: sector(148, 212, a - STEP / 2, a + STEP / 2), class: 'pocket ' + (p.joker ? 'p-joker' : p.color === 'red' ? 'p-red' : 'p-black') }, rot);
+  const path = wheelBet(el('path', { d: sector(148, 212, a - STEP / 2, a + STEP / 2), class: 'pocket ' + (p.joker ? 'p-joker' : p.color === 'red' ? 'p-red' : 'p-black') }, rot), p.joker ? 'joker:-' : 'card:' + p.id);
   if (p.joker) {
     el('text', { class: 'p-txt jk star', transform: `rotate(${a}) translate(0,-194)` }, rot).textContent = '★';
     el('text', { class: 'p-txt jk', transform: `rotate(${a}) translate(0,-166)` }, rot).textContent = 'JKR';
@@ -406,13 +410,30 @@ const pockets = M.POCKETS.map((p, i) => {
 });
 M.SUITS.forEach((s, k) => {
   const a0 = (13 * k + 0.5) * STEP, a1 = (13 * k + 13.5) * STEP, mid = (a0 + a1) / 2;
-  el('path', { d: arcBand(112, 148, a0, a1), class: 'band ' + (s.color === 'red' ? 'p-red' : 'p-black') }, rot);
+  wheelBet(el('path', { d: arcBand(112, 148, a0, a1), class: 'band ' + (s.color === 'red' ? 'p-red' : 'p-black') }, rot), 'suit:' + s.id);
   el('text', { class: 'band-sym', transform: `rotate(${mid}) translate(0,-134)` }, rot).textContent = s.sym;
   el('text', { class: 'band-name', transform: `rotate(${mid}) translate(0,-118)` }, rot).textContent = s.name.toUpperCase();
 });
-el('path', { d: sector(112, 148, -STEP / 2, STEP / 2), class: 'band p-joker' }, rot);
+wheelBet(el('path', { d: sector(112, 148, -STEP / 2, STEP / 2), class: 'band p-joker' }, rot), 'joker:-');
 el('circle', { r: 112, class: 'hub' }, rot);
 for (let k = 0; k < 4; k++) el('line', { x1: 0, y1: -58, x2: 0, y2: -108, class: 'spoke', transform: `rotate(${k * 90 + 45})` }, rot);
+const chipsOnWheel = el('g', { class: 'wchips' }, rot);
+function drawChip(layer, x, y, r, amt, state) {
+  const g = el('g', { class: 'wchip ' + chipClass(amt) + (state ? ' ' + state : ''), transform: `translate(${x} ${y})` }, layer);
+  el('circle', { r }, g);
+  el('text', {}, g).textContent = amt >= 1000 ? r2(amt / 1000) + 'k' : amt;
+}
+function renderWheelChips(shown) {
+  chipsOnWheel.innerHTML = '';
+  if (st.layout !== 2) return;
+  for (const [key, amt] of shown) {
+    const [type, t] = key.split(':');
+    const state = st.wonKeys ? (st.wonKeys.has(key) ? 'won' : 'lost') : '';
+    if (type === 'card' || type === 'joker') { const [x, y] = pt(176, (type === 'joker' ? 0 : pocketIndex[t]) * STEP); drawChip(chipsOnWheel, x, y, 11.5, amt, state); }
+    else if (type === 'suit') { const k = M.SUITS.findIndex((s) => s.id === t); const [x, y] = pt(130, (13 * k + 7) * STEP); drawChip(chipsOnWheel, x, y, 13, amt, state); }
+  }
+}
+
 // Golden bonus wheels (hidden until a Joker lands): v1 = 54 outer pockets + inner ring of 10, v3 = 54 outer pockets only.
 const BN = 54, BSTEP = 360 / BN, IN = M.BONUS_INNER.length, ISTEP = 360 / IN;
 // radial gradients: inner ring (r 100-148) and outer ring (r 148-212) each run dark -> light outward
@@ -552,26 +573,13 @@ mk($('gMain'), 'joker', '-', 'bet joker', '<span class="n">★ Joker</span><span
 mk($('gMain'), 'color', 'red', 'bet', '<span class="n red-t">Red</span><span class="p">2 balls 1.3x<br>3 balls 2.7x</span>');
 mk($('gMain'), 'color', 'black', 'bet', '<span class="n">Black</span><span class="p">2 balls 1.3x<br>3 balls 2.7x</span>');
 mk($('gMain'), 'high', '-', 'bet', '<span class="n">High 10–A</span><span class="p">2 balls 2.2x<br>3 balls 3.6x</span>');
+mk($('l2Out'), 'color', 'red', 'bet', '<span class="n red-t">Red</span><span class="p">1.3x · 2.7x</span>');
+mk($('l2Out'), 'color', 'black', 'bet', '<span class="n">Black</span><span class="p">1.3x · 2.7x</span>');
+mk($('l2Out'), 'high', '-', 'bet', '<span class="n">10–A</span><span class="p">2.2x · 3.6x</span>');
 for (const s of M.SUITS) mk($('gSuits'), 'suit', s.id, 'bet', `<span class="n${s.color === 'red' ? ' red-t' : ''}">${s.sym}</span><span class="p">1x · 2.3x · 3.6x</span>`, s.name);
 for (const r of M.RANKS) mk($('gRanks'), 'rank', r, 'bet', `<span class="n">${r}</span>`, 'Any ' + r);
 for (const s of M.SUITS) for (const r of M.RANKS) (mk($('gCards'), 'card', r + s.id, 'mini' + (s.color === 'red' ? ' red' : ''), `<span class="r">${r}</span><span class="s">${s.sym}</span>`, `${r} of ${s.name}`));
 
-// ---- bet layout 2: the betting board. Outside bets on top, rank columns, suit rows, one cell per card.
-{
-  const felt = $('felt');
-  const out = document.createElement('div'); out.className = 'fout'; felt.appendChild(out);
-  mk(out, 'color', 'red', 'f fo red', '<b>RED</b><small>1.3x · 2.7x</small>', 'Red');
-  mk(out, 'color', 'black', 'f fo', '<b>BLACK</b><small>1.3x · 2.7x</small>', 'Black');
-  mk(out, 'high', '-', 'f fo', '<b>10–A</b><small>2.2x · 3.6x</small>', 'High 10 to A');
-  mk(out, 'joker', '-', 'f fo jk', '<b>★ JOKER</b><small>13x · 120x · 1500x</small>', 'Joker');
-  const corner = document.createElement('div'); corner.className = 'f fcorner'; corner.textContent = 'rank'; felt.appendChild(corner);
-  for (const r of M.RANKS) mk(felt, 'rank', r, 'f fh', r, 'Any ' + r);
-  for (const s of M.SUITS) {
-    mk(felt, 'suit', s.id, 'f fs' + (s.color === 'red' ? ' red' : ''), s.sym, s.name);
-    for (const r of M.RANKS) mk(felt, 'card', r + s.id, 'f fcard' + (s.color === 'red' ? ' red' : ''), `<span class="r">${r}</span><span class="s">${s.sym}</span>`, `${r} of ${s.name}`);
-  }
-}
-const chipClass = (amt) => 'c' + ([100, 25, 10, 5].find((v) => amt >= v) || 1);
 
 const TAB_HINT = {
   main: 'Every ball on your pick counts: <b>more balls, bigger win.</b> Any <b>Joker</b> opens the Bonus for everyone who bet.',
@@ -619,6 +627,7 @@ $('rebet').addEventListener('click', () => {
 function render() {
   // while the balls roll and the result shows, keep this round's chips on the board
   const shown = st.phase === 'bet' ? st.bets : me.bets;
+  renderWheelChips(shown);
   for (const [key, list] of btns) for (const b of list) {
     const amt = shown.get(key) || 0, onBoard = b.classList.contains('f');
     b.classList.toggle('on', amt > 0);
@@ -693,6 +702,7 @@ function openBetting(now) {
   $('timer').className = 'timer';
   $('timeText').textContent = BET_SECONDS + 's';
   resetBonusView(); // back to the normal wheel after a bonus
+  st.wonKeys = null;
   $('lines').innerHTML = '';
   $('status').className = 'status';
   $('status').textContent = '';
@@ -758,6 +768,7 @@ function settleMap(bets, res) {
 function settle(res, now) {
   st.phase = 'result'; resultUntil = now + RESULT_SECONDS * 1000;
   const stake = sum(st.bets), mine = settleMap(st.bets, res);
+  st.wonKeys = new Set(mine.lines.map((l) => l.key));
   for (const [key] of st.bets) for (const e of btns.get(key)) e.classList.add(mine.lines.some((l) => l.key === key) ? 'won' : 'lost');
   // a win on a tab you are not looking at lights up that tab
   const tabOf = (k) => { const ty = k.split(':')[0]; return ['joker', 'color', 'high'].includes(ty) ? 'main' : ty; };
@@ -948,7 +959,7 @@ function settleBonus(now) {
 function tick(now) {
   if (st.phase === 'bet') {
     const left = Math.max(0, st.closesAt - now);
-    if (!reduced) { wAng += (now - lastT) * 0.006; setW(wAng); }
+    if (!reduced && st.layout !== 2) { wAng += (now - lastT) * 0.006; setW(wAng); }
     $('timeBar').style.transform = `scaleX(${left / (BET_SECONDS * 1000)})`;
     const s = Math.ceil(left / 1000);
     $('timeText').textContent = s + 's';
@@ -1037,13 +1048,16 @@ function mathTable(acc, n) {
   });
   $('modeBtns').appendChild(b);
 });
-const LAYOUT_HINT = 'Pick a chip, then tap the board: a <b>card</b> (15x per ball), a <b>♥ ♠ ♦ ♣</b> row (suit), an <b>A–K</b> column (any rank, 3.8x), or Red, Black, 10–A, Joker. Any Joker opens the Bonus.';
+const LAYOUT_HINT = 'Pick a chip on the right, then tap the wheel: a <b>card pocket</b> (15x per ball), a <b>suit band</b> or the <b>Joker</b>. Red, Black and 10–A are the buttons above. Any Joker opens the Bonus. Rank bets are in layout 1.';
 function applyLayout() {
-  $('controls').classList.toggle('layout2', st.layout === 2);
+  const l2 = st.layout === 2;
+  $('controls').classList.toggle('layout2', l2); document.body.classList.toggle('l2', l2); svg.classList.toggle('l2', l2);
+  if (l2) $('sideChips').appendChild($('chips')); else document.querySelector('.bar').prepend($('chips'));
   document.querySelectorAll('#layoutBtns button').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.layout === st.layout));
   $('hint').innerHTML = st.layout === 2 ? LAYOUT_HINT : TAB_HINT[st.tab];
+  render();
 }
-[[1, '1 · Bet panel'], [2, '2 · Chips + board']].forEach(([l, name]) => {
+[[1, '1 · Bet panel'], [2, '2 · Bet on the wheel']].forEach(([l, name]) => {
   const b = document.createElement('button');
   b.type = 'button'; b.dataset.layout = l; b.textContent = name;
   b.addEventListener('click', () => { st.layout = l; saveUrl(); applyLayout(); });
