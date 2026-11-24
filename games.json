@@ -2,6 +2,7 @@
   "sections": [
     "Published",
     "Team prototypes",
+    "Ante — F2P",
     "Card games",
     "In progress",
     "AI slop"
@@ -58,7 +59,7 @@
       "path": "free2play-daily-spin/",
       "title": "F2P — Money Machine",
       "sub": "Main game · Ante reels + Blender streak/button",
-      "section": "In progress",
+      "section": "Ante — F2P",
       "owner": "Ante",
       "source": "IvicaSkrobo/f2p-daily-spin"
     },
@@ -175,15 +176,21 @@
         "Vanja",
         "Marko",
         "Marko Matijevic",
-        "Borna",
-        "Ante"
+        "Borna"
       ],
       "excludePaths": [
-        "comoara-dacilor/"
+        "comoara-dacilor/",
+        "free2play-daily-spin/"
       ],
       "paths": [
         "remi-51/",
         "collector-21/"
+      ]
+    },
+    {
+      "section": "Ante — F2P",
+      "paths": [
+        "free2play-daily-spin/"
       ]
     }
   ]
