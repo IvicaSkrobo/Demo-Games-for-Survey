@@ -176,15 +176,24 @@ td.ok{color:var(--win);font-weight:700}
 svg.gold .w-rim{fill:var(--gold-dark)}
 svg.gold .w-rim-line{stroke:var(--gold)}
 svg.gold .cap{fill:var(--gold-dark);stroke:var(--gold)}
-.bon .pocket{stroke:var(--gold-dark)}
-.b-death{fill:var(--bg)} .b-2{fill:var(--gold-deep)} .b-3{fill:var(--gold)} .b-5{fill:var(--accent-deep)} .b-10{fill:var(--accent)} .b-crown{fill:var(--card)}
-.bi-15{fill:var(--gold-deep)} .bi-25{fill:var(--accent-deep)} .bi-200{fill:var(--card)}
-.bon .pocket.hit{filter:drop-shadow(0 0 8px var(--gold)) brightness(1.25);stroke:var(--gold);stroke-width:2.5}
-.b-txt{font:800 12px system-ui,sans-serif;fill:var(--card);text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.b-3-t,.b-crown-t,.bi-200-t{fill:var(--card-ink)}
-.b-death-t{fill:var(--muted);font-size:12px}
-.b-crown-t{font-size:17px}
-.bi-t{font-size:14px}
+/* bonus multiplier colours (game symbols): 2x green, 3x blue, 5x pink, 10x gold, Crown white; skulls dark */
+.bon .pocket{stroke:#2a1c06;stroke-width:1}
+.b-death{fill:url(#grDeath);stroke:#120a0d}
+.b-2{fill:url(#gr2)} .b-3{fill:url(#gr3)} .b-5{fill:url(#gr5)} .b-10{fill:url(#gr10)} .b-crown{fill:url(#grCrown)}
+.bi-15{fill:url(#gr3)} .bi-25{fill:url(#gr5)} .bi-200{fill:url(#gr10);animation:shine 1.1s ease-in-out infinite alternate}
+@keyframes shine{to{filter:brightness(1.35) drop-shadow(0 0 6px #fff3c4)}}
+.bon .pocket.hit{filter:drop-shadow(0 0 12px #fff3c4) brightness(1.45);stroke:#fff;stroke-width:3}
+.bon .pocket.b-death.hit{filter:none;stroke:var(--lose);stroke-width:2.5}
+.b-txt{font:900 16px system-ui,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none;paint-order:stroke;stroke:#0007;stroke-width:2.5px}
+.b-10-t,.b-crown-t,.bi-200-t{fill:#3a2604;stroke:#fff6;stroke-width:1.5px}
+.b-crown-t{font-size:22px}
+.bi-t{font-size:17px}
+.bi-200-t{font-size:19px}
+.bulb{display:none}
+svg.gold .bulb{display:inline;fill:#fff3c4;filter:drop-shadow(0 0 4px var(--gold));animation:bulb .6s steps(1) infinite}
+svg.gold .bulb.alt{animation-delay:.3s}
+@keyframes bulb{50%{fill:#6b4a0e;filter:none}}
+.ray{fill:#4a3209} .ray.alt{fill:#2c1d05}
 .gold-hub{fill:var(--table);stroke:var(--gold-deep);stroke-width:2}
 .cap-b{font:italic bold 17px Georgia,serif;fill:var(--gold);text-anchor:middle;dominant-baseline:central;letter-spacing:-.03em}
 .bb .core{fill:var(--card);stroke:var(--card-ink);stroke-width:.8}
@@ -225,7 +234,7 @@ svg.v2 .pocket.t-rank{stroke:var(--accent);stroke-width:3.5}
 .mode-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .mode-btns button,.modes .test{min-height:44px;border:1px solid var(--button-line);border-radius:8px;background:var(--button);font-weight:700;font-size:12.5px;padding:4px}
 .mode-btns button[aria-pressed=true]{border-color:var(--gold);color:var(--gold);background:var(--chip)}
-@media(prefers-reduced-motion:reduce){.card.arrive,.pl.new,.banner,.pk.hole{animation:none}.bb.me .ring{animation:none;opacity:.6}}
+@media(prefers-reduced-motion:reduce){.card.arrive,.pl.new,.banner,.pk.hole,.bi-200,svg.gold .bulb{animation:none}.bb.me .ring{animation:none;opacity:.6}}
 </style>
 </head>
 <body>
@@ -361,12 +370,21 @@ el('circle', { r: 112, class: 'hub' }, rot);
 for (let k = 0; k < 4; k++) el('line', { x1: 0, y1: -58, x2: 0, y2: -108, class: 'spoke', transform: `rotate(${k * 90 + 45})` }, rot);
 // Golden bonus wheels (hidden until a Joker lands): v1 = 54 outer pockets + inner ring of 10, v3 = 54 outer pockets only.
 const BN = 54, BSTEP = 360 / BN, IN = M.BONUS_INNER.length, ISTEP = 360 / IN;
+// radial gradients: inner ring (r 100-148) and outer ring (r 148-212) each run dark -> light outward
+const defs = el('defs', {}, svg);
+[['gr2', '#14532d', '#45c975'], ['gr3', '#123e6b', '#4fa2ee'], ['gr5', '#7a0f45', '#ee5fa6'], ['gr10', '#9c6a08', '#ffe390'],
+ ['grCrown', '#e6d29a', '#ffffff'], ['grDeath', '#050203', '#1a0c12']].forEach(([id, dark, light]) => {
+  const g = el('radialGradient', { id, gradientUnits: 'userSpaceOnUse', cx: 0, cy: 0, r: 212 }, defs);
+  [['0.47', dark], ['0.69', light], ['0.70', dark], ['1', light]].forEach(([o, c]) => el('stop', { offset: o, 'stop-color': c }, g));
+});
+function starburst(g, r) { for (let k = 0; k < 16; k++) el('path', { d: sector(56, r, k * 22.5, (k + 1) * 22.5), class: 'ray' + (k % 2 ? ' alt' : '') }, g); }
 function buildRing(outerRing, withInner) {
   const g = el('g', { class: 'bon', style: 'display:none' }, svg);
   const segs = outerRing.map((sg, i) => {
     const a = i * BSTEP, cls = sg.crown ? 'b-crown' : sg.death ? 'b-death' : 'b-' + sg.m;
-    const p = el('path', { d: sector(148, 212, a - BSTEP / 2, a + BSTEP / 2), class: 'pocket ' + cls }, g);
-    el('text', { class: 'b-txt ' + cls + '-t', transform: `rotate(${a}) translate(0,-186)` }, g).textContent = sg.crown ? '♔' : sg.death ? '☠︎' : sg.m + 'x';
+    // skulls sit a little lower and stay dark with no label, so the paying pockets stand out
+    const p = el('path', { d: sg.death ? sector(152, 207, a - BSTEP / 2, a + BSTEP / 2) : sector(146, 214, a - BSTEP / 2, a + BSTEP / 2), class: 'pocket ' + cls }, g);
+    if (!sg.death) el('text', { class: 'b-txt ' + cls + '-t', transform: `rotate(${a}) translate(0,-184)` }, g).textContent = sg.crown ? '\u2654' : sg.m + 'x';
     return p;
   });
   let isegs = [];
@@ -378,13 +396,16 @@ function buildRing(outerRing, withInner) {
       return p;
     });
     el('circle', { r: 100, class: 'gold-hub' }, g);
+    starburst(g, 98);
   } else {
-    el('circle', { r: 148, class: 'gold-hub' }, g);
-    for (let k = 0; k < 8; k++) el('line', { x1: 0, y1: -62, x2: 0, y2: -144, class: 'spoke gold-spoke', transform: `rotate(${k * 45})` }, g);
+    el('circle', { r: 146, class: 'gold-hub' }, g);
+    starburst(g, 144);
   }
   return { g, segs, isegs, set: (a) => g.setAttribute('transform', `rotate(${a})`) };
 }
 const ringV1 = buildRing(M.BONUS_OUTER, true), ringV3 = buildRing(M.BONUS_OUTER_V3, false);
+// marquee bulbs on the rim, lit only during the bonus
+for (let k = 0; k < 40; k++) { const [x, y] = pt(244, k * 9); el('circle', { cx: x, cy: y, r: 4.6, class: 'bulb' + (k % 2 ? ' alt' : '') }, svg); }
 let bAng = 0;
 el('circle', { r: 58, class: 'cap' }, svg);
 const capBonus = el('g', { opacity: 0 }, svg);
