@@ -1,9 +1,35 @@
 {
   "sections": [
+    "Published",
+    "Card games",
     "Prototypes",
     "Other demos"
   ],
   "games": [
+    {
+      "path": "circle/",
+      "title": "Circle",
+      "sub": "Live on Superbet · the published Original",
+      "section": "Published",
+      "owner": "Ivica",
+      "source": "IvicaSkrobo/CircleGame"
+    },
+    {
+      "path": "blackjack/",
+      "title": "Blackjack",
+      "sub": "Classic and Daredevil",
+      "section": "Card games",
+      "owner": "Ivica",
+      "source": "game-discovery/prototypes/2026-11-blackjack"
+    },
+    {
+      "path": "collector-21/",
+      "title": "Collector 21",
+      "sub": "Instant returns · build to 21",
+      "section": "Card games",
+      "owner": "Ivica",
+      "source": "game-discovery/prototypes/2026-11-collector-21"
+    },
     {
       "path": "wheel/",
       "title": "Wheel",
@@ -11,30 +37,6 @@
       "section": "Prototypes",
       "owner": "Ivica",
       "source": "game-discovery/prototypes/2026-11-wheel"
-    },
-    {
-      "path": "collector-21/",
-      "title": "Collector 21",
-      "sub": "Instant returns · build to 21",
-      "section": "Prototypes",
-      "owner": "Ivica",
-      "source": "game-discovery/prototypes/2026-11-collector-21"
-    },
-    {
-      "path": "blackjack/",
-      "title": "Blackjack",
-      "sub": "Classic and Daredevil",
-      "section": "Prototypes",
-      "owner": "Ivica",
-      "source": "game-discovery/prototypes/2026-11-blackjack"
-    },
-    {
-      "path": "circle/",
-      "title": "Circle",
-      "sub": "Circle game",
-      "section": "Prototypes",
-      "owner": "Ivica",
-      "source": "IvicaSkrobo/CircleGame"
     },
     {
       "path": "ski-v4/",
@@ -62,14 +64,16 @@
       "title": "Circle — Study 1",
       "sub": "Classic: standard vs daredevil",
       "section": "Other demos",
-      "owner": "Ivica"
+      "owner": "Ivica",
+      "hidden": true
     },
     {
       "path": "circle/study/mechanic/",
       "title": "Circle — Study 2",
       "sub": "Classic vs timer cashout",
       "section": "Other demos",
-      "owner": "Ivica"
+      "owner": "Ivica",
+      "hidden": true
     },
     {
       "path": "circle-star-comparison/",
