@@ -36,7 +36,7 @@
         const shown = games.filter((g) => !g.hidden).map((g) => {
           const rule = sectionRules.find((r) =>
             !(r.excludePaths || []).includes(g.path) &&
-            ((r.paths || []).includes(g.path) || (r.owners || []).includes(g.owner))
+            ((r.paths || []).includes(g.path) || (r.owners || []).some((owner) => g.owner === owner || (g.owner || "").startsWith(owner + " ")))
           );
           return rule ? { ...g, section: rule.section } : g;
         });
