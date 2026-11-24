@@ -134,7 +134,7 @@ main>details{grid-column:1/-1}
 const $=id=>document.getElementById(id);
 const SUITS=['♥','♠','♦','♣'],LABEL={11:'J',12:'Q',13:'K',14:'A'},rt=r=>LABEL[r]||String(r),isRed=s=>s==='♥'||s==='♦';
 const beats=(a,d)=>a===2?d===14:a===14?(d!==2&&d!==14):a>d;
-const BASE=.9,CAP=1000,MAXSTEPS=10,POOL_RATE=.06,WINS_PER_CARD=5;
+const BASE=.9,CAP=1000,MAXSTEPS=10,POOL_RATE=.06,POOL_SEED=5,WINS_PER_CARD=5;
 const LADDER=[.25,.4,.6,.8,1],WEIGHTS=[45,30,18,7],FACTOR=[.25,.4,.65,1],RNAME=['Jack','Queen','King','Ace'],ROYAL=[11,12,13,14],BETS=[5,10,25,50,100];
 let S={balance:1000,bet:10,pool:20,wins:0,royal:Array(16).fill(false),status:'idle',m:BASE,steps:0,deck:[],hand:[],dealer:null,dealerWin:null,picked:null,bonusRank:0,rung:0,pending:false,history:[],flash:-1,msg:'Choose a bet, then place it.'};
 const money=v=>v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -177,7 +177,7 @@ function startBonus(r){
   S.msg=RNAME[r]+' Run: win duels to climb the prize. A loss ends the run, but you keep what you reached.';dealHand();render();
 }
 function endBonus(text){
-  const prize=prizeAt(S.rung);S.history.unshift({v:prize/S.bet,bonus:true});S.history=S.history.slice(0,10);S.balance+=prize;S.pool-=S.pool*LADDER[S.rung]*FACTOR[S.bonusRank];S.status='cashed';
+  const prize=prizeAt(S.rung);S.history.unshift({v:prize/S.bet,bonus:true});S.history=S.history.slice(0,10);S.balance+=prize;S.pool=Math.max(POOL_SEED,S.pool-S.pool*LADDER[S.rung]*FACTOR[S.bonusRank]);S.status='cashed';
   S.msg=text+' Royal Run pays '+money(prize)+' chips. The rest stays in the pool.';render();afterRound(S.msg);
 }
 function pick(i){
