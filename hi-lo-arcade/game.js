@@ -13,8 +13,7 @@ const symbols = [
   { glyph: '♛', name: 'Crown' },
   { glyph: '⚡︎', name: 'Bolt' }
 ];
-const goldMultipliers = [1.25, 1.5, 2];
-const averageGoldMultiplier = goldMultipliers.reduce((sum, multiplier) => sum + multiplier, 0) / goldMultipliers.length;
+const goldExpectedShare = 0.25;
 const baseReturn = 0.91;
 const awakeReturn = 0.96;
 const formatPoints = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
@@ -47,6 +46,7 @@ let ended = true;
 let stake = Number(bet.value);
 let pot = 0;
 let audio;
+let goldDeck;
 
 function shuffle() {
   const cards = suits.flatMap(([suit, name]) => ranks.map((rank, value) => ({
@@ -142,7 +142,7 @@ function payouts() {
   const awake = energy === fullEnergy;
   const expectedReturn = pot ? risk : stake * (awake ? awakeReturn : baseReturn);
   const canTriggerGold = awake && !awardedThisRound && collection.length === vaultSize - 1;
-  const expectedMultiplier = canTriggerGold ? 1 + bonusChance * (averageGoldMultiplier - 1) : 1;
+  const expectedMultiplier = canTriggerGold ? 1 + bonusChance * goldExpectedShare : 1;
   const quote = direction => {
     const wins = counts[direction] + counts[0];
     if (!counts[direction] || !wins) return null;
@@ -150,6 +150,24 @@ function payouts() {
     return payout > risk ? { payout, chance: wins / deck.length } : null;
   };
   return { 1: quote(1), '-1': quote(-1) };
+}
+
+function goldQuotes() {
+  const quote = direction => {
+    const wins = goldDeck.filter(card => card.value === current.value || Math.sign(card.value - current.value) === direction).length;
+    const chance = wins / goldDeck.length;
+    return chance ? { chance, extra: Math.round(100 * pot * goldExpectedShare / chance) / 100 } : null;
+  };
+  return { 1: quote(1), '-1': quote(-1) };
+}
+
+function dealNext() {
+  byId('next-label').textContent = goldDeck ? 'Gold Card' : 'Next';
+  const card = showCard('next', null, 'arrive');
+  if (goldDeck) {
+    card.classList.add('gold-card');
+    card.setAttribute('aria-label', 'Face-down Gold Card');
+  }
 }
 
 function dealStarter() {
@@ -162,7 +180,11 @@ function dealStarter() {
 
 function setChoice(button, label, quote) {
   const detail = document.createElement('small');
-  detail.textContent = quote ? Math.round(quote.chance * 100) + '% · ' + formatPoints.format(quote.payout / (pot || stake)) + '×' : 'Unavailable';
+  detail.textContent = 'Unavailable';
+  if (quote) {
+    const reward = goldDeck ? '+' + formatCash.format(quote.extra) : formatPoints.format(quote.payout / (pot || stake)) + '×';
+    detail.textContent = Math.round(quote.chance * 100) + '% · ' + reward;
+  }
   button.replaceChildren(label, detail);
   button.setAttribute('aria-disabled', String(busy || !quote));
 }
@@ -172,7 +194,7 @@ function updateControls() {
     setChoice(higher, 'Higher ↑', null);
     setChoice(lower, 'Lower ↓', null);
   } else if (!busy) {
-    const prices = payouts();
+    const prices = goldDeck ? goldQuotes() : payouts();
     setChoice(higher, 'Higher ↑', prices[1]);
     setChoice(lower, 'Lower ↓', prices[-1]);
   } else {
@@ -190,17 +212,18 @@ function updateControls() {
   } else {
     takeWin.replaceChildren('Take', document.createElement('br'), 'Win');
   }
-  takeWin.disabled = busy || (ended ? !bet.validity.valid : !pot);
+  takeWin.disabled = busy || Boolean(goldDeck) || (ended ? !bet.validity.valid : !pot);
 }
 
 function start() {
   cashPop.replaceChildren();
   ended = false;
   awardedThisRound = false;
+  goldDeck = undefined;
   pot = 0;
   stake = Number(bet.value);
   dealStarter();
-  showCard('next', null, '');
+  dealNext();
   showStatus('Will the next card be higher or lower?');
   updateFamiliar();
   updateControls();
@@ -223,7 +246,7 @@ async function advanceCards(nextCard) {
 
   current = nextCard;
   const prices = payouts();
-  if (prices[1] || prices[-1]) {
+  if (goldDeck || prices[1] || prices[-1]) {
     incoming.classList.remove('reveal');
     currentSlot.replaceChildren(incoming);
     if (!reducedMotion.matches) {
@@ -238,12 +261,12 @@ async function advanceCards(nextCard) {
     dealStarter();
   }
 
-  showCard('next', null, 'arrive');
+  dealNext();
   await pause(130);
-  return prices[1] || prices[-1];
+  return goldDeck || prices[1] || prices[-1];
 }
 
-async function awardSymbol() {
+async function awardSymbol(winningCard) {
   awardedThisRound = true;
   const index = Math.floor(Math.random() * symbols.length);
   const symbol = symbols[index];
@@ -275,16 +298,11 @@ async function awardSymbol() {
   collection.push(index);
   updateFamiliar();
   if (collection.length === vaultSize) {
-    const previousPot = pot;
-    const multiplier = goldMultipliers[Math.floor(Math.random() * goldMultipliers.length)];
-    pot = Math.round(100 * pot * multiplier) / 100;
-    showCash(pot - previousPot);
-    byId('next-label').textContent = 'Gold card';
-    byId('next').firstElementChild.classList.add('gold-card');
+    goldDeck = shuffle().filter(card => card.rank !== winningCard.rank || card.suit !== winningCard.suit);
     bonus.classList.add('vault-open');
+    showStatus('Gold Card! Make a free Higher or Lower guess.');
     playTone(660);
-    await pause(850);
-    byId('next-label').textContent = 'Next';
+    await pause(500);
     collection.length = 0;
     bonus.classList.remove('vault-open');
   } else {
@@ -294,8 +312,38 @@ async function awardSymbol() {
   revealingBonus = false;
   updateFamiliar();
 }
+async function guessGold(direction) {
+  const quote = goldQuotes()[direction];
+  if (!quote) return;
+  busy = true;
+  updateControls();
+  const next = goldDeck.pop();
+  const correct = next.value === current.value || Math.sign(next.value - current.value) === direction;
+  byId('next').firstElementChild.classList.add('lift-card');
+  await pause(110);
+  showCard('next', next, 'reveal').classList.add('gold-card');
+  await pause(250);
+
+  if (correct) {
+    pot = Math.round(100 * (pot + quote.extra)) / 100;
+    status.textContent = '';
+    showCash(quote.extra);
+    playTone(660);
+  } else {
+    showStatus('Gold Card missed. Round continues.');
+  }
+  await pause(580);
+  goldDeck = undefined;
+  const prices = payouts();
+  if (!prices[1] && !prices[-1]) dealStarter();
+  dealNext();
+  busy = false;
+  updateControls();
+}
+
 async function guess(direction) {
   if (busy || ended) return;
+  if (goldDeck) return guessGold(direction);
   const quote = payouts()[direction];
   if (!quote) return;
   busy = true;
@@ -317,7 +365,7 @@ async function guess(direction) {
     pot = quote.payout;
     status.textContent = '';
     status.className = 'status';
-    if (earnedSymbol) await awardSymbol();
+    if (earnedSymbol) await awardSymbol(next);
     else await pause(180);
     const carriedCard = await advanceCards(next);
     if (!carriedCard) showStatus('New starter dealt.');
@@ -331,7 +379,7 @@ async function guess(direction) {
 }
 
 function collect() {
-  if (busy || ended || !pot) return;
+  if (busy || ended || !pot || goldDeck) return;
   status.textContent = '';
   status.className = 'status';
   showCash(pot);
