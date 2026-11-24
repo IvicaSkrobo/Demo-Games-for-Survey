@@ -113,6 +113,14 @@
       "section": "Hidden",
       "owner": "Ante",
       "hidden": true
+    },
+    {
+      "path": "spin-or-fold/",
+      "title": "Spin or Fold",
+      "sub": "Card roulette · 3 balls · wild Joker up to 1500x",
+      "section": "In progress",
+      "owner": "Niki",
+      "source": "game-discovery/prototypes/2026-11-spin-or-fold"
     }
   ]
 }
