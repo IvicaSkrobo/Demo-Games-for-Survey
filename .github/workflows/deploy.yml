@@ -2,20 +2,11 @@ name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
+  # Any push to main redeploys, so new game folders (from people or from
+  # game-discovery's auto-publish) go live without editing this file.
   push:
     branches:
       - main
-    paths:
-      - 'superbet-penalty/**'
-      - 'circle/**'
-      - 'manager-spin/**'
-      - 'free2play-daily-spin/**'
-      - 'ski-v4/**'
-      - 'wheel/**'
-      - 'collector-21/**'
-      - 'comoara-dacilor/**'
-      - 'index.html'
-      - '.github/workflows/**'
 
 permissions:
   contents: read

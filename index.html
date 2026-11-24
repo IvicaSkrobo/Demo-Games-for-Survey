@@ -5,66 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gamio Demo Games</title>
   <style>
-    body { margin: 0; background: #111; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-    h1 { font-size: 1.4rem; margin-bottom: 2rem; opacity: 0.6; letter-spacing: 0.1em; text-transform: uppercase; }
-    .games { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
-    a.card { display: block; background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 2rem 2.5rem; text-decoration: none; color: #fff; text-align: center; transition: border-color 0.2s, transform 0.2s; }
-    a.card:hover { border-color: #888; transform: translateY(-2px); }
-    a.card .title { font-size: 1.1rem; font-weight: 600; }
-    a.card .sub { font-size: 0.8rem; opacity: 0.45; margin-top: 0.4rem; }
+    :root { color-scheme: dark; }
+    body { margin: 0; background: #111; color: #fff; font-family: system-ui, sans-serif; min-height: 100vh; }
+    main { max-width: 1100px; margin: 0 auto; padding: 48px 20px 64px; }
+    h1 { font-size: 1.4rem; margin: 0 0 2.5rem; opacity: 0.6; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+    h2 { font-size: 0.8rem; margin: 2.2rem 0 1rem; color: #9a9a9a; letter-spacing: 0.12em; text-transform: uppercase; }
+    .games { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+    a.card { display: block; background: #1e1e1e; border: 1px solid #333; border-radius: 12px; padding: 1.4rem 1.5rem; text-decoration: none; color: #fff; transition: border-color 0.2s, transform 0.2s; }
+    a.card:hover, a.card:focus-visible { border-color: #888; transform: translateY(-2px); outline: none; }
+    a.card .title { font-size: 1.05rem; font-weight: 600; }
+    a.card .sub { font-size: 0.8rem; color: #a8a8a8; margin-top: 0.4rem; line-height: 1.35; }
+    a.card .owner { font-size: 0.7rem; color: #8a8a8a; margin-top: 0.8rem; }
+    .error { color: #f99; text-align: center; }
   </style>
 </head>
 <body>
-  <h1>Demo Games</h1>
-  <div class="games">
-    <a class="card" href="comoara-dacilor/">
-      <div class="title">Comoara Dacilor</div>
-      <div class="sub">Playable demo</div>
-    </a>
-    <a class="card" href="blackjack/">
-      <div class="title">Blackjack</div>
-      <div class="sub">Classic and Daredevil</div>
-    </a>
-    <a class="card" href="collector-21/">
-      <div class="title">Collector 21</div>
-      <div class="sub">Instant returns · build to 21</div>
-    </a>
-    <a class="card" href="superbet-penalty/FreeMode/">
-      <div class="title">Superbet Penalty</div>
-      <div class="sub">Free mode</div>
-    </a>
-    <a class="card" href="circle/">
-      <div class="title">Circle</div>
-      <div class="sub">Circle game</div>
-    </a>
-    <a class="card" href="circle/study/risk/">
-      <div class="title">Circle — Study 1</div>
-      <div class="sub">Classic: standard vs daredevil</div>
-    </a>
-    <a class="card" href="circle/study/mechanic/">
-      <div class="title">Circle — Study 2</div>
-      <div class="sub">Classic vs timer cashout</div>
-    </a>
-    <a class="card" href="manager-spin/">
-      <div class="title">ManagerSpin</div>
-      <div class="sub">Slot manager game</div>
-    </a>
-    <a class="card" href="free2play-daily-spin/">
-      <div class="title">F2P — Money Machine</div>
-      <div class="sub">Main game · Ante reels + Blender streak/button</div>
-    </a>
-    <a class="card" href="free2play-daily-spin/money-machine-handoff/money.html">
-      <div class="title">Money Machine — Animation Handoff</div>
-      <div class="sub">Ante's playable collector route · Patrik reference</div>
-    </a>
-    <a class="card" href="wheel/">
-      <div class="title">Wheel</div>
-      <div class="sub">New game discovery · spit-out wheel, bet on risk</div>
-    </a>
-    <a class="card" href="ski-v4/">
-      <div class="title">SkiJump 4.0</div>
-      <div class="sub">Candidate preview</div>
-    </a>
-  </div>
+  <main>
+    <h1>Demo Games</h1>
+    <div id="catalog"></div>
+    <noscript><p class="error">Turn on JavaScript to see the games list. Each game lives in its own folder, e.g. <a href="wheel/">wheel/</a>.</p></noscript>
+  </main>
+  <script>
+    // The list of games comes from games.json: sections in order, games grouped by section.
+    // "hidden": true keeps a game reachable by its link but off this page.
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+    fetch("games.json", { cache: "no-cache" })
+      .then((r) => r.json())
+      .then(({ sections = [], games = [] }) => {
+        const shown = games.filter((g) => !g.hidden);
+        const order = [...sections, ...new Set(shown.map((g) => g.section || "Other").filter((s) => !sections.includes(s)))];
+        document.getElementById("catalog").innerHTML = order
+          .map((section) => {
+            const list = shown.filter((g) => (g.section || "Other") === section);
+            if (!list.length) return "";
+            return `<h2>${esc(section)}</h2><div class="games">${list
+              .map((g) => `<a class="card" href="${esc(g.path)}"><div class="title">${esc(g.title)}</div><div class="sub">${esc(g.sub)}</div>${g.owner ? `<div class="owner">${esc(g.owner)}</div>` : ""}</a>`)
+              .join("")}</div>`;
+          })
+          .join("");
+      })
+      .catch(() => {
+        document.getElementById("catalog").innerHTML = '<p class="error">Could not load games.json.</p>';
+      });
+  </script>
 </body>
 </html>

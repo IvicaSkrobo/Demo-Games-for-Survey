@@ -1,0 +1,24 @@
+{
+  "sections": [
+    "New game discovery",
+    "Originals",
+    "Survey studies",
+    "Slots & F2P",
+    "Sports"
+  ],
+  "games": [
+    { "path": "wheel/", "title": "Wheel", "sub": "Printed pays · skull sweep · spin the wheel or the flapper", "section": "New game discovery", "owner": "Ivica", "source": "game-discovery/prototypes/2026-11-wheel" },
+    { "path": "collector-21/", "title": "Collector 21", "sub": "Instant returns · build to 21", "section": "New game discovery", "owner": "Ivica", "source": "game-discovery/prototypes/2026-11-collector-21" },
+    { "path": "blackjack/", "title": "Blackjack", "sub": "Classic and Daredevil", "section": "New game discovery", "owner": "Ivica", "source": "game-discovery/prototypes/2026-11-blackjack" },
+    { "path": "circle/", "title": "Circle", "sub": "Circle game", "section": "Originals", "owner": "Ivica", "source": "IvicaSkrobo/CircleGame" },
+    { "path": "ski-v4/", "title": "SkiJump 4.0", "sub": "Candidate preview", "section": "Originals", "owner": "Ivica" },
+    { "path": "circle/study/risk/", "title": "Circle — Study 1", "sub": "Classic: standard vs daredevil", "section": "Survey studies", "owner": "Ivica" },
+    { "path": "circle/study/mechanic/", "title": "Circle — Study 2", "sub": "Classic vs timer cashout", "section": "Survey studies", "owner": "Ivica" },
+    { "path": "circle-star-comparison/", "title": "Circle — Star comparison", "sub": "Stars variants side by side", "section": "Survey studies", "owner": "Ivica", "hidden": true },
+    { "path": "comoara-dacilor/", "title": "Comoara Dacilor", "sub": "Playable demo", "section": "Slots & F2P", "owner": "Niki" },
+    { "path": "manager-spin/", "title": "ManagerSpin", "sub": "Slot manager game", "section": "Slots & F2P", "owner": "Ivica" },
+    { "path": "free2play-daily-spin/", "title": "F2P — Money Machine", "sub": "Main game · Ante reels + Blender streak/button", "section": "Slots & F2P", "owner": "Ante", "source": "IvicaSkrobo/f2p-daily-spin" },
+    { "path": "free2play-daily-spin/money-machine-handoff/money.html", "title": "Money Machine — Animation Handoff", "sub": "Ante's playable collector route · Patrik reference", "section": "Slots & F2P", "owner": "Ante" },
+    { "path": "superbet-penalty/FreeMode/", "title": "Superbet Penalty", "sub": "Free mode", "section": "Sports", "owner": "Ivica" }
+  ]
+}
