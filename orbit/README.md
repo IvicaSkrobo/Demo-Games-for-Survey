@@ -12,7 +12,7 @@ Orbit is a static fruit wheel for mobile surveys. Players can stake separate dem
 
 ## Run locally
 
-From this folder, run `npx serve .`, or open `index.html` directly for offline play. Keep `fruit.webp` next to it. The game uses HTML, CSS, JavaScript, Canvas and a local WebP sprite sheet, with no build step. Survey iframes need script permission. When the page is hidden, the round countdown pauses. Reduced motion is available in the game and through the system setting.
+From this folder, run `npx serve .`, or open `index.html` directly for offline play. Keep `fruit.webp` next to it. The game uses HTML, CSS, JavaScript, Canvas and a local WebP sprite sheet, with no build step. Survey iframes need script permission. The layout stacks on narrow screens and puts the wheel beside the betting controls on desktop and wider landscape screens. When the page is hidden, the round countdown pauses. Reduced motion is available in the game and through the system setting.
 
 ## Odds and theoretical RTP
 
