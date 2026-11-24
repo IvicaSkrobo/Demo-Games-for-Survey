@@ -137,6 +137,14 @@
       "section": "Card games",
       "owner": "Vanja",
       "source": "game-discovery/prototypes/2026-11-dealer-duel"
+    },
+    {
+      "path": "climb-21/",
+      "title": "Climb 21",
+      "sub": "Blackjack where every card you survive raises your win",
+      "section": "In progress",
+      "owner": "Patrik",
+      "source": "game-discovery/prototypes/2026-11-climb-21"
     }
   ]
 }
