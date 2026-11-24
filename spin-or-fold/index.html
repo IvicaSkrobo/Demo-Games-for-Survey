@@ -33,13 +33,13 @@ h1 small{font-size:.55em;color:var(--accent);padding:0 .12em}
 .table{position:relative;text-align:center;border:1px solid var(--table-line);border-radius:22px;background:var(--table);padding:12px 12px 12px;box-shadow:inset 0 0 40px #0004;overflow:hidden}
 .table:before{content:"";position:absolute;inset:8px;border:1px solid #6fa9cb26;border-radius:16px;pointer-events:none}
 
-.players{position:relative;display:flex;gap:4px;overflow-x:auto;padding:4px;scrollbar-width:none}
+.players{position:relative;display:flex;gap:4px;overflow-x:auto;padding:9px 8px 5px;margin:-5px -4px 0;scrollbar-width:none}
 .players::-webkit-scrollbar{display:none}
 .pl{flex:0 0 46px;display:grid;justify-items:center;gap:2px;font-size:10.5px;line-height:1.15;min-width:0}
 .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:800 11px system-ui,sans-serif;color:#fff;background:var(--chip);border:2px solid var(--accent-dark);transition:border-color .2s,box-shadow .2s}
 .pl.me .av{border-color:var(--accent);background:var(--accent-deep)}
 .pl.betting .av{border-color:var(--accent)}
-.pl.won .av{border-color:var(--win);box-shadow:0 0 10px var(--win)}
+.pl.won .av{border-color:var(--win);box-shadow:0 0 8px var(--win)}
 .pl .nm{max-width:46px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
 .pl .amt{color:var(--text-cool);font-weight:700;font-variant-numeric:tabular-nums;min-height:12px}
 .pl.won .amt{color:var(--win)}
@@ -49,7 +49,9 @@ h1 small{font-size:.55em;color:var(--accent);padding:0 .12em}
 .players-cap{display:flex;justify-content:space-between;align-items:center;padding:0 6px}
 
 .timer{margin:4px 6px 2px;display:grid;gap:4px}
-.timer-row{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:12.5px}
+.timer-row{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:700;font-size:12.5px;text-align:left}
+.timer-row .win{color:var(--win)} .timer-row .lose{color:var(--muted)} .timer-row .gold{color:var(--gold)}
+.timer-row b{white-space:nowrap}
 .timer-row b{color:var(--text-cool);font-variant-numeric:tabular-nums}
 .track{height:6px;border-radius:3px;background:var(--chip);overflow:hidden}
 .track i{display:block;height:100%;width:100%;background:var(--primary);transform-origin:left;transition:background .3s}
@@ -108,6 +110,7 @@ h1 small{font-size:.55em;color:var(--accent);padding:0 .12em}
 .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 .tab{min-height:40px;border:1px solid var(--button-line);border-radius:8px;background:var(--button);font-weight:700;font-size:13px;position:relative}
 .tab[aria-selected=true]{border-color:var(--accent);color:var(--text-cool);background:var(--chip)}
+.tab.won{border-color:var(--win);box-shadow:0 0 0 1px var(--win),0 0 10px #50d57355;color:var(--win)}
 .tab .dot{position:absolute;top:4px;right:5px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
 .hint{min-height:36px;font-size:12.5px;line-height:1.4;color:var(--muted)}
 .hint b{color:var(--text)}
@@ -648,11 +651,10 @@ function startSpin(now) {
   st.phase = 'spin'; idle = false;
   capLogo.setAttribute('opacity', 1); capNum.textContent = '';
   $('timer').className = 'timer spinning';
-  $('phaseText').textContent = 'Bets closed · balls rolling';
+  $('phaseText').textContent = sum(st.bets) ? 'Bets closed · good luck! Your bet ' + fmt(sum(st.bets)) : 'Bets closed · watching this round';
   $('timeText').textContent = '';
   $('timeBar').style.transform = 'scaleX(1)';
-  $('status').className = 'status';
-  $('status').textContent = sum(st.bets) ? 'Good luck! Your bet: ' + fmt(sum(st.bets)) : 'Watching this round';
+  $('status').className = 'status'; $('status').textContent = ''; $('lines').innerHTML = '';
   for (const b of bots) b.plan = [];
   emptyHand(); render();
   let res = M.spin();
@@ -684,8 +686,7 @@ function stepSpin(now) {
       if (p.joker && !a.joker) {
         a.joker = true;
         $('banner').textContent = '★ JOKER · BONUS UNLOCKED'; $('banner').hidden = false;
-        $('status').className = 'status gold';
-        $('status').textContent = sum(st.bets) ? 'Joker! You\'re in the Bonus · bet ' + fmt(sum(st.bets)) : 'Joker! Bonus for players who bet · you\'re watching';
+        $('phaseText').innerHTML = '<span class="gold">' + (sum(st.bets) ? '★ Joker! You\'re in the Bonus · bet ' + fmt(sum(st.bets)) : '★ Joker! Bonus for players who bet') + '</span>';
       }
     }
   }
@@ -703,6 +704,9 @@ function settle(res, now) {
   st.phase = 'result'; resultUntil = now + RESULT_SECONDS * 1000;
   const stake = sum(st.bets), mine = settleMap(st.bets, res);
   for (const [key] of st.bets) btns.get(key).classList.add(mine.lines.some((l) => l.key === key) ? 'won' : 'lost');
+  // a win on a tab you are not looking at lights up that tab
+  const tabOf = (k) => { const ty = k.split(':')[0]; return ['joker', 'color', 'high'].includes(ty) ? 'main' : ty; };
+  document.querySelectorAll('.tab').forEach((t) => { if (mine.lines.some((l) => tabOf(l.key) === t.dataset.tab)) t.classList.add('won'); });
   st.balance = r2(st.balance + mine.win);
   me.result = stake ? mine.win : null;
   if (stake) st.lastWin = mine.win;
@@ -715,27 +719,25 @@ function settle(res, now) {
     if (r.win) table.push({ who: b.name, pay: r.win, why: betName(r.lines.sort((x, y) => y.pay - x.pay)[0].key) });
   }
   table.sort((a, b) => b.pay - a.pay);
-  const top = table.filter((x) => x.me).concat(table.filter((x) => !x.me)).slice(0, 4);
   $('timer').className = 'timer';
-  $('phaseText').textContent = 'Round over';
-  $('status').className = 'status ' + (stake ? (mine.win >= stake ? 'win' : 'lose') : '');
-  $('status').textContent = !stake ? (table.length ? table.length + ' winner' + (table.length > 1 ? 's' : '') + ' at the table' : 'No winners this round')
-    : mine.win ? (mine.win >= stake ? 'You win ' + fmt(mine.win) + ' · +' + fmt(mine.win - stake) : 'Paid ' + fmt(mine.win) + ' of ' + fmt(stake)) : 'No win · −' + fmt(stake);
-  $('lines').innerHTML = top.map((x) => `<li class="${x.me ? 'me' : ''}"><span>${x.who} · ${x.why}</span><b>+${fmt(x.pay)}</b></li>`).join('');
+  let msg = !stake ? (table.length ? table.length + ' winner' + (table.length > 1 ? 's' : '') + ' at the table' : 'No winners this round')
+    : mine.win ? (mine.win >= stake ? 'You win ' + fmt(mine.win) + ' (+' + fmt(mine.win - stake) + ')' : 'Paid ' + fmt(mine.win) + ' of ' + fmt(stake)) : 'No win · −' + fmt(stake);
+  const msgCls = stake ? (mine.win >= stake ? 'win' : 'lose') : '';
+  $('status').textContent = ''; $('lines').innerHTML = '';
   if (M.triggersBonus(res)) {
     st.board = res.slice();
     st.pendingBonus = bots.filter((b) => sum(b.bets) > 0).map((b) => ({ p: b, bet: sum(b.bets) }));
     if (stake) st.pendingBonus.push({ p: me, bet: stake }); // you land last
     if (!st.pendingBonus.length) st.pendingBonus = null;
-    $('phaseText').textContent = '★ Joker Bonus next';
-    if (stake) $('status').textContent += ' · Bonus next!';
+    msg += ' · ★ Bonus next';
   }
+  if (st.balance < 1) { st.balance = 1000; st.last = new Map(); msg += ' · balance reset'; }
+  $('phaseText').innerHTML = '<span class="' + msgCls + '">' + msg + '</span>';
   me.bets = new Map(st.bets);
   if (stake) st.last = new Map(st.bets);
   st.bets = new Map(); st.undo = [];
   hist.unshift(res); if (hist.length > 6) hist.pop();
   $('history').innerHTML = '<span class="label">Last</span>' + hist.map((h) => '<span class="h-r">' + h.map((b) => { const p = M.POCKETS[b]; return p.joker ? '<span class="h-c jk">★</span>' : `<span class="h-c${p.color === 'red' ? ' red' : ''}">${p.rank}${p.sym}</span>`; }).join('') + '</span>').join('');
-  if (st.balance < 1) { st.balance = 1000; st.last = new Map(); $('status').textContent += ' · balance reset to 1,000'; }
   render();
 }
 const hist = [];
