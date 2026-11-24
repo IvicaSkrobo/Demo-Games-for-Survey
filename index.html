@@ -31,8 +31,15 @@
     const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
     fetch("games.json", { cache: "no-cache" })
       .then((r) => r.json())
-      .then(({ sections = [], games = [] }) => {
-        const shown = games.filter((g) => !g.hidden);
+      .then(({ sections = [], games = [], sectionRules = [] }) => {
+        // Apply grouping after publishing metadata, so game updates preserve the team section.
+        const shown = games.filter((g) => !g.hidden).map((g) => {
+          const rule = sectionRules.find((r) =>
+            !(r.excludePaths || []).includes(g.path) &&
+            ((r.paths || []).includes(g.path) || (r.owners || []).includes(g.owner))
+          );
+          return rule ? { ...g, section: rule.section } : g;
+        });
         const order = [...sections, ...new Set(shown.map((g) => g.section || "Other").filter((s) => !sections.includes(s)))];
         document.getElementById("catalog").innerHTML = order
           .map((section) => {

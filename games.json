@@ -1,6 +1,7 @@
 {
   "sections": [
     "Published",
+    "Team prototypes",
     "Card games",
     "In progress",
     "AI slop"
@@ -153,6 +154,28 @@
       "section": "In progress",
       "owner": "Marko Matijevic",
       "source": "game-discovery/prototypes/2026-11-orbit"
+    }
+  ],
+  "sectionRules": [
+    {
+      "section": "Team prototypes",
+      "owners": [
+        "Niki",
+        "Patrik",
+        "Matea",
+        "Matej",
+        "Vanja",
+        "Marko",
+        "Marko Matijevic",
+        "Borna",
+        "Ante"
+      ],
+      "excludePaths": [
+        "comoara-dacilor/"
+      ],
+      "paths": [
+        "remi-51/"
+      ]
     }
   ]
 }
