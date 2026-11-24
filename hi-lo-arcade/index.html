@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hi-Lo</title>
+<style>
+  :root {
+    --bg:#11080d; --table:#1a0913; --panel:#28121c; --chip:#401628;
+    --button:#39232d; --primary:#50d573; --accent:#e1549c;
+    --accent-deep:#c31870; --accent-dark:#941658; --text:#edf4ee;
+    --text-cool:#d5edff; --muted:#a6c3d7; --win:#50d573;
+    --lose:#e31246; --card:#fcfdff;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px system-ui,sans-serif; }
+  main { width:min(100%,520px); margin:auto; padding:12px; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; gap:10px; }
+  .table { flex:1; display:flex; flex-direction:column; justify-content:space-evenly; gap:10px; padding:14px; background:var(--table); border:1px solid #361225; border-radius:22px; }
+  header, .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  h1 { margin:0; font:bold italic clamp(34px,10vw,52px)/1 Georgia,serif; letter-spacing:-.06em; }
+  .label { margin:0; color:var(--muted); font-size:11px; font-weight:750; letter-spacing:.16em; text-transform:uppercase; }
+  .pill { background:var(--chip); color:var(--text-cool); border-radius:99px; padding:4px 10px; white-space:nowrap; }
+  .bonus { background:var(--panel); border-radius:15px; padding:9px 11px; }
+  .bonus p { margin:4px 0 0; font-size:12px; color:var(--text-cool); }
+  .bonus.ready { outline:1px solid var(--accent); animation:bonus-ready 550ms ease-out; }
+  @keyframes bonus-ready {
+    40% { box-shadow:0 0 18px var(--accent-dark); }
+  }
+  .showdown { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; text-align:center; margin:16px 0; }
+  .showdown > div { display:grid; place-items:center; }
+  .card { width:min(100%,110px); height:144px; display:flex; flex-direction:column; justify-content:space-between; padding:8px 10px; border-radius:10px; text-align:left; background:var(--card); color:#142a3a; box-shadow:0 0 0 1px var(--table); font:bold 30px Georgia,serif; }
+  .order { text-align:center; line-height:1.5; }
+  .bonus-draw .card { outline:3px solid var(--accent); outline-offset:3px; }
+  .card.red { color:var(--lose); }
+  .suit { align-self:end; font-size:60px; line-height:1; }
+  .back { background:repeating-linear-gradient(135deg,var(--accent-dark) 0 6px,var(--accent-deep) 6px 9px); border:3px solid var(--card); }
+  .status { margin:0; min-height:42px; display:grid; align-content:center; font-weight:700; color:var(--text-cool); }
+  .status.win { color:var(--win); }
+  .status.lose { color:var(--text); border-left:3px solid var(--lose); padding-left:8px; }
+  .controls { position:sticky; bottom:0; display:grid; grid-template-columns:1.2fr 1fr; gap:8px; border-radius:15px; padding:8px; background:var(--panel); }
+  button { min-height:54px; border:1px solid #35536a; border-radius:8px; background:var(--button); color:var(--text); font:750 16px system-ui,sans-serif; cursor:pointer; touch-action:manipulation; }
+  button.primary { background:var(--primary); color:var(--card); border-color:var(--primary); text-shadow:0 1px 2px var(--table); }
+  button { transition:transform 100ms ease, opacity 150ms ease; }
+  button[aria-disabled="true"] { opacity:.72; cursor:default; }
+  button small { display:block; font-size:11px; margin-top:2px; }
+  button:active { transform:scale(.98); }
+  button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  button[hidden] { display:none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation:none !important; transition:none !important; }
+  }
+</style>
+<link rel="stylesheet" href="./atmosphere.css">
+<link rel="stylesheet" href="./arcade.css">
+</head>
+<body>
+<main>
+  <div class="table">
+    <header><h1>Hi-Lo</h1></header>
+    <section class="bonus" aria-labelledby="bonus-label">
+      <h2 class="sr-only" id="bonus-label">Bonus familiar</h2>
+      <div class="familiar" data-energy="0" aria-hidden="true">
+        <span class="familiar-aura"></span>
+        <span class="familiar-spark spark-one">✦</span>
+        <span class="familiar-spark spark-two">✧</span>
+        <span class="familiar-tail"></span>
+        <span class="familiar-body"></span>
+        <span class="familiar-head">
+          <span class="familiar-ear ear-left"></span><span class="familiar-ear ear-right"></span>
+          <span class="familiar-eyes"><i></i><i></i></span>
+          <span class="familiar-nose"></span>
+        </span>
+        <span class="familiar-sleep">z</span>
+      </div>
+      <button class="vault-payouts" id="vault-payouts" type="button" aria-haspopup="dialog">Payouts</button>
+      <div class="cash-pop" id="cash-pop" role="status"></div>
+      <div class="symbol-vault" aria-label="Vault collection">
+        <span>◇</span><span>◇</span><span>◇</span>
+      </div>
+      <p class="sr-only" id="familiar-state"></p>
+    </section>
+    <section aria-labelledby="current-label">
+      <h2 class="label" id="current-label">Current card</h2>
+      <div class="showdown">
+        <div id="current"></div>
+        <span class="next-label label" id="next-label">Next</span>
+        <div id="next"></div>
+      </div>
+      <p class="order label">2 low · Ace high · Both choices include ties</p>
+    </section>
+    <p class="status" id="status" role="status"></p>
+  </div>
+  <div class="controls">
+    <div class="guess-actions">
+      <button id="lower" type="button">Lower ↓</button>
+      <button class="primary" id="take-win" type="button">Play</button>
+      <button id="higher" type="button">Higher ↑</button>
+      <button id="redraw" type="button" aria-label="Redraw starter">↻</button>
+    </div>
+    <div class="round-actions">
+      <button id="sound" type="button" aria-label="Sound off" aria-pressed="false">♪</button>
+      <button id="options-button" type="button" aria-label="Menu" aria-expanded="false" aria-controls="options">☰</button>
+    </div>
+    <div id="bet-panel">
+      <label for="bet">Stake</label>
+      <div class="stake-stepper">
+        <button id="stake-minus" type="button" aria-label="Decrease stake">−</button>
+        <input id="bet" type="number" inputmode="decimal" min="1" max="10000" step="0.01" value="100" required>
+        <button id="stake-plus" type="button" aria-label="Increase stake">+</button>
+      </div>
+    </div>
+    <div id="options" hidden>
+      <p>Win to build a round payout. Take Win to collect, or risk it on the next card. This survey game uses simulated stakes and payouts.</p>
+    </div>
+  </div>
+</main>
+<dialog id="payout-dialog" aria-labelledby="payout-title">
+  <div class="payout-heading">
+    <h2 id="payout-title">Vault payouts</h2>
+    <button type="button" id="close-payouts" aria-label="Close payouts">×</button>
+  </div>
+  <p>Collect any three symbols. Rewards are added to your current win. Order doesn’t matter.</p>
+  <div class="payout-list" id="payout-list"></div>
+</dialog>
+<script src="./game.js"></script>
+</body>
+</html>

@@ -154,6 +154,14 @@
       "section": "In progress",
       "owner": "Marko Matijevic",
       "source": "game-discovery/prototypes/2026-11-orbit"
+    },
+    {
+      "path": "hi-lo-arcade/",
+      "title": "Hi-Lo",
+      "sub": "Call higher or lower and collect symbols to open the vault.",
+      "section": "In progress",
+      "owner": "Matea Zivkovic",
+      "source": "game-discovery/prototypes/2026-11-hi-lo"
     }
   ],
   "sectionRules": [
