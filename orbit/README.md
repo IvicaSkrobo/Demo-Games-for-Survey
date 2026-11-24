@@ -4,8 +4,8 @@ Orbit is a static fruit wheel for mobile surveys. Players can stake separate dem
 
 ## How to play
 
-1. Enter a stake of at least €1.00 or tap a quick amount. Tap a fruit to add a bet. Change the amount before picking another fruit to give it a different stake. Tap a selected fruit again to remove its bet.
-2. Tap **Place bets** to confirm your picks. Tap **Random bet** to immediately place the current stake on one uniformly random fruit. You can confirm several batches or tap Random bet repeatedly. Repeat stakes on the same fruit add together. The stop point for the current round is the charge reveal. Any bets you place after it are debited once and confirmed for the following round. Unsubmitted picks carry across rounds.
+1. Type a stake of at least €1.00 or use the stake chips. The €1 chip resets the stake to €1. Each + chip adds its amount per tap. Changing the stake applies to future bets.
+2. Tap a fruit to place the displayed stake immediately. **Random bet** chooses one uniformly random fruit per tap. Repeat taps stack on the same fruit. Bets placed after the charge reveal are debited once and confirmed for the next round.
 3. The charge reveal randomly selects a fruit and a boost of 1.5×, 2× or 3×. All bets stay live.
 4. The wheel lands two seconds later. A fruit landing pays that fruit, boosted if it was charged. A gold Harvest landing sends every active fruit bet to one more reveal. Harvest uses its own paytable.
 5. The fruit card and wheel marker flash for a confirmed live bet. The receipt shows the amount and whether the bet is for this round or the next. Payouts go straight to the demo wallet and appear in a dedicated payout panel. The result shows the net change after all round stakes. The rider feed shows busted and paid bets before removing them individually. Green markers on the wheel include the player’s stake.

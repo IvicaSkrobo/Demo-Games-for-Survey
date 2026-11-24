@@ -111,30 +111,29 @@ h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacin
 .controls{margin-top:7px;padding:7px 8px 8px;border-radius:15px;background:var(--panel)}
 .row-label{display:flex;justify-content:space-between;align-items:center;gap:5px;min-height:16px;margin-bottom:3px}
 .row-label .hint{font-size:10px;color:var(--muted);text-align:right}
-.amounts{display:grid;grid-template-columns:minmax(0,1.45fr) repeat(3,minmax(0,1fr));gap:4px}
+.amounts{display:grid;grid-template-columns:minmax(76px,1fr) repeat(4,minmax(44px,.55fr));align-items:center;gap:4px;padding:3px;border:1px solid var(--chip);border-radius:12px;background:var(--table)}
+.stake-chip{position:relative;padding:3px 0;border:1px solid var(--accent-dark);border-radius:999px;background:var(--chip);color:var(--text-cool);font-size:11px;line-height:1;font-weight:800;white-space:nowrap}
+.stake-chip:not(:disabled):active{background:var(--accent-dark);border-color:var(--accent)}
+.stake-reset{border-color:var(--button);background:var(--bg);color:var(--muted)}
 button,input{min-width:0;min-height:44px;border:1px solid #35536a;border-radius:8px;background:var(--button);color:var(--text);font:inherit;font-weight:750}
 button{padding:3px 4px;cursor:pointer;touch-action:manipulation}
 button[aria-pressed=true]{border-color:var(--accent);background:var(--chip);color:var(--text-cool)}
 button:disabled{opacity:.52;cursor:default}
 button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--card);outline-offset:1px}
-.amount-field{position:relative}
-.amount-field span{position:absolute;top:50%;left:8px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
-.amount-field input{width:100%;padding:4px 5px 4px 24px;font-size:16px;font-variant-numeric:tabular-nums}
+.amount-field{position:relative;min-width:0}
+.amount-field span{position:absolute;top:50%;left:8px;transform:translateY(-50%);color:var(--accent);pointer-events:none}
+.amount-field input{width:100%;padding:4px 5px 4px 24px;border-color:var(--accent-dark);border-radius:9px;background:var(--bg);font-size:16px;font-variant-numeric:tabular-nums}
 .amount-field input[aria-invalid=true]{border-color:var(--lose)}
 .fruit-heading{margin-top:6px}
 .fruits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
 .fruit{position:relative;display:grid;justify-items:center;align-content:center;gap:0;min-height:69px;padding:2px 1px;font-size:10px;line-height:1.1}
-.fruit:disabled[aria-pressed=true]{opacity:.9}
 .fruit .sprite{--size:30px}
 .fruit strong{font-size:11px}
 .fruit .payout{color:var(--muted)}
-.fruit .selected{position:absolute;top:2px;right:2px;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--accent-dark);color:var(--card);padding:2px 3px;border-radius:4px;font-size:9px;line-height:1}
-.bet-actions{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:5px;margin-top:6px}
+.bet-actions{margin-top:6px}
 .primary{display:block;width:100%;min-height:48px;border-color:transparent;background:var(--primary);color:white;text-shadow:0 1px 3px #142a3a,0 0 4px #142a3a;font-size:15px}
 .primary:disabled{opacity:.72}
-.primary,.random-bet{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.random-bet{min-height:48px;font-size:12px}
-.random-bet small{display:block;color:var(--text-cool);font-size:10px;overflow:hidden;text-overflow:ellipsis}
+.primary{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fruit .payout{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fruit .payout[data-split=true]{white-space:normal}
 .bet-announcement{display:flex;align-items:center;justify-content:center;gap:4px;min-height:20px;margin-top:3px;padding:2px 4px;border:1px solid transparent;border-radius:6px;font-size:10px;line-height:1.15;text-align:center;color:var(--muted);overflow-wrap:anywhere}
@@ -152,7 +151,7 @@ summary{min-height:44px;padding:11px 0;cursor:pointer}
 details p{margin:0 0 9px}
 .motion{flex:none;padding-inline:4px;border:0;background:transparent;color:var(--muted);font-size:11px}
 @media(min-width:420px){main{padding-inline:16px}.rider{--size:25px}.rider .bet{font-size:10px}}
-@media(max-height:690px) and (min-width:360px){.wheel{width:clamp(162px,48vw,210px)}}
+@media(max-height:690px) and (min-width:360px){.wheel{width:clamp(162px,46vw,210px)}}
 @media(max-height:620px) and (min-width:360px){.wheel{width:162px}}
 @media(prefers-reduced-motion:reduce){
   .rotor,.pin{transition:none}.wheel.win .hub,.wheel.win .spark,.table.win .result,.table.loss .result,.rider.leaving{animation:none}
@@ -187,7 +186,7 @@ body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.red
     </div>
     <div class="result" id="result" role="status" aria-atomic="true">
       <span class="result-badge" id="resultBadge" aria-hidden="true" hidden>✦</span>
-      <strong id="resultTitle">Pick one or more fruits</strong>
+      <strong id="resultTitle">Tap a fruit to place a bet</strong>
       <span id="resultDetail" hidden></span>
     </div>
     <section class="rail" aria-label="Live bets from simulated riders">
@@ -196,26 +195,26 @@ body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.red
     </section>
   </section>
   <section class="controls" aria-label="Play controls">
-    <div class="row-label"><label for="stake" class="label">Stake per fruit</label><span class="hint" id="stakeHint">€1.00 minimum</span></div>
+    <div class="row-label"><label for="stake" class="label">Stake per tap</label><span class="hint" id="stakeHint">€1.00 minimum</span></div>
     <div class="amounts">
-      <div class="amount-field"><span aria-hidden="true">€</span><input type="text" inputmode="decimal" id="stake" value="10.00" maxlength="14" aria-label="Stake per fruit in euros" aria-describedby="stakeHint" autocomplete="off"></div>
-      <button type="button" data-amount="1000" aria-pressed="true">€10</button>
-      <button type="button" data-amount="2500" aria-pressed="false">€25</button>
-      <button type="button" data-amount="5000" aria-pressed="false">€50</button>
+      <div class="amount-field"><span aria-hidden="true">€</span><input type="text" inputmode="decimal" id="stake" value="10.00" maxlength="14" aria-label="Stake per tap in euros" aria-describedby="stakeHint" autocomplete="off"></div>
+      <button type="button" class="stake-chip stake-reset" id="resetStake" aria-label="Reset stake to one euro">€1</button>
+      <button type="button" class="stake-chip" data-increment="100" aria-label="Add one euro to stake">+€1</button>
+      <button type="button" class="stake-chip" data-increment="500" aria-label="Add five euros to stake">+€5</button>
+      <button type="button" class="stake-chip" data-increment="1000" aria-label="Add ten euros to stake">+€10</button>
     </div>
-    <div class="row-label fruit-heading"><span class="label">Pick fruits</span><span class="hint" id="fruitHint">Tap again to remove a bet</span></div>
+    <div class="row-label fruit-heading"><span class="label">Fruit bets</span><span class="hint" id="fruitHint">Tap a fruit to bet</span></div>
     <div class="fruits" id="fruits" role="group" aria-label="Fruit bets"></div>
     <div class="bet-actions">
-      <button type="button" class="primary" id="primary" disabled>Place bets</button>
-      <button type="button" class="random-bet" id="randomBet">Random bet<small id="randomStake">€10.00</small></button>
+      <button type="button" class="primary" id="randomBet">Random bet · €10.00</button>
     </div>
     <span class="bet-announcement" id="betAnnouncement" role="status" aria-atomic="true"></span>
   </section>
   <footer>
     <details>
       <summary>How to play</summary>
-      <p>Enter a stake in euros or tap a quick amount, then pick one or more fruits. Changing the amount applies to the next fruit you pick. Tap a selected fruit again to remove its bet.</p>
-      <p>Tap <strong>Place bets</strong> to confirm your picks. You can place more bets on the same fruits or pick different ones. <strong>Random bet</strong> puts the current stake on one random fruit per tap.</p>
+      <p>Type a stake in euros or tap the + chips to add to it. Tap the €1 chip to reset the stake to €1. Changing the stake applies to your next bet.</p>
+      <p>Every tap on a fruit places one bet at the displayed stake. Tap the same fruit repeatedly to stack bets, or tap <strong>Random bet</strong> to pick a random fruit each time.</p>
       <p>Bets placed after the charge reveal are confirmed for the next round. The charge gives a random fruit 1.5×, 2× or 3×. Every live bet survives this reveal. On the next reveal, a fruit landing pays the bets on that fruit and the others bust.</p>
       <p>A gold Harvest landing sends every bet to one bonus reveal. Each fruit has its own reward at that reveal. Cherries always pay something in Harvest. Watermelon can pay more or bust. All payouts settle automatically and include the original stake where applicable.</p>
       <p>Amounts use a demo EUR balance. The wheel shows totals from live bets, with your locked bets highlighted in green. Other riders are simulated.</p>
@@ -258,16 +257,15 @@ const byId = id => document.getElementById(id);
 const nodes = Object.fromEntries([
   'balance', 'table', 'wheel', 'rotor', 'dial', 'pockets', 'pins', 'hub', 'idle', 'landedArt', 'landedName',
   'countdown', 'chargeValue', 'sparkles', 'result', 'resultBadge', 'resultTitle', 'resultDetail', 'riders', 'stake', 'stakeHint', 'fruitHint',
-  'fruits', 'primary', 'randomBet', 'randomStake', 'betAnnouncement', 'motion',
+  'fruits', 'resetStake', 'randomBet', 'betAnnouncement', 'motion',
 ].map(id => [id, byId(id)]));
-const quickBets = [...document.querySelectorAll('[data-amount]')];
+const stakeChips = [...document.querySelectorAll('[data-increment]')];
 const euros = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' });
 const compactEuros = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2, minimumFractionDigits: 0 });
 const money = cents => euros.format(cents / 100);
 const compact = cents => compactEuros.format(cents / 100);
 
 let balance = START_BALANCE;
-const draft = new Map();
 const placed = new Map();
 const nextBets = new Map();
 let phase = 'betting';
@@ -311,18 +309,16 @@ function addBets(destination, bets) {
   }
 }
 
-function commitBets(bets) {
-  const amount = total(bets);
-  if (!amount || amount > balance) return false;
+function placeBet(fruit, amount) {
+  if (amount < MIN_STAKE || amount > balance) return;
   const live = phase === 'betting';
-  addBets(live ? placed : nextBets, bets);
+  const bets = live ? placed : nextBets;
+  bets.set(fruit, (bets.get(fruit) || 0) + amount);
   balance -= amount;
   updatePins();
-  for (const fruit of bets.keys()) {
-    flash(fruitButtons.get(fruit), live ? 'placed' : 'queued');
-    if (live) flash(pins.get(fruit), 'placed');
-  }
-  const description = bets.size === 1 ? ' on ' + FRUITS[bets.keys().next().value].name : ' across ' + bets.size + ' fruits';
+  flash(fruitButtons.get(fruit), live ? 'placed' : 'queued');
+  if (live) flash(pins.get(fruit), 'placed');
+  const description = ' on ' + FRUITS[fruit].name;
   const receipt = nodes.betAnnouncement;
   receipt.dataset.round = live ? 'live' : 'next';
   receipt.textContent = 'Placed ' + money(amount) + description + (live ? ' · This round' : ' · Next round');
@@ -332,7 +328,7 @@ function commitBets(bets) {
     receipt.textContent = '';
     delete receipt.dataset.round;
   }, 2600);
-  return true;
+  renderControls();
 }
 
 function payoutMultiplier(fruit, landing, harvestBand, activeCharge) {
@@ -477,8 +473,8 @@ function makeFruitControls() {
     button.className = 'fruit';
     button.dataset.fruit = fruit;
     button.innerHTML = '<span class="sprite" aria-hidden="true"></span><strong>' + metadata.name +
-      '</strong><span class="payout"></span><span class="selected" hidden></span>';
-    button.addEventListener('click', () => toggleFruit(fruit));
+      '</strong><span class="payout"></span>';
+    button.addEventListener('click', () => placeBet(fruit, stakeAmount()));
     nodes.fruits.append(button);
     fruitButtons.set(fruit, button);
 
@@ -490,47 +486,25 @@ function makeFruitControls() {
   }
 }
 
-function toggleFruit(fruit) {
-  if (draft.has(fruit)) {
-    draft.delete(fruit);
-  } else {
-    const amount = stakeAmount();
-    if (amount < MIN_STAKE) {
-      setResult('Enter a stake of at least €1.00', 'Use up to two decimals.', 'loss');
-      nodes.stake.focus();
-      return;
-    }
-    if (amount > balance - total(draft)) {
-      setResult('Stake exceeds available balance', 'Adjust the stake or remove a bet.', 'loss');
-      return;
-    }
-    draft.set(fruit, amount);
-  }
-  lastBets.clear();
-  renderControls();
-}
-
 function renderControls() {
   const amount = stakeAmount();
-  const draftTotal = total(draft);
   const liveTotal = total(placed);
   const nextTotal = total(nextBets);
-  const available = balance - draftTotal;
   const canRefill = balance < MIN_STAKE && !liveTotal && !nextTotal;
+  const amountValid = amount >= MIN_STAKE && amount <= balance;
+  const round = phase === 'betting' ? 'this round' : 'next round';
   nodes.balance.textContent = money(balance);
-  nodes.stake.setAttribute('aria-invalid', String(amount < MIN_STAKE));
-  nodes.stakeHint.textContent = amount < MIN_STAKE ? '€1 minimum · up to 2 decimals' : '€1.00 minimum';
-  for (const button of quickBets) {
-    button.disabled = Number(button.dataset.amount) > available;
-    button.setAttribute('aria-pressed', String(amount === Number(button.dataset.amount)));
+  nodes.stake.setAttribute('aria-invalid', String(!amountValid));
+  nodes.stakeHint.textContent = amount < MIN_STAKE ? '€1 minimum · up to 2 decimals'
+    : amount > balance ? 'Stake exceeds balance' : '€1.00 minimum';
+  nodes.resetStake.disabled = amount === MIN_STAKE;
+  for (const chip of stakeChips) {
+    chip.disabled = amount + Number(chip.dataset.increment) > balance;
   }
   for (const [fruit, button] of fruitButtons) {
-    const selected = draft.get(fruit);
     const live = placed.get(fruit) || 0;
     const next = nextBets.get(fruit) || 0;
-    const badge = button.querySelector('.selected');
-    button.disabled = !selected && available < MIN_STAKE;
-    button.setAttribute('aria-pressed', String(Boolean(selected)));
+    button.disabled = !amountValid;
     const caption = button.querySelector('.payout');
     const lastPayout = lastBets.get(fruit);
     const settledText = lastPayout === undefined ? FRUITS[fruit].risk : lastPayout ? 'Paid ' + compact(lastPayout) : 'Busted';
@@ -538,22 +512,14 @@ function renderControls() {
     caption.textContent = confirmed.join(' · ') || settledText;
     caption.dataset.split = String(confirmed.length > 1);
     caption.dataset.tone = confirmed.length || lastPayout === undefined ? '' : lastPayout ? 'win' : 'loss';
-    button.setAttribute('aria-label', FRUITS[fruit].name + ', ' + caption.textContent +
-      (selected ? ', draft stake ' + money(selected) : ''));
-    badge.hidden = !selected;
-    badge.textContent = selected ? compact(selected) : '';
+    button.setAttribute('aria-label', 'Bet ' + money(amount) + ' on ' + FRUITS[fruit].name + ' for ' + round + ', ' + caption.textContent);
   }
   const totals = [liveTotal ? compact(liveTotal) + ' live' : '', nextTotal ? compact(nextTotal) + ' next' : ''];
   nodes.fruitHint.textContent = totals.filter(Boolean).join(' · ') ||
-    (phase === 'betting' ? 'Tap again to remove a pick' : 'Bets go to the next round');
-  nodes.primary.disabled = !draftTotal && !canRefill;
-  const placeLabel = phase === 'betting' ? 'Place bets' : 'Bet next round';
-  nodes.primary.textContent = canRefill ? 'Refill demo balance'
-    : draftTotal ? placeLabel + ' · ' + money(draftTotal) : placeLabel;
-  nodes.randomBet.disabled = amount < MIN_STAKE || amount > available;
-  nodes.randomBet.setAttribute('aria-label', 'Random bet of ' + money(amount) +
-    (phase === 'betting' ? ' in this round' : ' in the next round'));
-  nodes.randomStake.textContent = amount >= MIN_STAKE ? money(amount) : '€1 minimum';
+    (phase === 'betting' ? 'Tap a fruit to bet' : 'Bets go to the next round');
+  nodes.randomBet.disabled = !canRefill && !amountValid;
+  nodes.randomBet.textContent = canRefill ? 'Refill demo balance'
+    : (phase === 'betting' ? 'Random bet' : 'Random bet next round') + (amount >= MIN_STAKE ? ' · ' + money(amount) : '');
 }
 
 function newRider(index, firstBet = false) {
@@ -703,29 +669,29 @@ function schedule(delay) {
   tickTimer = setTimeout(advanceRound, delay);
 }
 
-for (const button of quickBets) {
-  button.addEventListener('click', () => {
-    nodes.stake.value = (Number(button.dataset.amount) / 100).toFixed(2);
-    renderControls();
+function setStake(amount) {
+  nodes.stake.value = (amount / 100).toFixed(2);
+  renderControls();
+}
+
+nodes.resetStake.addEventListener('click', () => setStake(MIN_STAKE));
+for (const chip of stakeChips) {
+  chip.addEventListener('click', () => {
+    const next = stakeAmount() + Number(chip.dataset.increment);
+    if (next <= balance) setStake(next);
   });
 }
 nodes.stake.addEventListener('input', renderControls);
-nodes.primary.addEventListener('click', () => {
+nodes.randomBet.addEventListener('click', () => {
   if (balance < MIN_STAKE && !placed.size && !nextBets.size) {
     balance = START_BALANCE;
-    nodes.stake.value = '10.00';
+    setStake(1000);
     setResult('Demo balance refilled');
-  } else if (commitBets(draft)) {
-    draft.clear();
+    return;
   }
-  renderControls();
-});
-nodes.randomBet.addEventListener('click', () => {
   const amount = stakeAmount();
-  if (amount < MIN_STAKE || amount > balance - total(draft)) return;
-  const fruit = keys[randomIndex(keys.length)];
-  commitBets(new Map([[fruit, amount]]));
-  renderControls();
+  if (amount < MIN_STAKE || amount > balance) return;
+  placeBet(keys[randomIndex(keys.length)], amount);
 });
 nodes.motion.addEventListener('click', () => {
   const reduced = document.body.classList.toggle('reduce-motion');
