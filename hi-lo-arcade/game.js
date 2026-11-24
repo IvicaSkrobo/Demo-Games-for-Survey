@@ -13,15 +13,8 @@ const symbols = [
   { glyph: '♛', name: 'Crown' },
   { glyph: '⚡︎', name: 'Bolt' }
 ];
-const combinations = [];
-for (let a = 0; a < symbols.length; a++) {
-  for (let b = a; b < symbols.length; b++) {
-    for (let c = b; c < symbols.length; c++) combinations.push([a, b, c]);
-  }
-}
-combinations.sort((a, b) => new Set(b).size - new Set(a).size);
-const vaultRewards = new Map(combinations.map((combo, index) => [combo.join(''), 10 + 2 * index]));
-const vaultKey = combo => [...combo].sort((a, b) => a - b).join('');
+const goldMultipliers = [1.25, 1.5, 2];
+const averageGoldMultiplier = goldMultipliers.reduce((sum, multiplier) => sum + multiplier, 0) / goldMultipliers.length;
 const baseReturn = 0.91;
 const awakeReturn = 0.96;
 const formatPoints = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
@@ -48,6 +41,7 @@ let energy = 0;
 let idleTimer;
 let revealingBonus = false;
 const collection = [];
+let awardedThisRound = false;
 let busy = false;
 let ended = true;
 let stake = Number(bet.value);
@@ -125,55 +119,6 @@ function updateFamiliar() {
     collection.length + ' of ' + vaultSize + ' symbols collected' + (description ? ': ' + description : ''));
 }
 
-function updatePayoutList() {
-  const matches = combo => {
-    const remaining = [...combo];
-    return collection.every(index => {
-      const position = remaining.indexOf(index);
-      if (position < 0) return false;
-      remaining.splice(position, 1);
-      return true;
-    });
-  };
-
-  const list = byId('payout-list');
-  list.replaceChildren();
-  const addGroup = (title, rows) => {
-    if (!rows.length) return;
-    const heading = document.createElement('h3');
-    heading.textContent = title;
-    const entries = document.createElement('ul');
-    for (const combo of rows) {
-      const row = document.createElement('li');
-      const icons = document.createElement('span');
-      icons.className = 'payout-icons';
-      icons.setAttribute('aria-label', combo.map(index => symbols[index].name).join(', '));
-      icons.textContent = combo.map(index => symbols[index].glyph).join('  ');
-      const amount = document.createElement('strong');
-      amount.textContent = '+' + vaultRewards.get(vaultKey(combo)) + '%';
-      row.append(icons, amount);
-      entries.append(row);
-    }
-    list.append(heading, entries);
-  };
-
-  const ordered = [...combinations].reverse();
-  if (collection.length) {
-    addGroup('Matches your vault', ordered.filter(matches));
-    addGroup('Other combinations', ordered.filter(combo => !matches(combo)));
-  } else {
-    addGroup('All combinations', ordered);
-  }
-  list.scrollTop = 0;
-}
-
-byId('vault-payouts').addEventListener('click', () => {
-  updatePayoutList();
-  byId('payout-dialog').showModal();
-});
-
-byId('close-payouts').addEventListener('click', () => byId('payout-dialog').close());
-
 function doze() {
   energy = Math.max(0, energy - 1);
   updateFamiliar();
@@ -196,11 +141,8 @@ function payouts() {
   const risk = pot || stake;
   const awake = energy === fullEnergy;
   const expectedReturn = pot ? risk : stake * (awake ? awakeReturn : baseReturn);
-  let expectedMultiplier = 1;
-  if (awake && collection.length === vaultSize - 1) {
-    const totalReward = symbols.reduce((sum, _, index) => sum + vaultRewards.get(vaultKey([...collection, index])), 0);
-    expectedMultiplier += bonusChance * totalReward / (100 * symbols.length);
-  }
+  const canTriggerGold = awake && !awardedThisRound && collection.length === vaultSize - 1;
+  const expectedMultiplier = canTriggerGold ? 1 + bonusChance * (averageGoldMultiplier - 1) : 1;
   const quote = direction => {
     const wins = counts[direction] + counts[0];
     if (!counts[direction] || !wins) return null;
@@ -254,6 +196,7 @@ function updateControls() {
 function start() {
   cashPop.replaceChildren();
   ended = false;
+  awardedThisRound = false;
   pot = 0;
   stake = Number(bet.value);
   dealStarter();
@@ -301,6 +244,7 @@ async function advanceCards(nextCard) {
 }
 
 async function awardSymbol() {
+  awardedThisRound = true;
   const index = Math.floor(Math.random() * symbols.length);
   const symbol = symbols[index];
   const target = symbolSlots[collection.length];
@@ -332,12 +276,15 @@ async function awardSymbol() {
   updateFamiliar();
   if (collection.length === vaultSize) {
     const previousPot = pot;
-    const reward = vaultRewards.get(vaultKey(collection));
-    pot = Math.round(pot * (100 + reward)) / 100;
+    const multiplier = goldMultipliers[Math.floor(Math.random() * goldMultipliers.length)];
+    pot = Math.round(100 * pot * multiplier) / 100;
     showCash(pot - previousPot);
+    byId('next-label').textContent = 'Gold card';
+    byId('next').firstElementChild.classList.add('gold-card');
     bonus.classList.add('vault-open');
     playTone(660);
     await pause(850);
+    byId('next-label').textContent = 'Next';
     collection.length = 0;
     bonus.classList.remove('vault-open');
   } else {
@@ -358,7 +305,7 @@ async function guess(direction) {
   const next = deck.pop();
   const difference = next.value - current.value;
   const correct = difference === 0 || Math.sign(difference) === direction;
-  const earnedSymbol = correct && wasAwake && Math.random() < bonusChance;
+  const earnedSymbol = correct && wasAwake && !awardedThisRound && Math.random() < bonusChance;
   const hidden = byId('next').firstElementChild;
   hidden.classList.add('lift-card');
   playTone(240);

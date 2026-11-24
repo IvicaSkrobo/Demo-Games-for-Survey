@@ -386,39 +386,3 @@ button:disabled { opacity:.55; cursor:default; }
 }
 #bet:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
 #bet:invalid { border-color:var(--lose); }
-
-.vault-payouts {
-  position:absolute;
-  top:8px;
-  left:8px;
-  z-index:2;
-  min-height:44px;
-  padding:0 8px;
-  font-size:12px;
-}
-#payout-dialog {
-  width:min(360px, calc(100% - 24px));
-  padding:14px;
-  color:var(--text);
-  background:var(--table);
-  border:1px solid var(--accent-dark);
-  border-radius:15px;
-}
-#payout-dialog::backdrop { background:color-mix(in srgb,var(--bg) 80%,transparent); }
-.payout-heading { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-.payout-heading h2 { margin:0; font:bold italic 27px Georgia,serif; }
-.payout-heading button { width:44px; font-size:24px; }
-#payout-dialog p { margin:8px 0 12px; color:var(--muted); font-size:13px; }
-.payout-list { max-height:min(365px, 56dvh); overflow:auto; overscroll-behavior:contain; }
-.payout-list h3 { margin:8px 0; color:var(--muted); font-size:12px; }
-.payout-list ul { margin:0 0 12px; padding:0; list-style:none; }
-.payout-list li {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:7px 10px;
-  border-bottom:1px solid var(--chip);
-}
-.payout-icons { white-space:pre; color:var(--accent); font-size:21px; }
-.payout-list strong { color:var(--primary); }

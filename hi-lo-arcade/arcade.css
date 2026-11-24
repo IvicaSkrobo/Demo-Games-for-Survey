@@ -52,13 +52,6 @@ h1 {
 .familiar[data-energy="3"] .familiar-head { border-color:var(--glow); animation-timing-function:steps(5,end); }
 .familiar[data-energy="3"] .familiar-eyes i { box-shadow:0 0 8px var(--coin); }
 .familiar-spark,.familiar-sleep { color:var(--coin); }
-.vault-payouts {
-  color:var(--glow);
-  background:var(--tile);
-  border-color:var(--edge);
-  border-radius:4px;
-  font-family:var(--arcade-font);
-}
 .symbol-vault span {
   color:var(--glow);
   background:#110b24;
@@ -169,9 +162,6 @@ h1 {
 @keyframes arcade-vault {
   30%,60% { background:#543468; box-shadow:inset 0 0 22px var(--coin); }
 }
-#payout-dialog { background:var(--screen); color:var(--paper); border-color:var(--edge); }
-#payout-dialog p,.payout-list h3 { color:var(--glow); }
-.payout-list strong,.payout-icons { color:var(--coin); }
 
 @media (max-height:700px) {
   main { gap:8px; }
@@ -239,3 +229,17 @@ h1 {
 .showdown #next-label { max-width:none; }
 .order { letter-spacing:.08em; }
 .status { font-size:13px; }
+
+.card.gold-card {
+  z-index:2;
+  color:var(--ink);
+  border-color:var(--coin);
+  background:linear-gradient(140deg,#a4612a 0%,var(--coin) 27%,#fff5c2 47%,var(--coin) 65%,#b87633);
+  box-shadow:0 0 0 2px #e49f43,0 0 20px #ffd368a8;
+  animation:gold-flash 720ms steps(8,end) both;
+}
+.card.gold-card .suit { text-shadow:2px 3px #fff1b1; }
+@keyframes gold-flash {
+  22% { transform:scale(1.075); filter:brightness(1.28); }
+  58% { filter:brightness(1.08); }
+}

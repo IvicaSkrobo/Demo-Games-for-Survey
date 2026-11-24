@@ -73,7 +73,6 @@
         </span>
         <span class="familiar-sleep">z</span>
       </div>
-      <button class="vault-payouts" id="vault-payouts" type="button" aria-haspopup="dialog">Payouts</button>
       <div class="cash-pop" id="cash-pop" role="status"></div>
       <div class="symbol-vault" aria-label="Vault collection">
         <span>◇</span><span>◇</span><span>◇</span>
@@ -109,18 +108,10 @@
       <button id="options-button" type="button" aria-label="Menu" aria-expanded="false" aria-controls="options">☰</button>
     </div>
     <div id="options" hidden>
-      <p>Win to build a round payout. Take Win to collect, or risk it on the next card. This survey game uses simulated stakes and payouts.</p>
+      <p>Win to build a round payout. Take Win to collect, or risk it on the next card. The awake familiar may award a symbol on a win. Three symbols turn the winning card gold. Stakes and rewards are simulated.</p>
     </div>
   </div>
 </main>
-<dialog id="payout-dialog" aria-labelledby="payout-title">
-  <div class="payout-heading">
-    <h2 id="payout-title">Vault payouts</h2>
-    <button type="button" id="close-payouts" aria-label="Close payouts">×</button>
-  </div>
-  <p>Collect any three symbols. Rewards are added to your current win. Order doesn’t matter.</p>
-  <div class="payout-list" id="payout-list"></div>
-</dialog>
 <script src="./game.js"></script>
 </body>
 </html>
