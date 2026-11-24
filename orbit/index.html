@@ -51,7 +51,7 @@ h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacin
 .timer-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent) var(--elapsed,0%),transparent 0);mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 0);pointer-events:none}
 .rotor{position:absolute;inset:5%;border-radius:50%;background:var(--table);box-shadow:0 0 0 1px var(--bg),0 0 0 3px var(--accent-dark);transform:rotate(var(--angle,0deg));transition:transform 560ms cubic-bezier(.22,.68,.25,1)}
 .dial,.pockets,.pins{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.pocket,.pin{position:absolute;left:var(--x);top:var(--y)}
+.pocket,.pin-stack{position:absolute;left:var(--x);top:var(--y)}
 .sprite{display:inline-block;flex:none;width:var(--size,32px);height:var(--size,32px);background-image:url("./fruit.webp");background-size:200% 200%;background-repeat:no-repeat;vertical-align:middle}
 [data-fruit=cherry] .sprite{background-position:0 0}
 [data-fruit=lemon] .sprite{background-position:100% 0}
@@ -71,15 +71,17 @@ h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacin
 .result[data-tone=charge] strong{color:var(--accent)}
 .fruit .payout[data-tone=win]{color:var(--win)}
 .fruit .payout[data-tone=loss]{color:var(--text)}
+.fruit .payout[data-tone=live]{color:var(--win)}
+.fruit .payout[data-tone=next]{color:var(--accent)}
 .pointer{position:absolute;z-index:3;left:50%;top:-3px;width:27px;height:23px;transform:translateX(-50%);background:linear-gradient(var(--card) 30%,var(--accent));clip-path:polygon(0 0,100% 0,50% 100%)}
 .hub{position:absolute;z-index:1;inset:28%;display:grid;place-content:center;justify-items:center;gap:1px;border-radius:50%;border:1px solid var(--accent);background:radial-gradient(ellipse at 48% 24%,var(--chip),var(--bg) 73%);box-shadow:0 0 0 3px var(--table),0 0 0 4px var(--accent-dark);pointer-events:none}
 .hub .sprite{--size:clamp(31px,10vw,48px)}
 .hub strong{font-size:10px;color:var(--text-cool);font-weight:800}
 .hub-idle{font-size:30px;line-height:1.25;color:var(--accent)}
 .pins{z-index:2}
-.pin{min-width:max-content;padding:2px 5px;border-radius:100px;border:1px solid var(--accent);background:var(--bg);color:var(--text-cool);box-shadow:0 2px 4px var(--bg);transform:translate(-50%,-50%) rotate(var(--counter,0deg));opacity:0;transition:transform 560ms cubic-bezier(.22,.68,.25,1),opacity 270ms ease; font-size:9px;line-height:1.1;font-weight:850;font-variant-numeric:tabular-nums}
-.pin[data-live=true]{opacity:1}
-.pin[data-own=true]{border-color:var(--win);color:var(--win)}
+.pin-stack{display:grid;justify-items:center;gap:2px;transform:translate(-50%,-50%) rotate(var(--counter,0deg));transition:transform 560ms cubic-bezier(.22,.68,.25,1),left 560ms ease,top 560ms ease}
+.pin{width:max-content;padding:2px 4px;border-radius:100px;border:1px solid var(--accent-dark);background:var(--bg);color:var(--muted);box-shadow:0 2px 4px var(--bg);font-size:8px;line-height:1.1;font-weight:750;font-variant-numeric:tabular-nums}
+.pin[data-own=true]{border-color:var(--win);color:var(--win);font-size:9px;font-weight:850}
 .result{position:relative;min-height:46px;margin:7px auto 5px;display:grid;place-content:center;gap:3px;padding:4px 6px;border:1px solid var(--chip);border-radius:8px;background:var(--bg);color:var(--muted);font-size:11px;line-height:1.1}
 .result strong{font-size:12px;color:var(--text-cool)}
 .result[data-tone=win],.result[data-tone=partial]{place-content:stretch;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto;column-gap:8px;row-gap:2px;padding:4px 8px;text-align:left}
@@ -105,7 +107,18 @@ h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacin
 @keyframes impact{20%{transform:translateX(-4px)}45%{transform:translateX(4px)}68%{transform:translateX(-2px)}}
 .rail{text-align:left}
 .rail-heading{display:flex;justify-content:space-between;align-items:center;margin:0 0 4px}
-.rail-heading span:last-child{font-size:10px;color:var(--muted)}
+.rail-heading span:last-child{font-size:10px;color:var(--text-cool)}
+.your-bets{display:grid;grid-template-columns:repeat(var(--shown,1),minmax(0,1fr));align-items:stretch;gap:4px;min-height:34px}
+.your-bets-empty{display:flex;align-items:center;margin:0;padding:3px 6px;color:var(--muted);font-size:11px}
+.your-bet{display:grid;align-content:center;min-width:0;padding:2px 4px;border:1px solid var(--accent-dark);border-radius:7px;background:var(--bg);font-variant-numeric:tabular-nums}
+.your-bet[data-live=true]{border-color:var(--win);background:color-mix(in srgb,var(--win) 8%,var(--bg))}
+.your-bet strong,.your-bet span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.your-bet strong{font-size:10px;line-height:10px;color:var(--text)}
+.your-bet span{font-size:10px;line-height:9px;font-weight:750}
+.your-bet .live-amount{color:var(--win)}
+.your-bet .next-amount{color:var(--accent)}
+.rider-details{margin-top:1px;color:var(--muted);border-bottom:1px solid var(--chip)}
+.rider-details[open]{padding-bottom:8px}
 .riders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;min-height:34px}
 .rider{min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:3px;padding:3px 4px;border:1px solid var(--chip);border-radius:7px;background:var(--table);--size:22px}
 .rider .name,.rider .bet{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -169,9 +182,9 @@ details p{margin:0 0 9px}
 }
 @media(max-height:620px) and (min-width:360px){.wheel{width:174px}}
 @media(prefers-reduced-motion:reduce){
-  .rotor,.pin{transition:none}.wheel.win .hub,.wheel.win .spark,.table.win .result,.table.loss .result,.rider.leaving{animation:none}
+  .rotor,.pin-stack{transition:none}.wheel.win .hub,.wheel.win .spark,.table.win .result,.table.loss .result,.rider.leaving{animation:none}
 }
-body.reduce-motion .rotor,body.reduce-motion .pin{transition:none}
+body.reduce-motion .rotor,body.reduce-motion .pin-stack{transition:none}
 body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.reduce-motion .table.win .result,body.reduce-motion .table.loss .result,body.reduce-motion .rider.leaving{animation:none}
 </style>
 </head>
@@ -209,9 +222,11 @@ body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.red
       <strong id="resultTitle">Tap a fruit to place a bet</strong>
       <span id="resultDetail">Tap again to add another bet.</span>
     </div>
-    <section class="rail" aria-label="Live bets from simulated riders">
-      <div class="rail-heading"><span class="label" id="riderLabel">Live bets</span><span>Simulated riders</span></div>
-      <div class="riders" id="riders"></div>
+    <section class="rail" aria-labelledby="yourBetHeading">
+      <div class="rail-heading"><strong class="label" id="yourBetHeading">Your bets</strong><span id="yourBetSummary">€0 live</span></div>
+      <div class="your-bets" id="yourBets">
+        <p class="your-bets-empty" id="yourBetsEmpty">Tap a fruit to see your live bet here.</p>
+      </div>
     </section>
   </section>
   <section class="controls" aria-label="Play controls">
@@ -235,6 +250,12 @@ body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.red
     <p id="lastRoundDetail"></p>
     <ul class="last-bets" id="lastRoundBets"></ul>
   </details>
+  <details class="rider-details">
+    <summary>Simulated riders</summary>
+    <div class="rail"><div class="rail-heading"><span class="label" id="riderLabel">Live bets</span></div>
+      <div class="riders" id="riders"></div>
+    </div>
+  </details>
   <footer>
     <details>
       <summary>How to play</summary>
@@ -242,7 +263,7 @@ body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.red
       <p>Every tap on a fruit places one bet at the displayed stake. Tap the same fruit repeatedly to stack bets, or tap <strong>Random bet</strong> to pick a random fruit each time.</p>
       <p>Watch the step bar. During Bet, your taps enter the current round. Charge boosts the payout if that fruit lands. Result shows what paid after the wheel stops. Taps during Charge, Harvest and Result go into the next round.</p>
       <p>A gold Harvest landing sends every bet to one bonus reveal. Each fruit has its own reward at that reveal. Cherries always pay something in Harvest. Watermelon can pay more or bust. All payouts settle automatically and include the original stake where applicable.</p>
-      <p>Amounts use a demo EUR balance. The wheel shows totals from live bets, with your locked bets highlighted in green. Other riders are simulated.</p>
+      <p>Amounts use a demo EUR balance. Green “You” markers show your live amount. Pink-bordered markers show the simulated riders’ total. Your bets shows what is live and what is queued for the next round.</p>
     </details>
     <button type="button" class="motion" id="motion" aria-pressed="false">Reduce motion</button>
   </footer>
@@ -286,6 +307,7 @@ const nodes = Object.fromEntries([
   'countdown', 'chargeValue', 'sparkles', 'result', 'resultBadge', 'resultTitle', 'resultDetail', 'riders', 'stake', 'stakeHint', 'fruitHint',
   'fruits', 'resetStake', 'randomBet', 'betAnnouncement', 'motion', 'stepBet', 'stepCharge',
   'stepResult', 'resultStepLabel', 'betTarget', 'riderLabel', 'lastRound', 'lastRoundTitle', 'lastRoundDetail', 'lastRoundBets',
+  'yourBets', 'yourBetsEmpty', 'yourBetSummary',
 ].map(id => [id, byId(id)]));
 const stakeChips = [...document.querySelectorAll('[data-increment]')];
 const euros = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' });
@@ -346,7 +368,7 @@ function placeBet(fruit, amount) {
   balance -= amount;
   updatePins();
   flash(fruitButtons.get(fruit), live ? 'placed' : 'queued');
-  if (live) flash(pins.get(fruit), 'placed');
+  if (live) flash(pins.get(fruit).own, 'placed');
   showBetNotice('Placed ' + money(amount) + ' on ' + FRUITS[fruit].name +
     (live ? ' · This round' : ' · Next round'), live);
   renderControls();
@@ -474,6 +496,13 @@ function pointAt(index) {
   rotation += delta || 360;
   nodes.rotor.style.setProperty('--angle', rotation + 'deg');
   nodes.rotor.style.setProperty('--counter', -rotation + 'deg');
+  for (const { stack, angle } of pins.values()) positionBetPin(stack, angle);
+}
+
+function positionBetPin(stack, angle) {
+  const distance = ((angle + rotation + 180) % 360 + 360) % 360 - 180;
+  const clearPointer = Math.abs(distance) < 29 ? (distance < 0 ? -29 : 29) - distance : 0;
+  position(stack, angle + clearPointer, 51);
 }
 
 function showHub(fruit, multiplier, state = fruit, message = '') {
@@ -496,6 +525,7 @@ function highlightCharge(fruit) {
 
 const fruitButtons = new Map();
 const pins = new Map();
+const yourBetCards = new Map();
 
 function makeFruitControls() {
   for (const [fruit, metadata] of Object.entries(FRUITS)) {
@@ -509,11 +539,23 @@ function makeFruitControls() {
     nodes.fruits.append(button);
     fruitButtons.set(fruit, button);
 
-    const pin = document.createElement('span');
-    pin.className = 'pin';
-    position(pin, metadata.pin * SLICE + 10, 51);
-    nodes.pins.append(pin);
-    pins.set(fruit, pin);
+    const stack = document.createElement('span');
+    stack.className = 'pin-stack';
+    stack.dataset.fruit = fruit;
+    stack.innerHTML = '<span class="pin" data-own="true" hidden></span><span class="pin" hidden></span>';
+    const angle = metadata.pin * SLICE + 15;
+    positionBetPin(stack, angle);
+    nodes.pins.append(stack);
+    pins.set(fruit, { stack, angle, own: stack.children[0], riders: stack.children[1] });
+
+    const card = document.createElement('div');
+    card.className = 'your-bet';
+    card.dataset.fruit = fruit;
+    card.hidden = true;
+    card.innerHTML = '<strong>' + metadata.name +
+      '</strong><span class="live-amount" hidden></span><span class="next-amount" hidden></span>';
+    nodes.yourBets.append(card);
+    yourBetCards.set(fruit, { card, live: card.children[1], next: card.children[2] });
   }
 }
 
@@ -542,16 +584,34 @@ function renderControls() {
     const confirmed = [live ? compact(live) + ' live' : '', next ? compact(next) + ' next' : ''].filter(Boolean);
     caption.textContent = confirmed.join(' · ') || settledText;
     caption.dataset.split = String(confirmed.length > 1);
-    caption.dataset.tone = confirmed.length || lastPayout === undefined ? '' : lastPayout ? 'win' : 'loss';
+    caption.dataset.tone = live ? 'live' : next ? 'next' : lastPayout ? 'win' : lastPayout === 0 ? 'loss' : '';
     button.setAttribute('aria-label', 'Bet ' + money(amount) + ' on ' + FRUITS[fruit].name + ' for ' + round + ', ' + caption.textContent);
   }
-  const totals = [liveTotal ? compact(liveTotal) + ' live' : '', nextTotal ? compact(nextTotal) + ' next' : ''];
+  renderYourBets(liveTotal, nextTotal);
   nodes.betTarget.textContent = phase === 'betting' ? 'Bet this round' : 'Bet next round';
-  nodes.fruitHint.textContent = totals.filter(Boolean).join(' · ') ||
-    (phase === 'betting' ? 'Tap a fruit to bet' : 'Tap a fruit to queue');
+  nodes.fruitHint.textContent = phase === 'betting' ? 'Tap a fruit to bet' : 'Queued until Bet opens';
   nodes.randomBet.disabled = !canRefill && !amountValid;
   nodes.randomBet.textContent = canRefill ? 'Refill demo balance'
     : (phase === 'betting' ? 'Random bet' : 'Random bet next round') + (amount >= MIN_STAKE ? ' · ' + money(amount) : '');
+}
+
+function renderYourBets(liveTotal, nextTotal) {
+  let shown = 0;
+  for (const [fruit, { card, live, next }] of yourBetCards) {
+    const current = placed.get(fruit) || 0;
+    const queued = nextBets.get(fruit) || 0;
+    card.hidden = !current && !queued;
+    card.dataset.live = String(Boolean(current));
+    live.hidden = !current;
+    next.hidden = !queued;
+    live.textContent = current ? 'Live ' + compact(current) : '';
+    next.textContent = queued ? 'Next ' + compact(queued) : '';
+    if (!card.hidden) shown++;
+  }
+  nodes.yourBets.style.setProperty('--shown', String(shown || 1));
+  nodes.yourBetsEmpty.hidden = Boolean(shown);
+  nodes.yourBetsEmpty.textContent = phase === 'betting' ? 'Tap a fruit to see your live bet here.' : 'No bets live or queued.';
+  nodes.yourBetSummary.textContent = compact(liveTotal) + ' live' + (nextTotal ? ' · ' + compact(nextTotal) + ' next' : '');
 }
 
 function newRider(index, firstBet = false) {
@@ -580,14 +640,14 @@ function showRider(slot, bet) {
 }
 
 function updatePins() {
-  for (const [fruit, pin] of pins) {
-    const own = placed.get(fruit) || 0;
-    const amount = slots.reduce((sum, {live}) => live?.fruit === fruit ? sum + live.stake : sum, own);
-    pin.dataset.live = String(amount > 0);
-    if (amount) {
-      pin.dataset.own = String(own > 0);
-      pin.textContent = compact(amount);
-    }
+  for (const [fruit, { own, riders }] of pins) {
+    const stake = placed.get(fruit) || 0;
+    const socialStake = slots.reduce((sum, {live}) => live?.fruit === fruit ? sum + live.stake : sum, 0);
+    own.hidden = !stake;
+    own.dataset.live = String(Boolean(stake));
+    own.textContent = stake ? 'You ' + compact(stake) : '';
+    riders.hidden = !socialStake;
+    riders.textContent = socialStake ? compact(socialStake) : '';
   }
 }
 
