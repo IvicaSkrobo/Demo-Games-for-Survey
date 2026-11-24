@@ -35,7 +35,7 @@ h1 small{font-size:.55em;color:var(--accent);padding:0 .12em}
 
 .players{position:relative;display:flex;gap:2px;overflow-x:auto;padding:9px 8px 5px;margin:-5px -4px 0;scrollbar-width:none}
 .players::-webkit-scrollbar{display:none}
-.pl{flex:1 0 36px;display:grid;justify-items:center;gap:2px;font-size:10.5px;line-height:1.15;min-width:0}
+.pl{flex:1 1 0;display:grid;justify-items:center;gap:2px;font-size:10px;line-height:1.15;min-width:0}
 .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:800 11px system-ui,sans-serif;color:#fff;background:var(--chip);border:2px solid var(--accent-dark);transition:border-color .2s,box-shadow .2s}
 .pl.me .av{border-color:var(--accent);background:var(--accent-deep)}
 .pl.betting .av{border-color:var(--accent)}
@@ -233,9 +233,44 @@ svg.v2 .pocket.t-rank{stroke:var(--accent);stroke-width:3.5}
 .pk.hole{box-shadow:0 0 0 2px var(--gold),0 2px 5px #0007;animation:flip-in .4s ease-out both}
 .pk.back{background:repeating-linear-gradient(45deg,var(--accent-dark) 0 3px,var(--accent-deep) 3px 6px);border:2px solid var(--card)}
 .pk-name{flex-basis:100%;font-weight:800;color:var(--gold);font-size:13px;margin-top:2px}
+/* ---------- bet layout 2: chips + betting board ---------- */
+.controls:not(.layout2) .felt{display:none}
+.controls.layout2 > .caption:first-child{display:none}
+.controls.layout2 .tabs,.controls.layout2 [data-panel]{display:none!important}
+.felt-note{font-size:11px;color:var(--muted);line-height:1.35}
+.felt-note b{color:var(--text)}
+.felt{display:grid;grid-template-columns:24px repeat(13,minmax(0,1fr));gap:2px;background:var(--table);border:1px solid var(--table-line);border-radius:10px;padding:4px}
+.f{position:relative;border:1px solid #ffffff21;border-radius:4px;background:#ffffff09;padding:0;min-width:0;color:var(--text);font-weight:800;display:grid;place-items:center;align-content:center;line-height:1}
+.f:hover{border-color:var(--accent)}
+.f.red,.f.red b{color:#ff7a99}
+.fout{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr 1fr 1.45fr;gap:3px;margin-bottom:2px}
+.fo{height:34px;gap:2px;font-size:12px;letter-spacing:.04em}
+.fo small{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:0}
+.fo.jk{background:repeating-linear-gradient(45deg,#941658cc 0 3px,#c31870cc 3px 6px);border-color:var(--accent)}
+.fo.jk small{color:var(--card)}
+.fcorner{font-size:8px;color:var(--muted);font-weight:700}
+.fh{height:18px;font-size:11px;color:var(--muted)}
+.fs{font-size:16px}
+.fcard{height:24px}
+.fcard .r{font:11px Georgia,serif}
+.fcard .s{font-size:9px}
+.f.on{border-color:var(--accent);background:#e1549c1c}
+.f.won{border-color:var(--win);background:#50d57340;box-shadow:0 0 0 2px var(--win),0 0 12px #50d57399;z-index:1}
+.f.lost{opacity:.5}
+.fcard.landed:after,.fo.landed:after{content:"";position:absolute;inset:-2px;border:2px dashed var(--accent);border-radius:5px;pointer-events:none}
+.f.crowd:before{content:"";position:absolute;top:2px;left:2px;width:5px;height:5px;border-radius:50%;background:var(--accent-deep)}
+/* round casino chips (layout 2) and chips placed on the board */
+.chips button[data-v="1"]{--cc:#6b7280} .chips button[data-v="5"]{--cc:#c62a3a} .chips button[data-v="10"]{--cc:#2563eb} .chips button[data-v="25"]{--cc:#15803d} .chips button[data-v="100"]{--cc:#16161a}
+.controls.layout2 .chips{justify-content:space-around}
+.controls.layout2 .chips button{flex:0 0 44px;width:44px;height:44px;min-height:44px;border-radius:50%;border:3px dashed #ffffffaa;background:radial-gradient(circle,var(--cc) 55%,#0000 56%),var(--cc);color:#fff;font-size:13px;box-shadow:inset 0 0 0 4px var(--cc),inset 0 0 0 5px #fff6,0 3px 6px #0008;transition:transform .12s}
+.controls.layout2 .chips button[aria-pressed=true]{transform:translateY(-4px) scale(1.08);outline:3px solid var(--accent);outline-offset:2px;color:#fff}
+.tok{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:19px;height:19px;padding:0 2px;border-radius:10px;border:2px dashed #ffffffb0;background:var(--cc);color:#fff;font:800 8.5px/15px system-ui,sans-serif;text-align:center;box-shadow:0 1px 4px #000c;z-index:2;pointer-events:none}
+.tok.c1{--cc:#6b7280} .tok.c5{--cc:#c62a3a} .tok.c10{--cc:#2563eb} .tok.c25{--cc:#15803d} .tok.c100{--cc:#16161a;border-color:var(--gold)}
+.fo .tok{left:auto;right:3px;top:3px;transform:none}
 /* bonus version switch */
 .modes{margin-top:12px;background:var(--panel);border-radius:15px;padding:12px;display:grid;gap:8px}
 .mode-btns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mode-btns.two{grid-template-columns:1fr 1fr}
 .mode-btns button,.modes .test{min-height:44px;border:1px solid var(--button-line);border-radius:8px;background:var(--button);font-weight:700;font-size:12.5px;padding:4px}
 .mode-btns button[aria-pressed=true]{border-color:var(--gold);color:var(--gold);background:var(--chip)}
 @media(prefers-reduced-motion:reduce){.card.arrive,.pl.new,.banner,.pk.hole,.bi-200,svg.gold .bulb{animation:none}.bb.me .ring{animation:none;opacity:.6}}
@@ -274,6 +309,7 @@ svg.v2 .pocket.t-rank{stroke:var(--accent);stroke-width:3.5}
       <div class="g-suits" data-panel="suit" id="gSuits" hidden></div>
       <div class="g-ranks" data-panel="rank" id="gRanks" hidden></div>
       <div class="g-cards" data-panel="card" id="gCards" hidden></div>
+      <div class="felt" id="felt"></div>
     </div>
     <div class="hint" id="hint">Every ball on your pick counts: <b>more balls, bigger win.</b> Any <b>Joker</b> opens the Bonus for everyone who bet.</div>
     <div class="bar">
@@ -290,6 +326,8 @@ svg.v2 .pocket.t-rank{stroke:var(--accent);stroke-width:3.5}
   <section class="modes" aria-label="Bonus version">
     <div class="caption"><span class="label">Bonus version</span><span class="label" id="modeNote"></span></div>
     <div class="mode-btns" id="modeBtns"></div>
+    <div class="caption"><span class="label">Bet layout</span><span class="label">tabs or chips on a board</span></div>
+    <div class="mode-btns two" id="layoutBtns"></div>
     <button class="test" id="forceJoker" type="button">Test: put a Joker in the next spin</button>
   </section>
 
@@ -335,6 +373,9 @@ const BET_SECONDS = 7, RESULT_SECONDS = 3;
 const st = { balance: 1000, chip: 5, bets: new Map(), undo: [], last: new Map(), phase: 'bet', tab: 'main', closesAt: 0, lastWin: 0, mode: 1, board: null, forceJoker: false };
 // Bonus version from the link: ?bonus=1|2|3 (or #v1 #v2 #v3), switchable at the bottom of the page.
 { const q = +(new URLSearchParams(location.search).get('bonus') || (location.hash.match(/v([123])/) || [])[1]); if ([1, 2, 3].includes(q)) st.mode = q; }
+// Bet layout: 1 = bet panel with tabs, 2 = round chips + betting board (?bet=2)
+st.layout = +new URLSearchParams(location.search).get('bet') === 2 ? 2 : 1;
+function saveUrl() { try { const q = new URLSearchParams(location.search); q.set('bonus', st.mode); q.set('bet', st.layout); history.replaceState(null, '', '?' + q); } catch (e) { /* some frames block this */ } }
 
 // ---------------------------------------------------------------- wheel
 const el = (t, a, p) => { const n = document.createElementNS(NS, t); for (const k in a) n.setAttribute(k, a[k]); if (p) p.appendChild(n); return n; };
@@ -429,7 +470,7 @@ setW(wAng);
 
 // ---------------------------------------------------------------- players at the table (simulated, no backend)
 // Fixed table, in this order after You. ini = the 2 letters on the avatar and on the bonus ball.
-const SEATS = [['Marko', 'Mk'], ['Ivica', 'Iv'], ['Borna', 'Bo'], ['Nik', 'Ni'], ['Patrik', 'Pa'], ['Ante', 'An'], ['Matea', 'Mt']];
+const SEATS = [['Marko', 'Mk'], ['Ivica', 'Iv'], ['Borna', 'Bo'], ['Nik', 'Ni'], ['Patrik', 'Pa'], ['Ante', 'An'], ['Matea', 'Mt'], ['Matej', 'Mj']];
 const BOT_TYPES = [['color', 30], ['suit', 20], ['high', 12], ['rank', 12], ['card', 14], ['joker', 12]];
 const me = { name: 'You', me: true, bets: new Map(), result: null };
 const bots = SEATS.map(([name, ini]) => ({ name, ini, bets: new Map(), result: null, plan: [] }));
@@ -481,9 +522,9 @@ function renderPlayers() {
 function renderCrowd() { // how many other players sit on each bet
   const count = new Map();
   for (const b of bots) for (const k of b.bets.keys()) count.set(k, (count.get(k) || 0) + 1);
-  for (const [key, btn] of btns) {
+  for (const [key, list] of btns) for (const btn of list) {
     const c = count.get(key) || 0;
-    if (btn.classList.contains('mini')) { btn.classList.toggle('crowd', c > 0); continue; }
+    if (btn.classList.contains('mini') || btn.classList.contains('f')) { btn.classList.toggle('crowd', c > 0); continue; }
     let o = btn.querySelector('.others');
     if (c && !o) { o = document.createElement('span'); o.className = 'others'; btn.appendChild(o); }
     if (o) { if (c) o.textContent = c; else o.remove(); }
@@ -505,7 +546,7 @@ function mk(parent, type, target, cls, html, label) {
   b.type = 'button'; b.className = cls; b.innerHTML = html; b.dataset.key = type + ':' + target;
   if (label) b.setAttribute('aria-label', label);
   b.addEventListener('click', () => { $('hint').innerHTML = INFO[type](target); place(b.dataset.key, st.chip); });
-  parent.appendChild(b); btns.set(b.dataset.key, b); return b;
+  parent.appendChild(b); if (!btns.has(b.dataset.key)) btns.set(b.dataset.key, []); btns.get(b.dataset.key).push(b); return b;
 }
 mk($('gMain'), 'joker', '-', 'bet joker', '<span class="n">★ Joker</span><span class="p">13x · 120x · 1500x · opens Bonus</span>');
 mk($('gMain'), 'color', 'red', 'bet', '<span class="n red-t">Red</span><span class="p">2 balls 1.3x<br>3 balls 2.7x</span>');
@@ -513,8 +554,24 @@ mk($('gMain'), 'color', 'black', 'bet', '<span class="n">Black</span><span class
 mk($('gMain'), 'high', '-', 'bet', '<span class="n">High 10–A</span><span class="p">2 balls 2.2x<br>3 balls 3.6x</span>');
 for (const s of M.SUITS) mk($('gSuits'), 'suit', s.id, 'bet', `<span class="n${s.color === 'red' ? ' red-t' : ''}">${s.sym}</span><span class="p">1x · 2.3x · 3.6x</span>`, s.name);
 for (const r of M.RANKS) mk($('gRanks'), 'rank', r, 'bet', `<span class="n">${r}</span>`, 'Any ' + r);
-const minis = new Map();
-for (const s of M.SUITS) for (const r of M.RANKS) minis.set(r + s.id, mk($('gCards'), 'card', r + s.id, 'mini' + (s.color === 'red' ? ' red' : ''), `<span class="r">${r}</span><span class="s">${s.sym}</span>`, `${r} of ${s.name}`));
+for (const s of M.SUITS) for (const r of M.RANKS) (mk($('gCards'), 'card', r + s.id, 'mini' + (s.color === 'red' ? ' red' : ''), `<span class="r">${r}</span><span class="s">${s.sym}</span>`, `${r} of ${s.name}`));
+
+// ---- bet layout 2: the betting board. Outside bets on top, rank columns, suit rows, one cell per card.
+{
+  const felt = $('felt');
+  const out = document.createElement('div'); out.className = 'fout'; felt.appendChild(out);
+  mk(out, 'color', 'red', 'f fo red', '<b>RED</b><small>1.3x · 2.7x</small>', 'Red');
+  mk(out, 'color', 'black', 'f fo', '<b>BLACK</b><small>1.3x · 2.7x</small>', 'Black');
+  mk(out, 'high', '-', 'f fo', '<b>10–A</b><small>2.2x · 3.6x</small>', 'High 10 to A');
+  mk(out, 'joker', '-', 'f fo jk', '<b>★ JOKER</b><small>13x · 120x · 1500x</small>', 'Joker');
+  const corner = document.createElement('div'); corner.className = 'f fcorner'; corner.textContent = 'rank'; felt.appendChild(corner);
+  for (const r of M.RANKS) mk(felt, 'rank', r, 'f fh', r, 'Any ' + r);
+  for (const s of M.SUITS) {
+    mk(felt, 'suit', s.id, 'f fs' + (s.color === 'red' ? ' red' : ''), s.sym, s.name);
+    for (const r of M.RANKS) mk(felt, 'card', r + s.id, 'f fcard' + (s.color === 'red' ? ' red' : ''), `<span class="r">${r}</span><span class="s">${s.sym}</span>`, `${r} of ${s.name}`);
+  }
+}
+const chipClass = (amt) => 'c' + ([100, 25, 10, 5].find((v) => amt >= v) || 1);
 
 const TAB_HINT = {
   main: 'Every ball on your pick counts: <b>more balls, bigger win.</b> Any <b>Joker</b> opens the Bonus for everyone who bet.',
@@ -530,7 +587,7 @@ document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () 
 }));
 for (const v of [1, 5, 10, 25, 100]) {
   const c = document.createElement('button');
-  c.type = 'button'; c.textContent = v; c.setAttribute('aria-pressed', v === st.chip);
+  c.type = 'button'; c.textContent = v; c.dataset.v = v; c.setAttribute('aria-pressed', v === st.chip); c.setAttribute('aria-label', 'Chip ' + v);
   c.addEventListener('click', () => { st.chip = v; [...$('chips').children].forEach((x) => x.setAttribute('aria-pressed', x === c)); });
   $('chips').appendChild(c);
 }
@@ -560,12 +617,17 @@ $('rebet').addEventListener('click', () => {
 });
 
 function render() {
-  for (const [key, b] of btns) {
-    const amt = st.bets.get(key) || 0;
+  // while the balls roll and the result shows, keep this round's chips on the board
+  const shown = st.phase === 'bet' ? st.bets : me.bets;
+  for (const [key, list] of btns) for (const b of list) {
+    const amt = shown.get(key) || 0, onBoard = b.classList.contains('f');
     b.classList.toggle('on', amt > 0);
-    let bd = b.querySelector('.badge');
-    if (amt) { if (!bd) { bd = document.createElement('span'); bd.className = 'badge'; b.appendChild(bd); } bd.textContent = amt >= 1000 ? r2(amt / 1000) + 'k' : amt; }
-    else if (bd) bd.remove();
+    let bd = b.querySelector(onBoard ? '.tok' : '.badge'); // board cells get a casino chip, panel buttons a badge
+    if (amt) {
+      if (!bd) { bd = document.createElement('span'); b.appendChild(bd); }
+      bd.className = onBoard ? 'tok ' + chipClass(amt) : 'badge';
+      bd.textContent = amt >= 1000 ? r2(amt / 1000) + 'k' : amt;
+    } else if (bd) bd.remove();
   }
   document.querySelectorAll('.tab').forEach((t) => {
     const has = [...st.bets.keys()].some((k) => { const ty = k.split(':')[0]; return t.dataset.tab === 'main' ? ['joker', 'color', 'high'].includes(ty) : ty === t.dataset.tab; });
@@ -603,11 +665,13 @@ function betName(key) {
 }
 function live(landed) {
   for (const [key] of st.bets) {
-    const [ty, t] = key.split(':'); const b = btns.get(key);
-    if (b.classList.contains('mini')) continue;
+    const [ty, t] = key.split(':');
+    for (const b of btns.get(key)) {
+    if (b.classList.contains('mini') || b.classList.contains('fcard') || b.classList.contains('fh') || b.classList.contains('fs')) continue;
     let h = 0; for (const x of landed) if (M.hits(ty, t, M.POCKETS[x])) h++;
     let d = b.querySelector('.live'); if (h && !d) { d = document.createElement('span'); d.className = 'live'; b.appendChild(d); }
     if (d) d.innerHTML = '<i></i>'.repeat(h);
+    }
   }
 }
 function clearMarks() {
@@ -672,7 +736,7 @@ function stepSpin(now) {
     if (pr >= 1 && !a.done[i]) {
       a.done[i] = 1; a.landed.push(a.res[i]); deal(i, a.res[i]); pockets[a.res[i]].classList.add('hit');
       const p = M.POCKETS[a.res[i]];
-      (p.joker ? btns.get('joker:-') : minis.get(p.id)).classList.add('landed');
+      for (const e of btns.get(p.joker ? 'joker:-' : 'card:' + p.id)) e.classList.add('landed');
       live(a.landed);
       if (p.joker && !a.joker) {
         a.joker = true;
@@ -694,7 +758,7 @@ function settleMap(bets, res) {
 function settle(res, now) {
   st.phase = 'result'; resultUntil = now + RESULT_SECONDS * 1000;
   const stake = sum(st.bets), mine = settleMap(st.bets, res);
-  for (const [key] of st.bets) btns.get(key).classList.add(mine.lines.some((l) => l.key === key) ? 'won' : 'lost');
+  for (const [key] of st.bets) for (const e of btns.get(key)) e.classList.add(mine.lines.some((l) => l.key === key) ? 'won' : 'lost');
   // a win on a tab you are not looking at lights up that tab
   const tabOf = (k) => { const ty = k.split(':')[0]; return ['joker', 'color', 'high'].includes(ty) ? 'main' : ty; };
   document.querySelectorAll('.tab').forEach((t) => { if (mine.lines.some((l) => tabOf(l.key) === t.dataset.tab)) t.classList.add('won'); });
@@ -968,11 +1032,24 @@ function mathTable(acc, n) {
   b.type = 'button'; b.dataset.mode = m; b.textContent = m + ' · ' + M.BONUS_MODES[m];
   b.addEventListener('click', () => {
     st.mode = m;
-    try { history.replaceState(null, '', '?bonus=' + m); } catch (e) { /* not allowed in some frames */ }
+    saveUrl();
     renderRules();
   });
   $('modeBtns').appendChild(b);
 });
+const LAYOUT_HINT = 'Pick a chip, then tap the board: a <b>card</b> (15x per ball), a <b>♥ ♠ ♦ ♣</b> row (suit), an <b>A–K</b> column (any rank, 3.8x), or Red, Black, 10–A, Joker. Any Joker opens the Bonus.';
+function applyLayout() {
+  $('controls').classList.toggle('layout2', st.layout === 2);
+  document.querySelectorAll('#layoutBtns button').forEach((b) => b.setAttribute('aria-pressed', +b.dataset.layout === st.layout));
+  $('hint').innerHTML = st.layout === 2 ? LAYOUT_HINT : TAB_HINT[st.tab];
+}
+[[1, '1 · Bet panel'], [2, '2 · Chips + board']].forEach(([l, name]) => {
+  const b = document.createElement('button');
+  b.type = 'button'; b.dataset.layout = l; b.textContent = name;
+  b.addEventListener('click', () => { st.layout = l; saveUrl(); applyLayout(); });
+  $('layoutBtns').appendChild(b);
+});
+applyLayout();
 $('forceJoker').addEventListener('click', () => { st.forceJoker = true; $('forceJoker').textContent = '★ Joker set for the next spin'; });
 renderRules();
 $('sim').addEventListener('click', () => {
