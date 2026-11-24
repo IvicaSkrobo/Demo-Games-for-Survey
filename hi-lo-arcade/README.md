@@ -14,7 +14,7 @@ Run `python3 -m http.server 8000` here and open `http://localhost:8000/`, or ope
 
 ## Return to player
 
-The first guess targets 91% expected return while the familiar is waking and 96% while it is awake. A Gold Card guess offers a bonus of 25% of the current payout divided by its win probability, so its expected value is 25% of the round payout before rounding. When a regular guess can complete the vault, a win has a 50% chance of unlocking that bonus, for an expected multiplier of 1.125. Otherwise the multiplier is 1. The base win quote divides its expected return target by the win probability and this multiplier. Wrong regular guesses lose the amount risked.
+The first guess targets 91% expected return while the familiar is waking and 96% while it is awake. All 35 unordered combinations of three symbols have distinct Gold Card values from 10% to 44%. The on-screen Paytable shows each combination. A Gold Card reward on a correct guess is its combination value times the current round payout divided by that choice's win probability. Its expected value therefore equals the combination percentage of the payout before rounding. When a regular win can complete the vault, its quote accounts for a 50% chance of drawing one of the five equally likely final symbols. Wrong regular guesses lose the amount risked.
 
 On continuation guesses, the target expected return in points is the current round payout. Cashout timing therefore preserves the theoretical first-guess return before rounding. Individual results vary.
 

@@ -73,6 +73,7 @@
         </span>
         <span class="familiar-sleep">z</span>
       </div>
+      <button class="paytable-trigger" id="open-paytable" type="button" aria-haspopup="dialog">Paytable</button>
       <div class="cash-pop" id="cash-pop" role="status"></div>
       <div class="symbol-vault" aria-label="Vault collection">
         <span>◇</span><span>◇</span><span>◇</span>
@@ -112,6 +113,14 @@
     </div>
   </div>
 </main>
+<dialog id="paytable" aria-labelledby="paytable-title">
+  <div class="paytable-header">
+    <h2 id="paytable-title">Gold Card paytable</h2>
+    <button id="close-paytable" type="button" aria-label="Close paytable">×</button>
+  </div>
+  <p>Any order counts. The percentage is the average extra reward relative to your round payout. Your Gold Card buttons show the exact reward for a correct guess.</p>
+  <div id="paytable-list" class="paytable-list"></div>
+</dialog>
 <script src="./game.js"></script>
 </body>
 </html>

@@ -13,7 +13,15 @@ const symbols = [
   { glyph: '♛', name: 'Crown' },
   { glyph: '⚡︎', name: 'Bolt' }
 ];
-const goldExpectedShare = 0.25;
+const goldCombinations = [];
+for (let a = 0; a < symbols.length; a++) {
+  for (let b = a; b < symbols.length; b++) {
+    for (let c = b; c < symbols.length; c++) goldCombinations.push([a, b, c]);
+  }
+}
+goldCombinations.sort((a, b) => new Set(b).size - new Set(a).size);
+const goldKey = combo => [...combo].sort((a, b) => a - b).join('');
+const goldPaytable = new Map(goldCombinations.map((combo, index) => [goldKey(combo), 10 + index]));
 const baseReturn = 0.91;
 const awakeReturn = 0.96;
 const formatPoints = new Intl.NumberFormat('en', { maximumFractionDigits: 2 });
@@ -47,6 +55,7 @@ let stake = Number(bet.value);
 let pot = 0;
 let audio;
 let goldDeck;
+let goldShare;
 
 function shuffle() {
   const cards = suits.flatMap(([suit, name]) => ranks.map((rank, value) => ({
@@ -119,6 +128,51 @@ function updateFamiliar() {
     collection.length + ' of ' + vaultSize + ' symbols collected' + (description ? ': ' + description : ''));
 }
 
+function openPaytable() {
+  const list = byId('paytable-list');
+  list.replaceChildren();
+  const matches = combo => {
+    const remaining = [...combo];
+    return collection.every(index => {
+      const position = remaining.indexOf(index);
+      if (position < 0) return false;
+      remaining.splice(position, 1);
+      return true;
+    });
+  };
+  const addRows = (title, combos) => {
+    if (!combos.length) return;
+    const heading = document.createElement('h3');
+    heading.textContent = title;
+    const rows = document.createElement('ul');
+    for (const combo of combos) {
+      const row = document.createElement('li');
+      const icons = document.createElement('span');
+      icons.className = 'paytable-symbols';
+      icons.textContent = combo.map(index => symbols[index].glyph).join('  ');
+      icons.setAttribute('aria-label', combo.map(index => symbols[index].name).join(', '));
+      const value = document.createElement('strong');
+      value.textContent = goldPaytable.get(goldKey(combo)) + '%';
+      row.append(icons, value);
+      rows.append(row);
+    }
+    list.append(heading, rows);
+  };
+
+  const descending = [...goldCombinations].reverse();
+  if (collection.length) {
+    addRows('Matches your vault', descending.filter(matches));
+    addRows('Other combinations', descending.filter(combo => !matches(combo)));
+  } else {
+    addRows('All combinations', descending);
+  }
+  byId('paytable').showModal();
+  list.scrollTop = 0;
+}
+
+byId('open-paytable').addEventListener('click', openPaytable);
+byId('close-paytable').addEventListener('click', () => byId('paytable').close());
+
 function doze() {
   energy = Math.max(0, energy - 1);
   updateFamiliar();
@@ -142,7 +196,11 @@ function payouts() {
   const awake = energy === fullEnergy;
   const expectedReturn = pot ? risk : stake * (awake ? awakeReturn : baseReturn);
   const canTriggerGold = awake && !awardedThisRound && collection.length === vaultSize - 1;
-  const expectedMultiplier = canTriggerGold ? 1 + bonusChance * goldExpectedShare : 1;
+  let expectedMultiplier = 1;
+  if (canTriggerGold) {
+    const total = symbols.reduce((sum, _, index) => sum + goldPaytable.get(goldKey([...collection, index])), 0);
+    expectedMultiplier += bonusChance * total / (100 * symbols.length);
+  }
   const quote = direction => {
     const wins = counts[direction] + counts[0];
     if (!counts[direction] || !wins) return null;
@@ -156,7 +214,7 @@ function goldQuotes() {
   const quote = direction => {
     const wins = goldDeck.filter(card => card.value === current.value || Math.sign(card.value - current.value) === direction).length;
     const chance = wins / goldDeck.length;
-    return chance ? { chance, extra: Math.round(100 * pot * goldExpectedShare / chance) / 100 } : null;
+    return chance ? { chance, extra: Math.round(100 * pot * goldShare / chance) / 100 } : null;
   };
   return { 1: quote(1), '-1': quote(-1) };
 }
@@ -298,6 +356,7 @@ async function awardSymbol(winningCard) {
   collection.push(index);
   updateFamiliar();
   if (collection.length === vaultSize) {
+    goldShare = goldPaytable.get(goldKey(collection)) / 100;
     goldDeck = shuffle().filter(card => card.rank !== winningCard.rank || card.suit !== winningCard.suit);
     bonus.classList.add('vault-open');
     showStatus('Gold Card! Make a free Higher or Lower guess.');
