@@ -419,7 +419,9 @@ el('circle', { r: 112, class: 'hub' }, rot);
 for (let k = 0; k < 4; k++) el('line', { x1: 0, y1: -58, x2: 0, y2: -108, class: 'spoke', transform: `rotate(${k * 90 + 45})` }, rot);
 const chipsOnWheel = el('g', { class: 'wchips' }, rot);
 function drawChip(layer, x, y, r, amt, state) {
-  const g = el('g', { class: 'wchip ' + chipClass(amt) + (state ? ' ' + state : ''), transform: `translate(${x} ${y})` }, layer);
+  // chips ride with the wheel but are turned back by the wheel angle, so they always face the player
+  const g = el('g', { class: 'wchip ' + chipClass(amt) + (state ? ' ' + state : ''), transform: `translate(${x} ${y}) rotate(${-wAng})` }, layer);
+  g.dataset.x = x; g.dataset.y = y;
   el('circle', { r }, g);
   el('text', {}, g).textContent = amt >= 1000 ? r2(amt / 1000) + 'k' : amt;
 }
@@ -486,7 +488,10 @@ const ballLayer = el('g', {}, svg);
 const bonusLayer = el('g', {}, svg);
 const balls = [0, 1, 2].map((i) => { const g = el('g', { opacity: 0 }, ballLayer); el('circle', { r: 9, class: 'ball' }, g); el('text', { class: 'ball-n' }, g).textContent = i + 1; return g; });
 let wAng = Math.random() * 360, idle = true, lastT = performance.now();
-const setW = (a) => rot.setAttribute('transform', `rotate(${a})`);
+const setW = (a) => {
+  rot.setAttribute('transform', `rotate(${a})`);
+  for (const c of chipsOnWheel.children) c.setAttribute('transform', `translate(${c.dataset.x} ${c.dataset.y}) rotate(${-a})`);
+};
 setW(wAng);
 
 // ---------------------------------------------------------------- players at the table (simulated, no backend)
