@@ -31,6 +31,14 @@
       "source": "game-discovery/prototypes/2026-11-collector-21"
     },
     {
+      "path": "hi-lo/",
+      "title": "Hi-Lo",
+      "sub": "Higher or lower · multiplier chain",
+      "section": "Card games",
+      "owner": "Trpimir (student)",
+      "source": "https://github.com/TrpimirPerkovic/Hi-Lo"
+    },
+    {
       "path": "wheel/",
       "title": "Wheel",
       "sub": "Printed pays · skull sweep · spin the wheel or the flapper",
