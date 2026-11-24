@@ -129,6 +129,14 @@
       "section": "Card games",
       "owner": "Ivica",
       "source": "game-discovery/prototypes/2026-11-remi-51"
+    },
+    {
+      "path": "dealer-duel/",
+      "title": "Dealer Duel",
+      "sub": "Pick a card, duel the dealer, chain your multiplier",
+      "section": "Card games",
+      "owner": "Vanja",
+      "source": "game-discovery/prototypes/2026-11-dealer-duel"
     }
   ]
 }
