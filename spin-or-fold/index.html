@@ -11,6 +11,7 @@
   --text:#edf4ee; --text-cool:#d5edff; --muted:#a6c3d7; --win:#50d573; --lose:#e31246;
   --card:#fcfdff; --card-ink:#142a3a;
   --table-line:#361225; --button-line:#35536a;
+  --gold:#f2c14e; --gold-deep:#c99318; --gold-dark:#5e400c; /* Joker Bonus wheel only */
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -168,7 +169,41 @@ td.ok{color:var(--win);font-weight:700}
 .h-r{display:flex;gap:2px;padding:3px 4px;border-radius:5px;background:var(--chip)}
 .h-c{background:var(--card);color:var(--card-ink);border-radius:3px;padding:1px 3px;font:700 10.5px/1.2 system-ui,sans-serif}
 .h-c.red{color:var(--lose)} .h-c.jk{background:var(--accent);color:#fff}
-@media(prefers-reduced-motion:reduce){.card.arrive,.pl.new{animation:none}}
+/* ---------- Joker Bonus ---------- */
+.table.bonus{border-color:var(--gold-deep);box-shadow:inset 0 0 50px #f2c14e2e}
+.wheel{transition:width .5s ease}
+.table.bonus .wheel{width:min(100%,340px,max(240px,46vh))}
+svg.gold .w-rim{fill:var(--gold-dark)}
+svg.gold .w-rim-line{stroke:var(--gold)}
+svg.gold .cap{fill:var(--gold-dark);stroke:var(--gold)}
+.bon .pocket{stroke:var(--gold-dark)}
+.b-death{fill:var(--bg)} .b-2{fill:var(--gold-deep)} .b-3{fill:var(--gold)} .b-5{fill:var(--accent-deep)} .b-10{fill:var(--accent)} .b-crown{fill:var(--card)}
+.bi-15{fill:var(--gold-deep)} .bi-25{fill:var(--accent-deep)} .bi-200{fill:var(--card)}
+.bon .pocket.hit{filter:drop-shadow(0 0 8px var(--gold)) brightness(1.25);stroke:var(--gold);stroke-width:2.5}
+.b-txt{font:800 12px system-ui,sans-serif;fill:var(--card);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.b-3-t,.b-crown-t,.bi-200-t{fill:var(--card-ink)}
+.b-death-t{fill:var(--muted);font-size:12px}
+.b-crown-t{font-size:17px}
+.bi-t{font-size:14px}
+.gold-hub{fill:var(--table);stroke:var(--gold-deep);stroke-width:2}
+.cap-b{font:italic bold 17px Georgia,serif;fill:var(--gold);text-anchor:middle;dominant-baseline:central;letter-spacing:-.03em}
+.bb .core{fill:var(--card);stroke:var(--card-ink);stroke-width:.8}
+.bb .ini{font:800 7px system-ui,sans-serif;fill:var(--card-ink);text-anchor:middle;dominant-baseline:central}
+.bb.me .core{fill:var(--accent);stroke:#fff;stroke-width:2.5}
+.bb.me .ring{fill:none;stroke:var(--accent);stroke-width:2.5;transform-box:fill-box;transform-origin:center;animation:ring 1s ease-out infinite}
+@keyframes ring{from{opacity:.9;transform:scale(.7)}to{opacity:0;transform:scale(1.9)}}
+.bb .you{font:800 12px system-ui,sans-serif;fill:#fff;text-anchor:middle;paint-order:stroke;stroke:var(--accent-dark);stroke-width:4px}
+.bb.win .core{stroke:var(--gold);stroke-width:3}
+.bb.dead{opacity:.3}
+.bb.me.dead{opacity:.55}
+.banner{position:absolute;left:50%;top:-4px;transform:translateX(-50%);background:var(--gold);color:var(--card-ink);font:800 11.5px system-ui,sans-serif;letter-spacing:.12em;padding:5px 12px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 12px #0009;z-index:3;animation:pop .4s ease-out}
+.timer.bonus .track i{background:var(--gold)}
+.status.gold{color:var(--gold)}
+.pl.inb .av{border-color:var(--gold)}
+.pl.out{opacity:.4}
+.pl.me.inb .av{box-shadow:0 0 0 2px var(--gold)}
+.in-note{color:var(--gold)}
+@media(prefers-reduced-motion:reduce){.card.arrive,.pl.new,.banner{animation:none}.bb.me .ring{animation:none;opacity:.6}}
 </style>
 </head>
 <body>
@@ -178,14 +213,14 @@ td.ok{color:var(--win);font-weight:700}
     <span class="pill" id="balance">1,000</span>
   </header>
 
-  <section class="table" aria-label="Game table">
+  <section class="table" id="table" aria-label="Game table">
     <div class="players-cap"><span class="label">At the table</span><span class="label" id="tableCount"></span></div>
     <div class="players" id="players"></div>
     <div class="timer" id="timer">
       <div class="timer-row"><span id="phaseText">Place your bets</span><b id="timeText">7s</b></div>
       <div class="track"><i id="timeBar"></i></div>
     </div>
-    <div class="wheel"><svg id="wheel" viewBox="-250 -250 500 500" role="img" aria-label="Wheel with 52 cards and a Joker"></svg><div class="hand" id="hand" aria-label="Cards dealt by the balls"></div></div>
+    <div class="wheel"><svg id="wheel" viewBox="-250 -250 500 500" role="img" aria-label="Wheel with 52 cards and a Joker"></svg><div class="hand" id="hand" aria-label="Cards dealt by the balls"></div><div class="banner" id="banner" hidden></div></div>
     <div class="status" id="status" role="status">A new round starts every 7 seconds.</div>
     <ul class="lines" id="lines"></ul>
   </section>
@@ -204,7 +239,7 @@ td.ok{color:var(--win);font-weight:700}
       <div class="g-ranks" data-panel="rank" id="gRanks" hidden></div>
       <div class="g-cards" data-panel="card" id="gCards" hidden></div>
     </div>
-    <div class="hint" id="hint">Every ball on your pick counts: <b>more balls, bigger win.</b> The Joker is wild for Red, Black, High and suits.</div>
+    <div class="hint" id="hint">Every ball on your pick counts: <b>more balls, bigger win.</b> Any <b>Joker</b> opens the Bonus for everyone who bet.</div>
     <div class="bar">
       <div class="chips" id="chips" aria-label="Chip value"></div>
       <button class="sec" id="undo" type="button">Undo</button>
@@ -224,13 +259,16 @@ td.ok{color:var(--win);font-weight:700}
       <li>When betting closes, three balls drop onto the wheel for everyone at the table.</li>
       <li>Each ball that lands on your pick counts. More balls, bigger win. Balls can land in the same pocket.</li>
       <li>The Joker is wild. It counts for every suit, Red, Black and High, but not for an exact card or a rank.</li>
+      <li><b>Joker Bonus:</b> when any ball lands on the Joker, bets are paid as normal, then a golden bonus wheel opens for every player who bet in that round, whatever they bet on.</li>
+      <li>In the bonus every player is one ball (yours is pink, marked YOU). Your bonus win is your total bet from that round × the multiplier your ball lands on. A skull means your ball is out. The Crown sends your ball to the inner ring with the 200x.</li>
     </ol>
     <div class="tbl"><table id="payTable"></table></div>
+    <div class="tbl"><table id="bonusTable"></table></div>
     <p>Wins are multipliers of your bet, stake included. Red, Black and High need at least 2 balls. The other players in this prototype are simulated.</p>
   </details>
   <details>
     <summary>Math check (RTP)</summary>
-    <p>Exact RTP for 53 pockets and 3 independent balls, plus a simulation that plays rounds with this game's own code. Target: 92% to 97%.</p>
+    <p>Exact RTP for 53 pockets and 3 independent balls. Base is the normal round; Bonus is the Joker Bonus share, the same for every bet. Sim plays rounds, bonus included, with this game's own code. Target: 92% to 97%.</p>
     <div class="tbl"><table id="mathTable"></table></div>
     <div class="simrow"><button id="sim" type="button">Simulate 300,000 rounds</button><span id="simNote"></span></div>
   </details>
@@ -264,6 +302,7 @@ function sector(r1, rr, a0, a1) {
 }
 function arcBand(r1, rr, a0, a1) { let d = ''; const n = Math.ceil((a1 - a0) / 60); for (let i = 0; i < n; i++) d += sector(r1, rr, a0 + (a1 - a0) * i / n, a0 + (a1 - a0) * (i + 1) / n); return d; }
 const svg = $('wheel');
+svg.classList.add('main');
 el('circle', { r: 249, class: 'w-rim' }, svg);
 el('circle', { r: 243, class: 'w-rim-line' }, svg);
 el('circle', { r: 238, class: 'w-track' }, svg);
@@ -289,13 +328,35 @@ M.SUITS.forEach((s, k) => {
 el('path', { d: sector(112, 148, -STEP / 2, STEP / 2), class: 'band p-joker' }, rot);
 el('circle', { r: 112, class: 'hub' }, rot);
 for (let k = 0; k < 4; k++) el('line', { x1: 0, y1: -58, x2: 0, y2: -108, class: 'spoke', transform: `rotate(${k * 90 + 45})` }, rot);
+// Joker Bonus wheel (hidden until a Joker lands): outer ring of 54 equal pockets, inner ring of 10.
+const BN = M.BONUS_OUTER.length, BSTEP = 360 / BN, IN = M.BONUS_INNER.length, ISTEP = 360 / IN;
+const bon = el('g', { class: 'bon', style: 'display:none' }, svg);
+const bSegs = M.BONUS_OUTER.map((sg, i) => {
+  const a = i * BSTEP, cls = sg.crown ? 'b-crown' : sg.death ? 'b-death' : 'b-' + sg.m;
+  const p = el('path', { d: sector(148, 212, a - BSTEP / 2, a + BSTEP / 2), class: 'pocket ' + cls }, bon);
+  el('text', { class: 'b-txt ' + cls + '-t', transform: `rotate(${a}) translate(0,-186)` }, bon).textContent = sg.crown ? '\u2654' : sg.death ? '\u2620\uFE0E' : sg.m + 'x';
+  return p;
+});
+const iSegs = M.BONUS_INNER.map((m, i) => {
+  const a = i * ISTEP;
+  const p = el('path', { d: sector(100, 148, a - ISTEP / 2, a + ISTEP / 2), class: 'pocket bi-' + m }, bon);
+  el('text', { class: 'b-txt bi-t bi-' + m + '-t', transform: `rotate(${a}) translate(0,-124)` }, bon).textContent = m + 'x';
+  return p;
+});
+el('circle', { r: 100, class: 'gold-hub' }, bon);
+let bAng = 0;
+const setB = (a) => bon.setAttribute('transform', `rotate(${a})`);
 el('circle', { r: 58, class: 'cap' }, svg);
+const capBonus = el('g', { opacity: 0 }, svg);
+el('text', { class: 'cap-b', y: -9 }, capBonus).textContent = 'Joker';
+el('text', { class: 'cap-b', y: 12 }, capBonus).textContent = 'Bonus';
 const capLogo = el('g', {}, svg);
 el('text', { class: 'cap-t', y: -17 }, capLogo).textContent = 'Spin';
 el('text', { class: 'cap-or', y: 2 }, capLogo).textContent = 'or';
 el('text', { class: 'cap-t', y: 20 }, capLogo).textContent = 'Fold';
 const capNum = el('text', { class: 'cap-n' }, svg);
 const ballLayer = el('g', {}, svg);
+const bonusLayer = el('g', {}, svg);
 const balls = [0, 1, 2].map((i) => { const g = el('g', { opacity: 0 }, ballLayer); el('circle', { r: 9, class: 'ball' }, g); el('text', { class: 'ball-n' }, g).textContent = i + 1; return g; });
 let wAng = Math.random() * 360, idle = true, lastT = performance.now();
 const setW = (a) => rot.setAttribute('transform', `rotate(${a})`);
@@ -348,7 +409,14 @@ function renderPlayers() {
     const bet = sum(p.bets);
     let cls = 'pl' + (p.me ? ' me' : '') + (p.fresh ? ' new' : '');
     let amt = bet ? fmt(bet) : '';
-    if (p.result != null && bet) { cls += p.result > 0 ? ' won' : ' lost'; amt = p.result > 0 ? '+' + fmt(p.result) : '−' + fmt(bet); }
+    if (st.phase === 'bonus' || st.phase === 'bonusResult') {
+      const bo = p.bonus;
+      if (!bo) { cls += ' out'; amt = ''; }
+      else if (bo.win == null) { cls += ' inb'; amt = fmt(bo.bet); }
+      else if (bo.win > 0) { cls += ' inb won'; amt = '+' + fmt(bo.win); }
+      else { cls += ' lost'; amt = '\u2620\uFE0E'; }
+    }
+    else if (p.result != null && bet) { cls += p.result > 0 ? ' won' : ' lost'; amt = p.result > 0 ? '+' + fmt(p.result) : '−' + fmt(bet); }
     else if (bet) cls += ' betting';
     return `<div class="${cls}"><span class="av">${p.me ? 'You' : p.name.slice(0, 2)}</span><span class="nm">${p.name}</span><span class="amt">${amt}</span></div>`;
   }).join('');
@@ -368,12 +436,12 @@ function renderCrowd() { // how many other players sit on each bet
 
 // ---------------------------------------------------------------- your bets
 const INFO = {
-  joker: () => '<b>Joker</b>: 1 ball 15x · 2 balls 120x · 3 balls <b>1500x</b>. Biggest win on the table.',
-  color: (t) => `<b>${t === 'red' ? 'Red' : 'Black'}</b>: needs 2 balls on ${t} (Joker counts). 2 balls <b>1.5x</b>, 3 balls <b>3x</b>.`,
-  high: () => '<b>High</b>: 10, J, Q, K, A (Joker counts). 2 balls <b>2.5x</b>, 3 balls <b>4x</b>.',
-  suit: (t) => `<b>${SUIT[t].sym} ${SUIT[t].name}</b>: each ball on a ${SUIT[t].name.slice(0, -1).toLowerCase()} or the Joker pays <b>1.2x</b>. 3 balls = 3.6x.`,
-  rank: (t) => `<b>Any ${t}</b>: each ball on a ${t} of any suit pays <b>4.2x</b>. 3 balls = 12.6x.`,
-  card: (t) => `<b>${t.slice(0, -1)}${SUIT[t.slice(-1)].sym}</b>: each ball on this exact card pays <b>17x</b>. 3 balls = <b>51x</b>.`,
+  joker: () => '<b>Joker</b>: 1 ball 13x · 2 balls 120x · 3 balls <b>1500x</b>. Any Joker also opens the <b>Bonus</b> for everyone who bet.',
+  color: (t) => `<b>${t === 'red' ? 'Red' : 'Black'}</b>: needs 2 balls on ${t} (Joker counts). 2 balls <b>1.3x</b>, 3 balls <b>2.7x</b>.`,
+  high: () => '<b>High</b>: 10, J, Q, K, A (Joker counts). 2 balls <b>2.2x</b>, 3 balls <b>3.6x</b>.',
+  suit: (t) => `<b>${SUIT[t].sym} ${SUIT[t].name}</b> (Joker counts): 1 ball gives your bet back, 2 balls <b>2.3x</b>, 3 balls <b>3.6x</b>.`,
+  rank: (t) => `<b>Any ${t}</b>: each ball on a ${t} of any suit pays <b>3.8x</b>. 3 balls = 11.4x.`,
+  card: (t) => `<b>${t.slice(0, -1)}${SUIT[t.slice(-1)].sym}</b>: each ball on this exact card pays <b>15x</b>. 3 balls = <b>45x</b>.`,
 };
 const btns = new Map();
 function mk(parent, type, target, cls, html, label) {
@@ -383,20 +451,20 @@ function mk(parent, type, target, cls, html, label) {
   b.addEventListener('click', () => { $('hint').innerHTML = INFO[type](target); place(b.dataset.key, st.chip); });
   parent.appendChild(b); btns.set(b.dataset.key, b); return b;
 }
-mk($('gMain'), 'joker', '-', 'bet joker', '<span class="n">★ Joker</span><span class="p">15x · 120x · 1500x</span>');
-mk($('gMain'), 'color', 'red', 'bet', '<span class="n red-t">Red</span><span class="p">2 balls 1.5x<br>3 balls 3x</span>');
-mk($('gMain'), 'color', 'black', 'bet', '<span class="n">Black</span><span class="p">2 balls 1.5x<br>3 balls 3x</span>');
-mk($('gMain'), 'high', '-', 'bet', '<span class="n">High 10–A</span><span class="p">2 balls 2.5x<br>3 balls 4x</span>');
-for (const s of M.SUITS) mk($('gSuits'), 'suit', s.id, 'bet', `<span class="n${s.color === 'red' ? ' red-t' : ''}">${s.sym}</span><span class="p">1.2x/ball</span>`, s.name);
+mk($('gMain'), 'joker', '-', 'bet joker', '<span class="n">★ Joker</span><span class="p">13x · 120x · 1500x · opens Bonus</span>');
+mk($('gMain'), 'color', 'red', 'bet', '<span class="n red-t">Red</span><span class="p">2 balls 1.3x<br>3 balls 2.7x</span>');
+mk($('gMain'), 'color', 'black', 'bet', '<span class="n">Black</span><span class="p">2 balls 1.3x<br>3 balls 2.7x</span>');
+mk($('gMain'), 'high', '-', 'bet', '<span class="n">High 10–A</span><span class="p">2 balls 2.2x<br>3 balls 3.6x</span>');
+for (const s of M.SUITS) mk($('gSuits'), 'suit', s.id, 'bet', `<span class="n${s.color === 'red' ? ' red-t' : ''}">${s.sym}</span><span class="p">1x · 2.3x · 3.6x</span>`, s.name);
 for (const r of M.RANKS) mk($('gRanks'), 'rank', r, 'bet', `<span class="n">${r}</span>`, 'Any ' + r);
 const minis = new Map();
 for (const s of M.SUITS) for (const r of M.RANKS) minis.set(r + s.id, mk($('gCards'), 'card', r + s.id, 'mini' + (s.color === 'red' ? ' red' : ''), `<span class="r">${r}</span><span class="s">${s.sym}</span>`, `${r} of ${s.name}`));
 
 const TAB_HINT = {
-  main: 'Every ball on your pick counts: <b>more balls, bigger win.</b> The Joker is wild for Red, Black, High and suits.',
-  suit: 'Each ball on your suit pays <b>1.2x</b>. Joker counts for every suit.',
-  rank: 'Pick a rank, any suit. Each ball on it pays <b>4.2x</b>.',
-  card: 'Pick one exact card. Each ball on it pays <b>17x</b>, 3 balls pay <b>51x</b>.',
+  main: 'Every ball on your pick counts: <b>more balls, bigger win.</b> Any <b>Joker</b> opens the Bonus for everyone who bet.',
+  suit: 'Your suit (Joker counts): 1 ball = bet back, 2 balls <b>2.3x</b>, 3 balls <b>3.6x</b>.',
+  rank: 'Pick a rank, any suit. Each ball on it pays <b>3.8x</b>.',
+  card: 'Pick one exact card. Each ball on it pays <b>15x</b>, 3 balls pay <b>45x</b>.',
 };
 document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => {
   st.tab = t.dataset.tab;
@@ -458,6 +526,7 @@ function render() {
   $('double').disabled = !open || !st.bets.size || tb > st.balance;
   const canRebet = open && st.last.size && !st.bets.size && lastT <= st.balance;
   $('rebet').disabled = !canRebet;
+  if (open) $('phaseText').innerHTML = tb ? '<span class="in-note">★ You\'re in the Bonus if a Joker lands</span>' : 'Place bets · a Joker opens the Bonus';
   $('rebetSub').textContent = !open ? 'bets closed' : st.bets.size ? 'bet ' + fmt(tb) + ' · auto spin' : st.last.size ? 'last bet ' + fmt(lastT) : 'tap a bet';
   renderPlayers();
 }
@@ -501,8 +570,12 @@ function openBetting(now) {
   clearMarks(); rotateSeats(); planBots();
   for (const b of bots) b.result = null; me.result = null;
   $('timer').className = 'timer';
-  $('phaseText').textContent = 'Place your bets';
   $('timeText').textContent = BET_SECONDS + 's';
+  // back to the normal wheel after a bonus
+  rot.style.display = ''; bon.style.display = 'none'; svg.classList.remove('gold'); $('table').classList.remove('bonus');
+  capBonus.setAttribute('opacity', 0); bonusLayer.innerHTML = ''; $('banner').hidden = true;
+  bSegs.concat(iSegs).forEach((p) => p.classList.remove('hit'));
+  for (const p of [me, ...bots]) p.bonus = null;
   $('lines').innerHTML = '';
   $('status').className = 'status';
   $('status').textContent = '';
@@ -545,6 +618,12 @@ function stepSpin(now) {
       const p = M.POCKETS[a.res[i]];
       (p.joker ? btns.get('joker:-') : minis.get(p.id)).classList.add('landed');
       live(a.landed);
+      if (p.joker && !a.joker) {
+        a.joker = true;
+        $('banner').textContent = '★ JOKER · BONUS UNLOCKED'; $('banner').hidden = false;
+        $('status').className = 'status gold';
+        $('status').textContent = sum(st.bets) ? 'Joker! You\'re in the Bonus · bet ' + fmt(sum(st.bets)) : 'Joker! Bonus for players who bet · you\'re watching';
+      }
     }
   }
   if (t >= a.T) { anim = null; settle(a.res, now); }
@@ -580,6 +659,13 @@ function settle(res, now) {
   $('status').textContent = !stake ? (table.length ? table.length + ' winner' + (table.length > 1 ? 's' : '') + ' at the table' : 'No winners this round')
     : mine.win ? (mine.win >= stake ? 'You win ' + fmt(mine.win) + ' · +' + fmt(mine.win - stake) : 'Paid ' + fmt(mine.win) + ' of ' + fmt(stake)) : 'No win · −' + fmt(stake);
   $('lines').innerHTML = top.map((x) => `<li class="${x.me ? 'me' : ''}"><span>${x.who} · ${x.why}</span><b>+${fmt(x.pay)}</b></li>`).join('');
+  if (M.triggersBonus(res)) {
+    st.pendingBonus = bots.filter((b) => sum(b.bets) > 0).map((b) => ({ p: b, bet: sum(b.bets) }));
+    if (stake) st.pendingBonus.push({ p: me, bet: stake }); // you land last
+    if (!st.pendingBonus.length) st.pendingBonus = null;
+    $('phaseText').textContent = '★ Joker Bonus next';
+    if (stake) $('status').textContent += ' · Bonus next!';
+  }
   me.bets = new Map(st.bets);
   if (stake) st.last = new Map(st.bets);
   st.bets = new Map(); st.undo = [];
@@ -589,6 +675,101 @@ function settle(res, now) {
   render();
 }
 const hist = [];
+
+let bonus = null;
+function startBonus(now) {
+  const list = st.pendingBonus; st.pendingBonus = null;
+  st.phase = 'bonus';
+  for (const p of [me, ...bots]) p.bonus = null;
+  for (const q of list) q.p.bonus = { bet: q.bet, mult: null, win: null };
+  rot.style.display = 'none'; bon.style.display = ''; svg.classList.add('gold'); $('table').classList.add('bonus');
+  capLogo.setAttribute('opacity', 0); capBonus.setAttribute('opacity', 1); capNum.textContent = '';
+  $('banner').textContent = '★ JOKER BONUS'; $('banner').hidden = false;
+  $('timer').className = 'timer bonus';
+  $('phaseText').textContent = '★ Joker Bonus · ' + list.length + ' ball' + (list.length > 1 ? 's' : '');
+  $('timeText').textContent = ''; $('timeBar').style.transform = 'scaleX(1)';
+  $('status').className = 'status gold';
+  $('status').textContent = me.bonus ? 'Your ball is pink · ' + fmt(me.bonus.bet) + ' × multiplier' : 'You had no bet last round · watching';
+  $('lines').innerHTML = ''; emptyHand(); balls.forEach((g) => g.setAttribute('opacity', 0));
+  bonusLayer.innerHTML = '';
+  const sp = reduced ? 0.3 : 1, gap = Math.min(0.45, 3 / list.length);
+  const outerN = {}, innerN = {};
+  let T = 0;
+  const items = list.map((q, i) => {
+    const r = M.bonusSpin();
+    const stack = outerN[r.outer] = (outerN[r.outer] || 0) + 1;
+    const istack = r.inner == null ? 0 : (innerN[r.inner] = (innerN[r.inner] || 0) + 1);
+    const L = (3.4 + i * gap) * sp, end = L + (r.inner == null ? 0 : 2.6 * sp);
+    T = Math.max(T, end);
+    const g = el('g', { class: 'bb' + (q.p.me ? ' me' : '') }, bonusLayer);
+    if (q.p.me) el('circle', { r: 11, class: 'ring' }, g);
+    el('circle', { r: q.p.me ? 11 : 8, class: 'core' }, g);
+    if (q.p.me) el('text', { class: 'you', y: -20 }, g).textContent = 'YOU';
+    else el('text', { class: 'ini' }, g).textContent = q.p.name.slice(0, 2);
+    return { q, r, g, L, end, stack, istack, spin: (3 + (i % 3)) * 360 + Math.random() * 360, landed: false, final: false };
+  });
+  bonus = { t0: now + 900 * sp, w0: bAng, W: 2 * 360, T: T + 0.5 * sp, items };
+  render();
+}
+function bonusLanded(it, mult) {
+  const bo = it.q.p.bonus;
+  bo.mult = mult; bo.win = r2(bo.bet * mult);
+  it.g.classList.add(mult ? 'win' : 'dead');
+  if (it.q.p.me) {
+    $('status').className = 'status ' + (mult ? 'win' : 'lose');
+    $('status').textContent = mult ? 'Your ball: ' + mult + 'x · +' + fmt(bo.win) : 'Your ball is out';
+  }
+  renderPlayers();
+}
+function stepBonus(now) {
+  const b = bonus, t = Math.max(0, (now - b.t0) / 1000);
+  bAng = b.w0 + b.W * easeOut(Math.min(t / b.T, 1)); setB(bAng);
+  let all = true;
+  for (const it of b.items) {
+    const target = it.r.outer * BSTEP + (it.stack > 4 ? (it.stack - 4) * 1.8 : 0);
+    const rOut = 196 - Math.min(it.stack - 1, 3) * 13;
+    const pr = Math.min(t / it.L, 1);
+    let rel, r;
+    if (pr < 1) {
+      rel = target + it.spin * (1 - easeOut(pr));
+      r = pr > .62 ? 225 + (rOut - 225) * bounce((pr - .62) / .38) : 225;
+      all = false;
+    } else {
+      if (!it.landed) {
+        it.landed = true; bSegs[it.r.outer].classList.add('hit');
+        if (it.r.inner == null) bonusLanded(it, it.r.mult);
+        else if (it.q.p.me) { $('status').className = 'status gold'; $('status').textContent = '♔ Crown! Your ball rolls to the inner ring…'; }
+      }
+      if (it.r.inner == null) { rel = target; r = rOut; }
+      else {
+        const u = Math.min((t - it.L) / (it.end - it.L), 1), itarget = it.r.inner * ISTEP;
+        rel = itarget + (target + 360 - itarget) * (1 - easeOut(u));
+        r = rOut + (124 - (it.istack - 1) * 9 - rOut) * easeOut(Math.min(u * 1.6, 1));
+        if (u >= 1 && !it.final) { it.final = true; iSegs[it.r.inner].classList.add('hit'); bonusLanded(it, it.r.mult); }
+        if (u < 1) all = false;
+      }
+    }
+    const [x, y] = pt(r, bAng + rel);
+    it.g.setAttribute('transform', `translate(${x} ${y})`);
+  }
+  if (all && t >= b.T) settleBonus(now);
+}
+function settleBonus(now) {
+  st.phase = 'bonusResult'; resultUntil = now + 3500;
+  const items = bonus.items; bonus = null;
+  const mine = me.bonus;
+  if (mine) { st.balance = r2(st.balance + mine.win); st.lastWin = mine.win; }
+  const out = items.filter((it) => !it.r.mult).length;
+  const won = items.filter((it) => it.r.mult).sort((a, b) => b.q.p.bonus.win - a.q.p.bonus.win);
+  const top = won.filter((it) => it.q.p.me).concat(won.filter((it) => !it.q.p.me)).slice(0, 4);
+  $('lines').innerHTML = top.map((it) => `<li class="${it.q.p.me ? 'me' : ''}"><span>${it.q.p.name} · ${it.r.mult}x</span><b>+${fmt(it.q.p.bonus.win)}</b></li>`).join('')
+    + (out ? `<li><span>\u2620\uFE0E ${out} ball${out > 1 ? 's' : ''} out</span><span></span></li>` : '');
+  $('phaseText').textContent = 'Bonus over';
+  $('status').className = 'status ' + (mine ? (mine.win ? 'win' : 'lose') : 'gold');
+  $('status').textContent = mine ? (mine.win ? 'Bonus win ' + fmt(mine.win) + ' · ' + mine.mult + 'x your bet' : 'Your ball is out · no bonus win')
+    : 'Bet every round to get a ball in the next Bonus';
+  render();
+}
 
 function tick(now) {
   if (st.phase === 'bet') {
@@ -605,6 +786,12 @@ function tick(now) {
     if (anim) stepSpin(now);
   } else if (st.phase === 'result') {
     $('timeBar').style.transform = `scaleX(${Math.max(0, resultUntil - now) / (RESULT_SECONDS * 1000)})`;
+    $('timeText').textContent = (st.pendingBonus ? 'bonus in ' : 'next in ') + Math.max(0, Math.ceil((resultUntil - now) / 1000)) + 's';
+    if (now >= resultUntil) st.pendingBonus ? startBonus(now) : openBetting(now);
+  } else if (st.phase === 'bonus') {
+    if (bonus) stepBonus(now);
+  } else if (st.phase === 'bonusResult') {
+    $('timeBar').style.transform = `scaleX(${Math.max(0, resultUntil - now) / 3500})`;
     $('timeText').textContent = 'next in ' + Math.max(0, Math.ceil((resultUntil - now) / 1000)) + 's';
     if (now >= resultUntil) openBetting(now);
   }
@@ -617,6 +804,7 @@ document.addEventListener('visibilitychange', () => {
   const now = performance.now();
   if (st.phase === 'bet' && st.closesAt < now) st.closesAt = now + 1500;
   if (st.phase === 'spin' && anim) anim.t0 = now - Math.min(now - anim.t0, anim.T * 1000 * .5);
+  if (st.phase === 'bonus' && bonus) bonus.t0 = now - Math.min(now - bonus.t0, bonus.T * 1000 * .5);
   lastT = now;
 });
 
@@ -625,10 +813,18 @@ const REPS = [['joker', '-', '★ Joker'], ['card', 'KH', 'Exact card'], ['rank'
 const pct = (x) => (x * 100).toFixed(2) + '%';
 const pc = (x) => (x ? x + 'x' : '–');
 $('payTable').innerHTML = '<tr><th>Bet</th><th>1 ball</th><th>2</th><th>3</th><th>RTP</th></tr>' + REPS.map(([t, g, n]) => `<tr><td>${n}</td><td>${pc(M.PAYS[t][1])}</td><td>${pc(M.PAYS[t][2])}</td><td>${pc(M.PAYS[t][3])}</td><td>${pct(M.exact(t, g).rtp)}</td></tr>`).join('');
+{
+  const bs = M.bonusStats(), cnt = (f) => M.BONUS_OUTER.filter(f).length, icnt = (m) => M.BONUS_INNER.filter((x) => x === m).length;
+  const rows = [['\u2620\uFE0E Out', cnt((x) => x.death)], ['2x', cnt((x) => x.m === 2)], ['3x', cnt((x) => x.m === 3)], ['5x', cnt((x) => x.m === 5)], ['10x', cnt((x) => x.m === 10)], ['♔ Crown', cnt((x) => x.crown)]];
+  $('bonusTable').innerHTML = '<tr><th>Bonus wheel</th><th>Pockets</th><th>Chance</th></tr>'
+    + rows.map(([n, c]) => `<tr><td>${n}</td><td>${c}/${BN}</td><td>${pct(c / BN)}</td></tr>`).join('')
+    + [15, 25, 200].map((m) => `<tr><td>&nbsp;&nbsp;Crown → ${m}x</td><td>${icnt(m)}/${IN}</td><td>${pct(icnt(m) / IN / BN)}</td></tr>`).join('')
+    + `<tr><td>Average bonus</td><td colspan="2">${bs.ev.toFixed(2)}x your bet · Bonus comes 1 round in ${(1 / M.P_TRIGGER).toFixed(0)}</td></tr>`;
+}
 function mathTable(acc, n) {
-  $('mathTable').innerHTML = '<tr><th>Bet</th><th>Win %</th><th>Max</th><th>RTP</th><th>Sim</th></tr>' + REPS.map(([t, g, nm], i) => {
+  $('mathTable').innerHTML = '<tr><th>Bet</th><th>Base</th><th>Bonus</th><th>Total</th><th>Sim</th></tr>' + REPS.map(([t, g, nm], i) => {
     const e = M.exact(t, g);
-    return `<tr><td>${nm}</td><td>${pct(e.winChance)}</td><td>${e.maxWin}x</td><td class="${e.rtp >= .92 && e.rtp <= .97 ? 'ok' : ''}">${pct(e.rtp)}</td><td>${acc ? pct(acc[i] / n) : '–'}</td></tr>`;
+    return `<tr><td>${nm}</td><td>${pct(e.rtpBase)}</td><td>${pct(e.rtpBonus)}</td><td class="${e.rtp >= .92 && e.rtp <= .97 ? 'ok' : ''}">${pct(e.rtp)}</td><td>${acc ? pct(acc[i] / n) : '–'}</td></tr>`;
   }).join('');
 }
 mathTable();
@@ -636,9 +832,9 @@ $('sim').addEventListener('click', () => {
   const totalN = 300000, chunk = 20000, acc = REPS.map(() => 0); let n = 0;
   $('sim').disabled = true;
   (function step() {
-    for (let i = 0; i < chunk; i++) { const b = M.spin(); for (let k = 0; k < REPS.length; k++) acc[k] += M.settle(REPS[k][0], REPS[k][1], b).mult; }
+    for (let i = 0; i < chunk; i++) { const b = M.spin(), bo = M.triggersBonus(b) ? M.bonusSpin().mult : 0; for (let k = 0; k < REPS.length; k++) acc[k] += M.settle(REPS[k][0], REPS[k][1], b).mult + bo; }
     n += chunk; mathTable(acc, n); $('simNote').textContent = Math.round(n / totalN * 100) + '%';
-    if (n < totalN) setTimeout(step, 0); else { $('sim').disabled = false; $('simNote').textContent = 'Done. Joker and card swing ±1%.'; }
+    if (n < totalN) setTimeout(step, 0); else { $('sim').disabled = false; $('simNote').textContent = 'Done. Joker, card and bonus swing ±1–2%.'; }
   })();
 });
 
