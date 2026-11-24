@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#11080d">
+<title>Beat the Dealer</title>
+<style>
+:root{
+  --bg:#11080d;
+  --table:#1a0913;
+  --panel:#28121c;
+  --chip:#401628;
+  --button:#39232d;
+  --primary:#50d573;
+  --accent:#e1549c;
+  --accent-deep:#c31870;
+  --accent-dark:#941658;
+  --text:#edf4ee;
+  --text-cool:#d5edff;
+  --muted:#a6c3d7;
+  --win:#50d573;
+  --lose:#e31246;
+  --card:#fcfdff;
+}
+* { box-sizing:border-box }
+body { margin:0; overflow-x:clip; background:var(--bg); color:var(--text); font:15px system-ui,sans-serif }
+main { width:min(100%,480px); margin:auto; padding:16px 12px }
+header { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:12px }
+h1 { margin:0; font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif; letter-spacing:-.06em }
+.label { color:var(--muted); font-size:10px; font-weight:750; letter-spacing:.16em; text-transform:uppercase }
+.balance { background:var(--chip); color:var(--text-cool); border-radius:20px; padding:6px 12px; text-align:center; white-space:nowrap }
+.balance strong { display:block; font-variant-numeric:tabular-nums }
+.table { background:var(--table); border:1px solid #361225; border-radius:22px; padding:16px 12px 12px; text-align:center }
+.streak { display:inline-block; padding:5px 10px; border-radius:20px; background:var(--chip); color:var(--text-cool) }
+.multiplier { color:var(--accent); margin-inline-start:8px; font-variant-numeric:tabular-nums }
+.pile { display:grid; justify-items:center; gap:6px; margin:14px 0 }
+.pile-cards { position:relative; width:min(100%,260px); height:184px; isolation:isolate }
+.comparison { min-height:15px }
+.card { position:absolute; left:calc(50% - 38px); top:42px; width:76px; height:100px; border-radius:9px; display:grid; place-content:center; background:var(--card); color:#142a3a; font:700 37px/.95 Georgia,serif; border:2px solid var(--card); box-shadow:0 2px 7px color-mix(in srgb,var(--bg) 50%,transparent); transform:translate(var(--x,0px),var(--y,0px)) rotate(var(--turn,0deg)) }
+.card.dealt { display:block; border:0; border-radius:4px; animation:deal-card 310ms cubic-bezier(.21,.67,.36,1) backwards }
+.card svg { display:block; width:100%; height:100%; overflow:hidden; border-radius:inherit }
+.card.dealt.cash-away { animation:cash-away 340ms cubic-bezier(.46,.03,.75,.5) var(--exit-delay) both }
+.payout { display:grid; align-content:center; gap:4px; height:100%; color:var(--win) }
+.payout strong { font:italic bold clamp(32px,11vw,52px)/1 Georgia,serif; font-variant-numeric:tabular-nums }
+.payout span { color:var(--text) }
+@keyframes deal-card {
+  0% { opacity:0; transform:translate(71px,-46px) rotate(25deg) scale(.9) }
+  68% { opacity:1; transform:translate(calc(var(--x) - 3px),calc(var(--y) + 4px)) rotate(calc(var(--turn) - 3deg)) scale(1.02) }
+  100% { opacity:1; transform:translate(var(--x),var(--y)) rotate(var(--turn)) }
+}
+@keyframes cash-away {
+  from { transform:translate(var(--x),var(--y)) rotate(var(--turn)) }
+  to { transform:translate(calc(var(--x) + 100vw),calc(var(--y) - 66px)) rotate(calc(var(--turn) + 28deg)) }
+}
+@media (prefers-reduced-motion:reduce) {
+  .card.dealt, .card.dealt.cash-away { animation:none }
+}
+.card.back { background:repeating-linear-gradient(135deg,var(--accent-dark) 0 7px,var(--accent-deep) 7px 14px); color:var(--text); border-color:var(--accent) }
+.card.winner { outline:2px solid var(--win); outline-offset:2px }
+#status { min-height:44px; margin:0; display:grid; place-content:center }
+.controls { background:var(--panel); border-radius:15px; margin-top:10px; padding:12px; display:grid; gap:8px }
+.caption,.actions { display:flex; align-items:center; gap:8px }
+.caption { justify-content:space-between }
+.demo-setting { display:flex; align-items:center; gap:4px; min-height:28px; white-space:nowrap; cursor:pointer }
+.demo-setting input { margin:0; accent-color:var(--accent) }
+button,select { min-width:0; min-height:44px; padding:5px 9px; border:1px solid #35536a; border-radius:8px; background:var(--button); color:var(--text); font:700 14px system-ui,sans-serif; cursor:pointer; touch-action:manipulation }
+button:focus-visible,select:focus-visible { outline:2px solid var(--text-cool); outline-offset:2px }
+button:disabled { cursor:default; opacity:.65 }
+.actions button { flex:1 }
+.primary { background:var(--primary); color:var(--card); min-height:48px; font-size:17px; font-weight:850; border-color:var(--primary); text-shadow:0 1px 2px #142a3a,0 0 2px #142a3a }
+@media (max-width:400px) {
+  main { padding-block:12px }
+  .pile { gap:4px; margin-block:8px }
+  .controls { gap:6px }
+}
+[hidden] { display:none !important }
+</style>
+<main>
+  <header>
+    <h1>Beat the Dealer</h1>
+    <div class="balance"><span class="label">Play chips</span><strong id="balance">100</strong></div>
+  </header>
+  <section class="table" aria-label="Card table">
+    <div class="caption">
+      <div class="label streak"><span id="streak">Streak 0</span><strong class="multiplier" id="multiplier" hidden></strong></div>
+      <label class="label demo-setting"><input type="checkbox" id="demoOpening" checked> Demo opening</label>
+      <span class="label" id="remaining">56 cards left</span>
+    </div>
+    <div class="pile">
+      <span class="label" id="turnLabel">Shared deck</span>
+      <div class="pile-cards" id="pileCards"><div class="card back" aria-label="Face-down card">♠</div></div>
+      <span class="label comparison" id="comparison"></span>
+    </div>
+    <p id="status" role="status">Bet 10 chips to reveal the dealer’s first card.</p>
+  </section>
+  <section class="controls" aria-label="Game controls">
+    <div class="caption">
+      <label class="label">Mode
+        <select id="mode">
+          <option value="normal">Normal</option><option value="daredevil">Daredevil</option>
+        </select>
+      </label>
+      <label class="label" id="batchSetting" hidden>Number of cards:
+        <select id="batch">
+          <option>2</option><option>3</option><option>4</option><option>5</option>
+          <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+        </select>
+      </label>
+    </div>
+    <div class="label" id="offer" hidden></div>
+    <div class="actions">
+      <button type="button" id="back" hidden>Back out</button>
+      <button type="button" id="dealer" hidden>Ask dealer</button>
+      <button type="button" id="cash" hidden>Cash out</button>
+    </div>
+    <div class="actions">
+      <button type="button" id="play" class="primary">Play · 10 chips</button>
+    </div>
+  </section>
+</main>
+<script>
+'use strict';
+const stake = 10;
+const startingBalance = 100;
+const daredevilBoostPerExtraCard = 10;
+const ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A','JK'];
+const suits = ['♠','♥','♦','♣'];
+const suitNames = ['spades','hearts','diamonds','clubs'];
+const rankNames = { J:'Jack', Q:'Queen', K:'King', A:'Ace', JK:'Joker' };
+const suitPaths = [
+  'M0-10C-3-5-10-1-10 4c0 5 6 7 9 3l-2 5h6L1 7c3 4 9 2 9-3C10-1 3-5 0-10Z',
+  'M0 10-8 2C-15-5-7-13 0-7c7-6 15 2 8 9Z',
+  'M0-11 9 0 0 11-9 0Z',
+  'M0-11a5 5 0 0 1 4 8C10-5 14 2 9 6 6 8 3 7 1 5l2 7h-6l2-7c-2 2-5 3-8 1-5-4-1-11 5-9a5 5 0 0 1 4-8Z',
+];
+const jokerRank = ranks.length - 1;
+const suitedCardCount = jokerRank * suits.length;
+const deckSize = suitedCardCount + 4;
+const balanceLabel = document.querySelector('#balance');
+const streakLabel = document.querySelector('#streak');
+const multiplierLabel = document.querySelector('#multiplier');
+const remainingLabel = document.querySelector('#remaining');
+const status = document.querySelector('#status');
+const pileCards = document.querySelector('#pileCards');
+const turnLabel = document.querySelector('#turnLabel');
+const comparison = document.querySelector('#comparison');
+const play = document.querySelector('#play');
+const cash = document.querySelector('#cash');
+const back = document.querySelector('#back');
+const dealer = document.querySelector('#dealer');
+const batch = document.querySelector('#batch');
+const batchSetting = document.querySelector('#batchSetting');
+const mode = document.querySelector('#mode');
+const demoOpening = document.querySelector('#demoOpening');
+const offer = document.querySelector('#offer');
+const formatter = new Intl.NumberFormat('en-US', { maximumFractionDigits:2 });
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const wait = (ms = reducedMotion.matches ? 80 : 480) => new Promise(resolve => setTimeout(resolve, ms));
+let balance = startingBalance;
+let deck = [];
+let dealtCards = [];
+let streak = 0;
+let phase = 'idle';
+let revealing = false;
+let topRank = 0;
+let multiplier = 0;
+let playerOnTop = false;
+let openingJoker = false;
+
+function format(value) {
+  return value >= 1e9 ? value.toExponential(2) : formatter.format(value);
+}
+
+function chance(dealerDraw) {
+  if (!deck.length) return 0;
+  if (!dealerDraw && openingJoker) return 1;
+  return deck.filter(card => dealerDraw ? rank(card) <= topRank : rank(card) >= topRank).length / deck.length;
+}
+
+function daredevilBoost(count) {
+  return mode.value === 'daredevil' && count >= 2 ? (count - 1) * daredevilBoostPerExtraCard : 0;
+}
+
+function shuffledDeck() {
+  const cards = Array.from({ length: deckSize }, (_, index) => index);
+  for (let index = cards.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [cards[index], cards[other]] = [cards[other], cards[index]];
+  }
+  return cards;
+}
+
+function dealCard() {
+  const card = deck.pop();
+  remainingLabel.textContent = `${deck.length} cards left`;
+  return card;
+}
+
+function rank(card) {
+  return card >= suitedCardCount ? jokerRank : card % jokerRank;
+}
+
+function resetPile() {
+  turnLabel.textContent = 'Shared deck';
+  comparison.textContent = '';
+  dealtCards = [];
+  const back = document.createElement('div');
+  back.className = 'card back';
+  back.setAttribute('aria-label', 'Face-down card');
+  back.textContent = '♠';
+  pileCards.replaceChildren(back);
+}
+
+function rotatePoint(x, y, degrees) {
+  const angle = degrees * Math.PI / 180;
+  return [x * Math.cos(angle) - y * Math.sin(angle), x * Math.sin(angle) + y * Math.cos(angle)];
+}
+
+function cardLanding(previous) {
+  const spread = Math.max(46, (pileCards.clientWidth || 260) / 2 - 57);
+  if (!previous) return { x: Math.random() * 32 - 16, y: Math.random() * 24 - 12, turn: Math.random() * 26 - 13 };
+
+  const corners = [-1, 1].map(side => rotatePoint(side * 23, side * 30, previous.turn));
+  function leavesCorner({ x, y, turn }) {
+    const dx = previous.x - x;
+    const dy = previous.y - y;
+    const distance = Math.hypot(dx, dy);
+    return distance >= 31 && distance <= 67 && corners.some(([cx, cy]) => {
+      const [localX, localY] = rotatePoint(dx + cx, dy + cy, -turn);
+      return Math.abs(localX) >= 55 || Math.abs(localY) >= 67;
+    });
+  }
+
+  for (let attempt = 0; attempt < 40; attempt += 1) {
+    const landing = { x: Math.random() * spread * 2 - spread, y: Math.random() * 56 - 28, turn: Math.random() * 68 - 34 };
+    if (leavesCorner(landing)) return landing;
+  }
+  const direction = previous.x > 0 ? -1 : 1;
+  return { x: previous.x + direction * 55, y: previous.y, turn: previous.turn };
+}
+
+function cardFace(suit, value) {
+  const joker = value === jokerRank;
+  const label = ranks[value];
+  const centerLabel = joker ? 'JOKER' : label;
+  const ink = joker || suit === 1 || suit === 2 ? '#c82035' : '#142a3a';
+  const symbol = joker ? 'M0-11 3-4 11-3 5 2 7 10 0 6-7 10-5 2-11-3-3-4Z' : suitPaths[suit];
+  const corner = `<text x="9" y="14" font-size="11">${label}</text>
+    <path d="${symbol}" transform="translate(9 21) scale(.28)"/>`;
+  return `<svg viewBox="0 0 76 100" aria-hidden="true" fill="currentColor" style="color:${ink}"
+    font-family="Georgia,serif" font-weight="700" text-anchor="middle">
+    <rect x=".5" y=".5" width="75" height="99" rx="4" fill="#fcfdff" stroke="#a6c3d7"/>
+    ${corner}<g transform="rotate(180 38 50)">${corner}</g>
+    <text x="38" y="49" font-size="${joker ? 17 : 32}">${centerLabel}</text>
+    <path d="${symbol}" transform="translate(38 66) scale(.92)"/>
+  </svg>`;
+}
+
+function showCard(card) {
+  const previous = dealtCards.at(-1);
+  const landing = cardLanding(previous?.landing);
+  if (previous) {
+    previous.element.classList.remove('winner');
+    previous.element.setAttribute('aria-hidden', 'true');
+  } else {
+    pileCards.replaceChildren();
+  }
+  const suit = Math.floor(card / jokerRank);
+  const joker = card >= suitedCardCount;
+  const value = rank(card);
+  const rankLabel = ranks[value];
+  const element = document.createElement('div');
+  element.className = 'card dealt';
+  element.style.setProperty('--x', `${landing.x}px`);
+  element.style.setProperty('--y', `${landing.y}px`);
+  element.style.setProperty('--turn', `${landing.turn}deg`);
+  element.innerHTML = cardFace(suit, value);
+  element.setAttribute('role', 'img');
+  element.setAttribute('aria-label', joker ? 'Joker' : `${rankNames[rankLabel] ?? rankLabel} of ${suitNames[suit]}`);
+  dealtCards.push({ element, landing });
+  pileCards.append(element);
+  return element;
+}
+
+function renderControls() {
+  const preview = phase === 'preview';
+  const active = phase === 'active';
+  const playerChance = chance(false);
+  const dealerChance = chance(true);
+  const daredevil = mode.value === 'daredevil';
+  const minimumDraw = daredevil ? 2 : 1;
+  const enoughCards = deck.length >= minimumDraw;
+  balanceLabel.textContent = format(balance);
+  streakLabel.textContent = `Streak ${streak}`;
+  multiplierLabel.hidden = multiplier === 0;
+  multiplierLabel.textContent = `${format(multiplier)}×`;
+  play.disabled = revealing || (active || preview) && (!enoughCards || playerChance === 0);
+  const count = Math.min(daredevil ? Number(batch.value) : 1, deck.length);
+  const boost = daredevilBoost(count);
+  const drawLabel = count > 1 ? `Draw ${count}${boost ? ` · +${boost}%` : ''}` : 'Draw card';
+  play.textContent = preview || active ? drawLabel :
+    balance < stake ? 'Refill play chips' : 'Play · 10 chips';
+  batch.disabled = revealing;
+  batchSetting.hidden = !daredevil;
+  mode.disabled = phase !== 'idle' || revealing;
+  demoOpening.disabled = mode.disabled;
+  back.hidden = !preview;
+  back.disabled = revealing;
+  dealer.hidden = !active || !playerOnTop;
+  dealer.disabled = revealing || dealerChance === 0;
+  dealer.textContent = `Ask dealer · ${format(dealerChance * 100)}%`;
+  cash.hidden = !active;
+  cash.disabled = revealing;
+  cash.textContent = `Cash out ${format(stake * multiplier)}`;
+  offer.hidden = revealing || !(preview || active);
+  if (!enoughCards) {
+    offer.textContent = 'Daredevil needs two cards in the pile';
+  } else if (playerChance) {
+    const base = preview ? (openingJoker ? 1 : 0.95) : multiplier;
+    offer.textContent = `Free next draw · ${format(playerChance * 100)}% hit · ${format(base / playerChance)}× on hit`;
+  } else {
+    offer.textContent = 'No player hits left in the deck';
+  }
+}
+
+async function settleWin(deckEmpty = false) {
+  const chips = stake * multiplier;
+  balance += chips;
+  phase = 'idle';
+  revealing = true;
+  status.textContent = 'Collecting your payout…';
+  renderControls();
+  if (!reducedMotion.matches && dealtCards.length) {
+    const stagger = Math.min(105, 1500 / dealtCards.length);
+    for (const [index, { element }] of dealtCards.entries()) {
+      const delay = (dealtCards.length - 1 - index) * stagger;
+      element.style.setProperty('--exit-delay', `${delay}ms`);
+      element.classList.add('cash-away');
+    }
+    await wait(340 + (dealtCards.length - 1) * stagger);
+  }
+  const result = document.createElement('div');
+  const amount = document.createElement('strong');
+  const label = document.createElement('span');
+  result.className = 'payout';
+  result.setAttribute('role', 'status');
+  amount.textContent = format(chips);
+  label.className = 'label';
+  label.textContent = 'Play chips won';
+  result.append(amount, label);
+  pileCards.replaceChildren(result);
+  dealtCards = [];
+  turnLabel.textContent = 'Cash out';
+  comparison.textContent = '';
+  status.textContent = deckEmpty ? 'Deck empty. Cash-out complete.' : 'Cash-out complete.';
+  revealing = false;
+  renderControls();
+}
+
+function resetRound() {
+  deck = [];
+  topRank = 0;
+  streak = 0;
+  multiplier = 0;
+  playerOnTop = false;
+  openingJoker = false;
+  remainingLabel.textContent = `${deckSize} cards left`;
+  resetPile();
+}
+
+async function previewOpening() {
+  resetRound();
+  deck = shuffledDeck();
+  if (demoOpening.checked) {
+    const preferLow = Math.random() < 0.8;
+    const candidates = deck.filter(card => (rank(card) <= 4) === preferLow);
+    const opening = candidates[Math.floor(Math.random() * candidates.length)];
+    deck.splice(deck.indexOf(opening), 1);
+    deck.push(opening);
+  }
+  balance -= stake;
+  phase = 'preview';
+  revealing = true;
+  const card = dealCard();
+  topRank = rank(card);
+  openingJoker = topRank === jokerRank;
+  turnLabel.textContent = 'Dealer';
+  showCard(card);
+  status.textContent = openingJoker ? 'Opening Joker. Any card wins your first draw.' :
+    'Match or beat the dealer, or back out and lose the bet.';
+  renderControls();
+  await wait();
+  revealing = false;
+  renderControls();
+}
+
+async function drawCards(dealerDraw) {
+  const daredevilDraw = !dealerDraw && mode.value === 'daredevil';
+  const minimumDraw = daredevilDraw ? 2 : 1;
+  const count = daredevilDraw ? Math.min(Number(batch.value), deck.length) : 1;
+  const opening = phase === 'preview';
+  if (revealing || count < minimumDraw || !chance(dealerDraw)) return;
+  if (opening) {
+    phase = 'active';
+    multiplier = openingJoker ? 1 : 0.95;
+  }
+  revealing = true;
+  status.textContent = dealerDraw ? 'Dealer is drawing…' : 'Drawing your cards…';
+  renderControls();
+  for (let index = 0; index < count; index += 1) {
+    const hitChance = chance(dealerDraw);
+    if (!daredevilDraw && hitChance === 0) break;
+    const previous = ranks[topRank];
+    const card = dealCard();
+    const value = rank(card);
+    const freeHit = !dealerDraw && openingJoker;
+    const success = freeHit || (dealerDraw ? value <= topRank : value >= topRank);
+    openingJoker = false;
+    turnLabel.textContent = dealerDraw ? 'Dealer' : 'You';
+    comparison.textContent = freeHit ? 'Opening Joker · Any card wins' :
+      `${dealerDraw ? 'At or below' : 'At or above'} · ${previous === 'JK' ? 'Joker' : previous}`;
+    const face = showCard(card);
+    await wait();
+    if (!success) {
+      revealing = false;
+      phase = 'idle';
+      streak = 0;
+      multiplier = 0;
+      status.textContent = dealerDraw ? 'Dealer drew higher. Streak over.' : 'You drew lower. Streak over.';
+      renderControls();
+      return;
+    }
+    topRank = value;
+    multiplier /= hitChance;
+    playerOnTop = !dealerDraw;
+    if (!dealerDraw) streak += 1;
+    face.classList.add('winner');
+    renderControls();
+  }
+  revealing = false;
+  const boost = daredevilDraw ? daredevilBoost(count) : 0;
+  multiplier *= 1 + boost / 100;
+  if (deck.length === 0) {
+    await settleWin(true);
+    return;
+  }
+  status.textContent = dealerDraw ? 'Dealer held. Draw against the new top card.' :
+    boost ? `Daredevil batch complete. +${boost}% payout.` : 'Draw again, ask the dealer, or cash out.';
+  renderControls();
+}
+
+play.addEventListener('click', () => {
+  if (revealing) return;
+  if (phase !== 'idle') {
+    void drawCards(false);
+  } else if (balance < stake) {
+    balance = startingBalance;
+    resetRound();
+    status.textContent = 'Bet 10 chips to reveal the dealer’s first card.';
+    renderControls();
+  } else {
+    void previewOpening();
+  }
+});
+back.addEventListener('click', () => {
+  if (phase !== 'preview' || revealing) return;
+  phase = 'idle';
+  resetRound();
+  status.textContent = 'Round ended. The 10-chip bet was forfeited.';
+  renderControls();
+});
+dealer.addEventListener('click', () => {
+  if (phase === 'active' && playerOnTop) void drawCards(true);
+});
+cash.addEventListener('click', () => {
+  if (phase === 'active' && !revealing) void settleWin();
+});
+batch.addEventListener('change', renderControls);
+mode.addEventListener('change', renderControls);
+renderControls();
+</script>
+</html>

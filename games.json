@@ -163,6 +163,14 @@
       "section": "In progress",
       "owner": "Matea Zivkovic",
       "source": "game-discovery/prototypes/2026-11-hi-lo"
+    },
+    {
+      "path": "beat-the-dealer/",
+      "title": "Beat the Dealer",
+      "sub": "Win the next flip or cash out your streak.",
+      "section": "In progress",
+      "owner": "Antonio",
+      "source": "game-discovery/prototypes/2026-11-beat-the-dealer"
     }
   ],
   "sectionRules": [
