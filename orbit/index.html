@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#11080d">
+<title>Orbit · Gamio Originals</title>
+<style>
+:root{
+  --bg:#11080d;
+  --table:#1a0913;
+  --panel:#28121c;
+  --chip:#401628;
+  --button:#39232d;
+  --primary:#50d573;
+  --accent:#e1549c;
+  --accent-deep:#c31870;
+  --accent-dark:#941658;
+  --text:#edf4ee;
+  --text-cool:#d5edff;
+  --muted:#a6c3d7;
+  --win:#50d573;
+  --lose:#e31246;
+  --card:#fcfdff;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}
+main{width:min(100%,460px);margin:auto;padding:0 12px 8px}
+header{min-height:44px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.label,.brand{font-size:10px;font-weight:750;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.brand{font-size:11px;color:var(--text)}
+.balance{max-width:67%;padding:5px 9px;border-radius:8px;background:var(--chip);color:var(--text-cool);font-weight:800;font-variant-numeric:tabular-nums;text-align:right;overflow-wrap:anywhere}
+.balance .label{margin-right:3px}
+.table{position:relative;isolation:isolate;text-align:center;border:1px solid #361225;border-radius:22px;background:radial-gradient(ellipse at 50% 45%,var(--chip),var(--table) 72%);padding:8px 10px 8px}
+.table::before{content:"";position:absolute;inset:4px;border:1px solid color-mix(in srgb,var(--accent-dark) 42%,transparent);border-radius:17px;z-index:-1;pointer-events:none}
+h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacing:-.06em}
+.intro{margin:3px 0 0;color:var(--muted);font-size:12px}
+.wheel{position:relative;isolation:isolate;width:clamp(162px,50vw,242px);aspect-ratio:1;margin:8px auto 5px;border-radius:50%;background:linear-gradient(145deg,var(--accent),var(--accent-dark) 20%,var(--chip) 50%,var(--accent-deep) 84%,var(--accent));box-shadow:0 5px 16px var(--bg),0 0 0 2px var(--bg),0 0 0 3px var(--accent-dark)}
+.wheel::before{content:"";position:absolute;inset:2px;border-radius:50%;border:1px solid color-mix(in srgb,var(--card) 35%,transparent);pointer-events:none}
+.timer-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent) var(--elapsed,0%),transparent 0);mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 0);pointer-events:none}
+.rotor{position:absolute;inset:5%;border-radius:50%;background:var(--table);box-shadow:0 0 0 1px var(--bg),0 0 0 3px var(--accent-dark);transform:rotate(var(--angle,0deg));transition:transform 560ms cubic-bezier(.22,.68,.25,1)}
+.dial,.pockets,.pins{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.pocket,.pin{position:absolute;left:var(--x);top:var(--y)}
+.sprite{display:inline-block;flex:none;width:var(--size,32px);height:var(--size,32px);background-image:url("./fruit.webp");background-size:200% 200%;background-repeat:no-repeat;vertical-align:middle}
+[data-fruit=cherry] .sprite{background-position:0 0}
+[data-fruit=lemon] .sprite{background-position:100% 0}
+[data-fruit=plum] .sprite{background-position:0 100%}
+[data-fruit=melon] .sprite{background-position:100% 100%}
+.pocket{transform:translate(-50%,-50%) rotate(var(--slice));--size:clamp(22px,6.5vw,34px)}
+.pocket .sprite{filter:drop-shadow(0 2px 1px var(--bg))}
+.pocket .harvest-mark{font-size:22px;line-height:1;color:#f8cf79;text-shadow:0 1px 4px var(--bg)}
+.pocket.charged::before{content:"";position:absolute;inset:-2px;border:1px solid var(--accent);border-radius:6px;box-shadow:0 0 8px var(--accent)}
+.hub .charge-multiplier{font-size:clamp(18px,6.4vw,30px);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.hub[data-multiplier=true] .sprite{--size:clamp(24px,7.4vw,34px)}
+.hub[data-multiplier=true] .hub-idle{font-size:21px;line-height:1}
+.hub[data-state=paid] .charge-multiplier{color:var(--win)}
+.hub[data-state=harvest]{border-color:#f8cf79}
+.hub[data-state=harvest] .hub-idle{color:#f8cf79}
+.result[data-tone=charge]{border-color:var(--accent-dark)}
+.result[data-tone=charge] strong{color:var(--accent)}
+.fruit .payout[data-tone=win]{color:var(--win)}
+.fruit .payout[data-tone=loss]{color:var(--text)}
+.pointer{position:absolute;z-index:3;left:50%;top:-3px;width:22px;height:21px;transform:translateX(-50%);background:linear-gradient(var(--text),var(--accent));clip-path:polygon(0 0,100% 0,50% 100%)}
+.hub{position:absolute;z-index:1;inset:28%;display:grid;place-content:center;justify-items:center;gap:1px;border-radius:50%;border:1px solid var(--accent);background:radial-gradient(ellipse at 48% 24%,var(--chip),var(--bg) 73%);box-shadow:0 0 0 3px var(--table),0 0 0 4px var(--accent-dark);pointer-events:none}
+.hub .sprite{--size:clamp(31px,10vw,48px)}
+.hub strong{font-size:10px;color:var(--text-cool);font-weight:800}
+.hub .countdown{font-variant-numeric:tabular-nums;color:var(--muted);font-size:10px}
+.hub-idle{font-size:30px;line-height:1.25;color:var(--accent)}
+.pins{z-index:2}
+.pin{min-width:max-content;padding:2px 5px;border-radius:100px;border:1px solid var(--accent);background:var(--bg);color:var(--text-cool);box-shadow:0 2px 4px var(--bg);transform:translate(-50%,-50%) rotate(var(--counter,0deg));opacity:0;transition:transform 560ms cubic-bezier(.22,.68,.25,1),opacity 270ms ease; font-size:9px;line-height:1.1;font-weight:850;font-variant-numeric:tabular-nums}
+.pin[data-live=true]{opacity:1}
+.pin[data-own=true]{border-color:var(--win);color:var(--win)}
+.result{position:relative;min-height:46px;margin:7px auto 5px;display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;padding:4px 6px;border:1px solid var(--chip);border-radius:8px;background:var(--bg);color:var(--muted);font-size:11px;line-height:1.1}
+.result strong{font-size:12px;color:var(--text-cool)}
+.result[data-tone=win],.result[data-tone=partial]{display:grid;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto;column-gap:8px;row-gap:2px;padding:4px 8px;text-align:left}
+.result[data-tone=win]{border-color:var(--win);background:linear-gradient(115deg,color-mix(in srgb,var(--win) 18%,var(--bg)),var(--bg) 75%)}
+.result[data-tone=partial]{background:linear-gradient(115deg,var(--chip),var(--bg) 75%)}
+.result-badge{grid-row:1/3;align-self:center;justify-self:center;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--chip);color:var(--text);font-size:20px;line-height:1}
+.result[data-tone=win] .result-badge{color:var(--win);background:color-mix(in srgb,var(--win) 18%,var(--bg));border:1px solid var(--win)}
+.result[data-tone=win] strong,.result[data-tone=partial] strong{font-size:clamp(17px,5.1vw,23px);font-variant-numeric:tabular-nums;letter-spacing:-.035em}
+.result[data-tone=win] #resultDetail,.result[data-tone=partial] #resultDetail{font-size:10px;color:var(--text-cool);line-height:1.2}
+.table.win .result{animation:payout-reveal 720ms ease-out}
+@keyframes payout-reveal{from{box-shadow:0 0 0 0 var(--win)}28%{box-shadow:0 0 0 3px var(--win),0 0 18px color-mix(in srgb,var(--win) 65%,transparent)}to{box-shadow:0 0 0 0 transparent}}
+.result[data-tone=win] strong{color:var(--win)}
+.result[data-tone=loss]{border-color:var(--lose);background:color-mix(in srgb,var(--lose) 21%,var(--bg))}
+.result[data-tone=loss] strong,.result[data-tone=partial] strong{color:var(--card)}
+.result[data-tone=partial]{border-color:var(--accent-dark)}
+.sparkles{position:absolute;z-index:4;inset:0;pointer-events:none}
+.spark{position:absolute;top:50%;left:50%;color:var(--win);font-size:22px;opacity:0}
+.wheel.win .hub{animation:prize 700ms 560ms ease-out}
+.wheel.win .spark{animation:spark 780ms ease-out both;animation-delay:calc(560ms + var(--lag))}
+.table.loss .result{animation:impact 360ms ease-out}
+@keyframes prize{25%{transform:scale(1.17);box-shadow:0 0 0 4px var(--win),0 0 22px var(--win)}}
+@keyframes spark{20%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.55);opacity:0}}
+@keyframes impact{20%{transform:translateX(-4px)}45%{transform:translateX(4px)}68%{transform:translateX(-2px)}}
+.rail{text-align:left}
+.rail-heading{display:flex;justify-content:space-between;align-items:center;margin:0 0 4px}
+.rail-heading span:last-child{font-size:10px;color:var(--muted)}
+.riders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;min-height:34px}
+.rider{min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:3px;padding:3px 4px;border:1px solid var(--chip);border-radius:7px;background:var(--table);--size:22px}
+.rider .name,.rider .bet{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rider .name{display:block;color:var(--text-cool);font-size:10px;line-height:1.15}
+.rider .bet{display:block;color:var(--muted);font-size:9px;line-height:1.2;font-variant-numeric:tabular-nums}
+.rider[data-state=lost]{border-color:var(--lose);background:color-mix(in srgb,var(--lose) 17%,var(--table))}
+.rider[data-state=lost] .bet{color:var(--text)}
+.rider[data-state=paid]{border-color:var(--win)}
+.rider[data-state=paid] .bet{color:var(--win)}
+.rider.leaving{animation:leave 280ms ease-in forwards}
+@keyframes leave{to{opacity:0;transform:translateY(4px) scale(.95)}}
+.controls{margin-top:7px;padding:7px 8px 8px;border-radius:15px;background:var(--panel)}
+.row-label{display:flex;justify-content:space-between;align-items:center;gap:5px;min-height:16px;margin-bottom:3px}
+.row-label .hint{font-size:10px;color:var(--muted);text-align:right}
+.amounts{display:grid;grid-template-columns:minmax(0,1.45fr) repeat(3,minmax(0,1fr));gap:4px}
+button,input{min-width:0;min-height:44px;border:1px solid #35536a;border-radius:8px;background:var(--button);color:var(--text);font:inherit;font-weight:750}
+button{padding:3px 4px;cursor:pointer;touch-action:manipulation}
+button[aria-pressed=true]{border-color:var(--accent);background:var(--chip);color:var(--text-cool)}
+button:disabled{opacity:.52;cursor:default}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--card);outline-offset:1px}
+.amount-field{position:relative}
+.amount-field span{position:absolute;top:50%;left:8px;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.amount-field input{width:100%;padding:4px 5px 4px 24px;font-size:16px;font-variant-numeric:tabular-nums}
+.amount-field input[aria-invalid=true]{border-color:var(--lose)}
+.fruit-heading{margin-top:6px}
+.fruits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.fruit{position:relative;display:grid;justify-items:center;align-content:center;gap:0;min-height:69px;padding:2px 1px;font-size:10px;line-height:1.1}
+.fruit:disabled[aria-pressed=true]{opacity:.9}
+.fruit .sprite{--size:30px}
+.fruit strong{font-size:11px}
+.fruit .payout{color:var(--muted)}
+.fruit .selected{position:absolute;top:2px;right:2px;max-width:calc(100% - 4px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:var(--accent-dark);color:var(--card);padding:2px 3px;border-radius:4px;font-size:9px;line-height:1}
+.bet-actions{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:5px;margin-top:6px}
+.primary{display:block;width:100%;min-height:48px;border-color:transparent;background:var(--primary);color:white;text-shadow:0 1px 3px #142a3a,0 0 4px #142a3a;font-size:15px}
+.primary:disabled{opacity:.72}
+.primary,.random-bet{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.random-bet{min-height:48px;font-size:12px}
+.random-bet small{display:block;color:var(--text-cool);font-size:10px;overflow:hidden;text-overflow:ellipsis}
+.fruit .payout{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fruit .payout[data-split=true]{white-space:normal}
+.bet-announcement{display:flex;align-items:center;justify-content:center;gap:4px;min-height:20px;margin-top:3px;padding:2px 4px;border:1px solid transparent;border-radius:6px;font-size:10px;line-height:1.15;text-align:center;color:var(--muted);overflow-wrap:anywhere}
+.bet-announcement[data-round=live],.bet-announcement[data-round=next]{color:var(--text);background:var(--bg);border-color:var(--accent)}
+.bet-announcement[data-round=live]{border-color:var(--win)}
+.bet-announcement[data-round]::before{content:"✓";color:var(--accent);font-weight:850}
+.bet-announcement[data-round=live]::before{color:var(--win)}
+.fruit[data-feedback=placed],.fruit[data-feedback=win],.pin[data-feedback=placed]{border-color:var(--win);box-shadow:0 0 0 1px var(--win),0 0 11px color-mix(in srgb,var(--win) 45%,transparent)}
+.fruit[data-feedback=placed],.fruit[data-feedback=win]{background:color-mix(in srgb,var(--win) 18%,var(--button))}
+.fruit[data-feedback=queued]{border-color:var(--accent);background:var(--chip);box-shadow:0 0 0 1px var(--accent)}
+.pin[data-feedback=placed]{background:var(--win);color:var(--bg)}
+footer{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;color:var(--muted)}
+details{min-width:0;font-size:12px;line-height:1.5}
+summary{min-height:44px;padding:11px 0;cursor:pointer}
+details p{margin:0 0 9px}
+.motion{flex:none;padding-inline:4px;border:0;background:transparent;color:var(--muted);font-size:11px}
+@media(min-width:420px){main{padding-inline:16px}.rider{--size:25px}.rider .bet{font-size:10px}}
+@media(max-height:690px) and (min-width:360px){.wheel{width:clamp(162px,48vw,210px)}}
+@media(max-height:620px) and (min-width:360px){.wheel{width:162px}}
+@media(prefers-reduced-motion:reduce){
+  .rotor,.pin{transition:none}.wheel.win .hub,.wheel.win .spark,.table.win .result,.table.loss .result,.rider.leaving{animation:none}
+}
+body.reduce-motion .rotor,body.reduce-motion .pin{transition:none}
+body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.reduce-motion .table.win .result,body.reduce-motion .table.loss .result,body.reduce-motion .rider.leaving{animation:none}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <strong class="brand">Gamio Originals</strong>
+    <div class="balance"><span class="label">Demo balance</span> <span id="balance">€500.00</span></div>
+  </header>
+  <section class="table" id="table" aria-labelledby="title">
+    <h1 id="title">Orbit</h1>
+    <p class="intro">Pick your fruits. Watch two reveals.</p>
+    <div class="wheel" id="wheel" aria-hidden="true">
+      <div class="timer-ring"></div>
+      <div class="rotor" id="rotor">
+        <canvas class="dial" id="dial" width="512" height="512"></canvas>
+        <div class="pockets" id="pockets"></div>
+        <div class="pins" id="pins"></div>
+      </div>
+      <div class="hub" id="hub">
+        <span class="hub-idle" id="idle">✦</span><span class="sprite" id="landedArt" hidden></span>
+        <strong id="landedName">Bets open</strong><strong class="charge-multiplier" id="chargeValue" hidden></strong>
+        <span class="countdown" id="countdown">5.0s</span>
+      </div>
+      <span class="pointer"></span>
+      <div class="sparkles" id="sparkles"></div>
+    </div>
+    <div class="result" id="result" role="status" aria-atomic="true">
+      <span class="result-badge" id="resultBadge" aria-hidden="true" hidden>✦</span>
+      <strong id="resultTitle">Pick one or more fruits</strong>
+      <span id="resultDetail" hidden></span>
+    </div>
+    <section class="rail" aria-label="Live bets from simulated riders">
+      <div class="rail-heading"><span class="label">Live bets</span><span>Simulated riders</span></div>
+      <div class="riders" id="riders"></div>
+    </section>
+  </section>
+  <section class="controls" aria-label="Play controls">
+    <div class="row-label"><label for="stake" class="label">Stake per fruit</label><span class="hint" id="stakeHint">€1.00 minimum</span></div>
+    <div class="amounts">
+      <div class="amount-field"><span aria-hidden="true">€</span><input type="text" inputmode="decimal" id="stake" value="10.00" maxlength="14" aria-label="Stake per fruit in euros" aria-describedby="stakeHint" autocomplete="off"></div>
+      <button type="button" data-amount="1000" aria-pressed="true">€10</button>
+      <button type="button" data-amount="2500" aria-pressed="false">€25</button>
+      <button type="button" data-amount="5000" aria-pressed="false">€50</button>
+    </div>
+    <div class="row-label fruit-heading"><span class="label">Pick fruits</span><span class="hint" id="fruitHint">Tap again to remove a bet</span></div>
+    <div class="fruits" id="fruits" role="group" aria-label="Fruit bets"></div>
+    <div class="bet-actions">
+      <button type="button" class="primary" id="primary" disabled>Place bets</button>
+      <button type="button" class="random-bet" id="randomBet">Random bet<small id="randomStake">€10.00</small></button>
+    </div>
+    <span class="bet-announcement" id="betAnnouncement" role="status" aria-atomic="true"></span>
+  </section>
+  <footer>
+    <details>
+      <summary>How to play</summary>
+      <p>Enter a stake in euros or tap a quick amount, then pick one or more fruits. Changing the amount applies to the next fruit you pick. Tap a selected fruit again to remove its bet.</p>
+      <p>Tap <strong>Place bets</strong> to confirm your picks. You can place more bets on the same fruits or pick different ones. <strong>Random bet</strong> puts the current stake on one random fruit per tap.</p>
+      <p>Bets placed after the charge reveal are confirmed for the next round. The charge gives a random fruit 1.5×, 2× or 3×. Every live bet survives this reveal. On the next reveal, a fruit landing pays the bets on that fruit and the others bust.</p>
+      <p>A gold Harvest landing sends every bet to one bonus reveal. Each fruit has its own reward at that reveal. Cherries always pay something in Harvest. Watermelon can pay more or bust. All payouts settle automatically and include the original stake where applicable.</p>
+      <p>Amounts use a demo EUR balance. The wheel shows totals from live bets, with your locked bets highlighted in green. Other riders are simulated.</p>
+    </details>
+    <button type="button" class="motion" id="motion" aria-pressed="false">Reduce motion</button>
+  </footer>
+</main>
+<script>
+'use strict';
+
+const BETTING_MS = 5000;
+const REVEAL_MS = 2000;
+const RETURN = .97;
+const HARVEST_BANDS = 4;
+const BOOSTS = [1.5, 1.5, 2, 3];
+const HARVEST = { name: 'Harvest', wedge: '#694920', edge: '#f8cf79' };
+const START_BALANCE = 50000;
+const MIN_STAKE = 100;
+const FRUITS = {
+  cherry: { name: 'Cherries', risk: 'Most common', harvest: [1.25, 1.75, 2.25, 2.75], wedge: '#81233f', edge: '#ee658a', pin: 0 },
+  lemon: { name: 'Lemon', risk: 'Common', harvest: [0.5, 1.5, 2, 4], wedge: '#6a471b', edge: '#ecc777', pin: 4 },
+  plum: { name: 'Plum', risk: 'Uncommon', harvest: [0, 1, 2, 5], wedge: '#542c77', edge: '#bb88ed', pin: 7 },
+  melon: { name: 'Watermelon', risk: 'Rare', harvest: [0, 0, 2, 6], wedge: '#215440', edge: '#79d09c', pin: 10 },
+};
+const SEGMENTS = [
+  'cherry', 'lemon', 'cherry', 'plum', 'lemon', 'cherry', 'melon', 'plum',
+  'cherry', 'lemon', 'melon', 'cherry', 'harvest', 'plum', 'cherry', 'lemon',
+];
+const SLICE = 360 / SEGMENTS.length;
+const keys = Object.keys(FRUITS);
+const mean = values => values.reduce((sum, value) => sum + value, 0) / values.length;
+const expectedCharge = 1 + (mean(BOOSTS) - 1) / keys.length;
+const baseMultipliers = Object.fromEntries(keys.map(fruit => {
+  const pockets = SEGMENTS.filter(segment => segment === fruit).length;
+  const harvestPockets = SEGMENTS.filter(segment => segment === 'harvest').length;
+  const ordinaryReturn = RETURN * SEGMENTS.length - harvestPockets * mean(FRUITS[fruit].harvest);
+  return [fruit, ordinaryReturn / (pockets * expectedCharge)];
+}));
+const byId = id => document.getElementById(id);
+const nodes = Object.fromEntries([
+  'balance', 'table', 'wheel', 'rotor', 'dial', 'pockets', 'pins', 'hub', 'idle', 'landedArt', 'landedName',
+  'countdown', 'chargeValue', 'sparkles', 'result', 'resultBadge', 'resultTitle', 'resultDetail', 'riders', 'stake', 'stakeHint', 'fruitHint',
+  'fruits', 'primary', 'randomBet', 'randomStake', 'betAnnouncement', 'motion',
+].map(id => [id, byId(id)]));
+const quickBets = [...document.querySelectorAll('[data-amount]')];
+const euros = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR' });
+const compactEuros = new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 2, minimumFractionDigits: 0 });
+const money = cents => euros.format(cents / 100);
+const compact = cents => compactEuros.format(cents / 100);
+
+let balance = START_BALANCE;
+const draft = new Map();
+const placed = new Map();
+const nextBets = new Map();
+let phase = 'betting';
+let charge = null;
+let phaseDuration = BETTING_MS;
+const lastBets = new Map();
+let rotation = 0;
+let deadline = 0;
+let pausedFor = null;
+let tickTimer;
+let countdownTimer;
+let effectTimer;
+let betNoticeTimer;
+const motionPreference = matchMedia('(prefers-reduced-motion: reduce)');
+const feedback = new WeakMap();
+const drawBuffer = new Uint32Array(1);
+const riderNames = ['Mira', 'Ivo', 'Nia', 'Luka', 'Ana', 'Leo'];
+const riderStakes = [500, 1000, 1500, 2000, 2500, 5000];
+
+function randomIndex(length) {
+  const range = 2 ** 32;
+  const limit = range - range % length;
+  do { crypto.getRandomValues(drawBuffer); } while (drawBuffer[0] >= limit);
+  return drawBuffer[0] % length;
+}
+
+function stakeAmount() {
+  const value = nodes.stake.value.trim().replace(',', '.');
+  if (!/^\d+(?:\.\d{0,2})?$/.test(value)) return 0;
+  const cents = Math.round(Number(value) * 100);
+  return Number.isSafeInteger(cents) ? cents : 0;
+}
+
+function total(bets) {
+  return [...bets.values()].reduce((sum, stake) => sum + stake, 0);
+}
+
+function addBets(destination, bets) {
+  for (const [fruit, amount] of bets) {
+    destination.set(fruit, (destination.get(fruit) || 0) + amount);
+  }
+}
+
+function commitBets(bets) {
+  const amount = total(bets);
+  if (!amount || amount > balance) return false;
+  const live = phase === 'betting';
+  addBets(live ? placed : nextBets, bets);
+  balance -= amount;
+  updatePins();
+  for (const fruit of bets.keys()) {
+    flash(fruitButtons.get(fruit), live ? 'placed' : 'queued');
+    if (live) flash(pins.get(fruit), 'placed');
+  }
+  const description = bets.size === 1 ? ' on ' + FRUITS[bets.keys().next().value].name : ' across ' + bets.size + ' fruits';
+  const receipt = nodes.betAnnouncement;
+  receipt.dataset.round = live ? 'live' : 'next';
+  receipt.textContent = 'Placed ' + money(amount) + description + (live ? ' · This round' : ' · Next round');
+  flash(receipt, live ? 'placed' : 'queued');
+  clearTimeout(betNoticeTimer);
+  betNoticeTimer = setTimeout(() => {
+    receipt.textContent = '';
+    delete receipt.dataset.round;
+  }, 2600);
+  return true;
+}
+
+function payoutMultiplier(fruit, landing, harvestBand, activeCharge) {
+  if (landing === 'harvest') return FRUITS[fruit].harvest[harvestBand];
+  if (fruit !== landing) return 0;
+  return baseMultipliers[fruit] * (activeCharge?.fruit === fruit ? activeCharge.multiplier : 1);
+}
+
+const formatMultiplier = value => Number(value.toFixed(2)) + '×';
+
+function flash(element, tone) {
+  const previous = feedback.get(element);
+  previous?.animation?.cancel();
+  clearTimeout(previous?.timer);
+  element.dataset.feedback = tone;
+  const reduceMotion = motionPreference.matches || document.body.classList.contains('reduce-motion');
+  const peak = element.classList.contains('pin') ? 1.28 : 1.045;
+  const animation = reduceMotion ? null : element.animate(
+    [{ scale: 1 }, { scale: peak, offset: .32 }, { scale: 1 }],
+    { duration: 380, easing: 'ease-out' },
+  );
+  const timer = setTimeout(() => {
+    animation?.cancel();
+    delete element.dataset.feedback;
+    feedback.delete(element);
+  }, 700);
+  feedback.set(element, { animation, timer });
+}
+
+function setResult(title, detail = '', tone = '') {
+  nodes.resultBadge.hidden = tone !== 'win' && tone !== 'partial';
+  nodes.resultBadge.textContent = tone === 'win' ? '✦' : '€';
+  nodes.resultTitle.textContent = title;
+  nodes.resultDetail.textContent = detail;
+  nodes.resultDetail.hidden = !detail;
+  nodes.result.dataset.tone = tone;
+}
+
+function playEffect(tone) {
+  clearTimeout(effectTimer);
+  nodes.table.classList.remove('loss', 'win');
+  nodes.wheel.classList.remove('win');
+  if (!tone) return;
+  if (tone === 'loss') nodes.table.classList.add('loss');
+  if (tone === 'win') {
+    nodes.table.classList.add('win');
+    nodes.wheel.classList.add('win');
+  }
+  effectTimer = setTimeout(playEffect, tone === 'win' ? 1600 : 500);
+}
+
+function position(element, angle, radius) {
+  const radians = angle * Math.PI / 180;
+  element.style.setProperty('--x', (50 + Math.sin(radians) * radius) + '%');
+  element.style.setProperty('--y', (50 - Math.cos(radians) * radius) + '%');
+}
+
+function makeWheel() {
+  const ctx = nodes.dial.getContext('2d');
+  const radius = 254;
+  ctx.translate(256, 256);
+  SEGMENTS.forEach((fruit, index) => {
+    const start = (index * SLICE - 90 - SLICE / 2) * Math.PI / 180;
+    const end = start + SLICE * Math.PI / 180;
+    const style = fruit === 'harvest' ? HARVEST : FRUITS[fruit];
+    const gradient = ctx.createRadialGradient(0, 0, 110, 0, 0, radius);
+    gradient.addColorStop(0, '#1a0913');
+    gradient.addColorStop(.87, style.wedge);
+    gradient.addColorStop(1, style.edge);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, radius, start, end);
+    ctx.closePath();
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    ctx.strokeStyle = '#11080d';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, 240, start + .012, end - .012);
+    ctx.strokeStyle = style.edge;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    const pocket = document.createElement('span');
+    pocket.className = 'pocket';
+    pocket.dataset.fruit = fruit;
+    pocket.style.setProperty('--slice', (index * SLICE) + 'deg');
+    pocket.innerHTML = fruit === 'harvest'
+      ? '<span class="harvest-mark">✦</span>'
+      : '<span class="sprite"></span>';
+    position(pocket, index * SLICE, 36);
+    nodes.pockets.append(pocket);
+  });
+
+  for (const [index, [x,y]] of [[-100,-69],[43,-96],[101,-57],[90,65],[-15,86],[-106,43]].entries()) {
+    const spark = document.createElement('span');
+    spark.className = 'spark';
+    spark.textContent = index % 2 ? '✧' : '✦';
+    spark.style.setProperty('--dx', x + 'px');
+    spark.style.setProperty('--dy', y + 'px');
+    spark.style.setProperty('--lag', index * 23 + 'ms');
+    nodes.sparkles.append(spark);
+  }
+}
+
+function pointAt(index) {
+  const target = -SLICE * index;
+  const delta = ((target - rotation + 180) % 360 + 360) % 360 - 180;
+  rotation += delta || 360;
+  nodes.rotor.style.setProperty('--angle', rotation + 'deg');
+  nodes.rotor.style.setProperty('--counter', -rotation + 'deg');
+  const fruit = SEGMENTS[index];
+  showHub(fruit);
+}
+
+function showHub(fruit, multiplier, state = fruit) {
+  const isFruit = Boolean(FRUITS[fruit]);
+  nodes.hub.dataset.fruit = fruit;
+  nodes.hub.dataset.state = state;
+  nodes.hub.dataset.multiplier = String(Boolean(multiplier));
+  nodes.landedName.textContent = isFruit ? FRUITS[fruit].name : HARVEST.name;
+  nodes.landedArt.hidden = !isFruit;
+  nodes.idle.hidden = isFruit;
+  nodes.chargeValue.hidden = !multiplier;
+  nodes.chargeValue.textContent = multiplier ? formatMultiplier(multiplier) : '';
+}
+
+function highlightCharge(fruit) {
+  for (const pocket of nodes.pockets.children) {
+    pocket.classList.toggle('charged', pocket.dataset.fruit === fruit);
+  }
+}
+
+const fruitButtons = new Map();
+const pins = new Map();
+
+function makeFruitControls() {
+  for (const [fruit, metadata] of Object.entries(FRUITS)) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'fruit';
+    button.dataset.fruit = fruit;
+    button.innerHTML = '<span class="sprite" aria-hidden="true"></span><strong>' + metadata.name +
+      '</strong><span class="payout"></span><span class="selected" hidden></span>';
+    button.addEventListener('click', () => toggleFruit(fruit));
+    nodes.fruits.append(button);
+    fruitButtons.set(fruit, button);
+
+    const pin = document.createElement('span');
+    pin.className = 'pin';
+    position(pin, metadata.pin * SLICE + 10, 51);
+    nodes.pins.append(pin);
+    pins.set(fruit, pin);
+  }
+}
+
+function toggleFruit(fruit) {
+  if (draft.has(fruit)) {
+    draft.delete(fruit);
+  } else {
+    const amount = stakeAmount();
+    if (amount < MIN_STAKE) {
+      setResult('Enter a stake of at least €1.00', 'Use up to two decimals.', 'loss');
+      nodes.stake.focus();
+      return;
+    }
+    if (amount > balance - total(draft)) {
+      setResult('Stake exceeds available balance', 'Adjust the stake or remove a bet.', 'loss');
+      return;
+    }
+    draft.set(fruit, amount);
+  }
+  lastBets.clear();
+  renderControls();
+}
+
+function renderControls() {
+  const amount = stakeAmount();
+  const draftTotal = total(draft);
+  const liveTotal = total(placed);
+  const nextTotal = total(nextBets);
+  const available = balance - draftTotal;
+  const canRefill = balance < MIN_STAKE && !liveTotal && !nextTotal;
+  nodes.balance.textContent = money(balance);
+  nodes.stake.setAttribute('aria-invalid', String(amount < MIN_STAKE));
+  nodes.stakeHint.textContent = amount < MIN_STAKE ? '€1 minimum · up to 2 decimals' : '€1.00 minimum';
+  for (const button of quickBets) {
+    button.disabled = Number(button.dataset.amount) > available;
+    button.setAttribute('aria-pressed', String(amount === Number(button.dataset.amount)));
+  }
+  for (const [fruit, button] of fruitButtons) {
+    const selected = draft.get(fruit);
+    const live = placed.get(fruit) || 0;
+    const next = nextBets.get(fruit) || 0;
+    const badge = button.querySelector('.selected');
+    button.disabled = !selected && available < MIN_STAKE;
+    button.setAttribute('aria-pressed', String(Boolean(selected)));
+    const caption = button.querySelector('.payout');
+    const lastPayout = lastBets.get(fruit);
+    const settledText = lastPayout === undefined ? FRUITS[fruit].risk : lastPayout ? 'Paid ' + compact(lastPayout) : 'Busted';
+    const confirmed = [live ? compact(live) + ' live' : '', next ? compact(next) + ' next' : ''].filter(Boolean);
+    caption.textContent = confirmed.join(' · ') || settledText;
+    caption.dataset.split = String(confirmed.length > 1);
+    caption.dataset.tone = confirmed.length || lastPayout === undefined ? '' : lastPayout ? 'win' : 'loss';
+    button.setAttribute('aria-label', FRUITS[fruit].name + ', ' + caption.textContent +
+      (selected ? ', draft stake ' + money(selected) : ''));
+    badge.hidden = !selected;
+    badge.textContent = selected ? compact(selected) : '';
+  }
+  const totals = [liveTotal ? compact(liveTotal) + ' live' : '', nextTotal ? compact(nextTotal) + ' next' : ''];
+  nodes.fruitHint.textContent = totals.filter(Boolean).join(' · ') ||
+    (phase === 'betting' ? 'Tap again to remove a pick' : 'Bets go to the next round');
+  nodes.primary.disabled = !draftTotal && !canRefill;
+  const placeLabel = phase === 'betting' ? 'Place bets' : 'Bet next round';
+  nodes.primary.textContent = canRefill ? 'Refill demo balance'
+    : draftTotal ? placeLabel + ' · ' + money(draftTotal) : placeLabel;
+  nodes.randomBet.disabled = amount < MIN_STAKE || amount > available;
+  nodes.randomBet.setAttribute('aria-label', 'Random bet of ' + money(amount) +
+    (phase === 'betting' ? ' in this round' : ' in the next round'));
+  nodes.randomStake.textContent = amount >= MIN_STAKE ? money(amount) : '€1 minimum';
+}
+
+function newRider(index, firstBet = false) {
+  const fruit = firstBet ? ['cherry', 'lemon', 'plum'][index] : keys[Math.floor(Math.random() * keys.length)];
+  const stake = firstBet ? [1000, 2500, 1500][index] : riderStakes[Math.floor(Math.random() * riderStakes.length)];
+  return { name: riderNames[index + (firstBet || Math.random() < .5 ? 0 : 3)], fruit, stake };
+}
+
+const slots = Array.from({ length: 3 }, (_, index) => {
+  const card = document.createElement('article');
+  card.className = 'rider';
+  card.style.gridColumn = String(index + 1);
+  card.innerHTML = '<span class="sprite" aria-hidden="true"></span><div><strong class="name"></strong><span class="bet"></span></div>';
+  nodes.riders.append(card);
+  return { card, name: card.querySelector('.name'), bet: card.querySelector('.bet'), live: null };
+});
+
+function showRider(slot, bet) {
+  slot.live = bet;
+  slot.card.hidden = false;
+  slot.card.classList.remove('leaving');
+  slot.card.dataset.state = 'live';
+  slot.card.dataset.fruit = bet.fruit;
+  slot.name.textContent = bet.name;
+  slot.bet.textContent = FRUITS[bet.fruit].name + ' ' + compact(bet.stake);
+}
+
+function updatePins() {
+  for (const [fruit, pin] of pins) {
+    const own = placed.get(fruit) || 0;
+    const amount = slots.reduce((sum, {live}) => live?.fruit === fruit ? sum + live.stake : sum, own);
+    pin.dataset.live = String(amount > 0);
+    if (amount) {
+      pin.dataset.own = String(own > 0);
+      pin.textContent = compact(amount);
+    }
+  }
+}
+
+function settleRiders(landing, harvestBand) {
+  slots.forEach((slot, index) => {
+    const bet = slot.live;
+    if (!bet) return;
+    const paid = Math.round(bet.stake * payoutMultiplier(bet.fruit, landing, harvestBand, charge));
+    slot.live = null;
+    slot.card.dataset.state = paid ? 'paid' : 'lost';
+    slot.bet.textContent = paid ? 'Paid ' + compact(paid) : 'Busted −' + compact(bet.stake);
+    const fadeDelay = 620 + index * 155 + (paid ? 110 : 0);
+    setTimeout(() => slot.card.classList.add('leaving'), fadeDelay);
+    setTimeout(() => { slot.card.hidden = true; }, fadeDelay + 280);
+    setTimeout(() => {
+      showRider(slot, newRider(index));
+      updatePins();
+    }, 1250 + index * 175);
+  });
+}
+
+function settlePlayer(landing, harvestBand) {
+  const harvest = landing === 'harvest';
+  const description = harvest ? 'Harvest complete' : FRUITS[landing].name + ' landed';
+  if (!placed.size) {
+    setResult(description, 'Bets open for the next round');
+    return;
+  }
+  const committed = total(placed);
+  let paid = 0;
+  let multiplier = 0;
+  let winners = 0;
+  for (const [fruit, stake] of placed) {
+    const factor = payoutMultiplier(fruit, landing, harvestBand, charge);
+    const reward = Math.round(stake * factor);
+    lastBets.set(fruit, reward);
+    paid += reward;
+    if (reward) {
+      multiplier = factor;
+      winners++;
+    }
+  }
+  const net = paid - committed;
+  balance += paid;
+  placed.clear();
+  if (!paid) {
+    setResult('Busted −' + money(committed), description, 'loss');
+    playEffect('loss');
+    return;
+  }
+  const netLabel = net === 0 ? 'Even' : (net > 0 ? 'Net +' : 'Net −') + money(Math.abs(net));
+  if (winners === 1) showHub(landing, multiplier, net >= 0 ? 'paid' : landing);
+  const reveal = harvest && winners > 1 ? 'Harvest · ' + winners + ' paid' : description + ' · ' + formatMultiplier(multiplier);
+  setResult('Paid ' + money(paid), reveal + ' · ' + netLabel, net >= 0 ? 'win' : 'partial');
+  if (net >= 0) {
+    for (const [fruit, reward] of lastBets) {
+      if (reward) flash(fruitButtons.get(fruit), 'win');
+    }
+    playEffect('win');
+  }
+}
+
+function finishRound(landing, harvestBand) {
+  settlePlayer(landing, harvestBand);
+  settleRiders(landing, harvestBand);
+  phase = 'betting';
+  charge = null;
+  addBets(placed, nextBets);
+  nextBets.clear();
+  highlightCharge();
+  updatePins();
+}
+
+function advanceRound() {
+  if (phase === 'betting') {
+    phase = 'landing';
+    lastBets.clear();
+    charge = { fruit: keys[randomIndex(keys.length)], multiplier: BOOSTS[randomIndex(BOOSTS.length)] };
+    showHub(charge.fruit, charge.multiplier, 'charge');
+    highlightCharge(charge.fruit);
+    setResult(FRUITS[charge.fruit].name + ' charged', 'All bets survive this reveal', 'charge');
+  } else if (phase === 'landing') {
+    const index = randomIndex(SEGMENTS.length);
+    const landing = SEGMENTS[index];
+    pointAt(index);
+    if (landing === 'harvest') {
+      phase = 'harvest';
+      highlightCharge();
+      setResult('Harvest bonus!', 'Every bet gets a bonus reveal', 'charge');
+    } else {
+      finishRound(landing);
+    }
+  } else {
+    finishRound('harvest', randomIndex(HARVEST_BANDS));
+  }
+  renderControls();
+  phaseDuration = phase === 'betting' ? BETTING_MS : REVEAL_MS;
+  schedule(phaseDuration);
+}
+
+function updateCountdown() {
+  const remaining = Math.max(0, deadline - performance.now());
+  const timerLabel = phase === 'betting' ? 'Charge in' : phase === 'landing' ? 'Land in' : 'Reveal in';
+  nodes.countdown.textContent = timerLabel + ' ' + (Math.ceil(remaining / 100) / 10).toFixed(1) + 's';
+  nodes.wheel.style.setProperty('--elapsed', ((1 - remaining / phaseDuration) * 100) + '%');
+}
+
+function schedule(delay) {
+  deadline = performance.now() + delay;
+  updateCountdown();
+  tickTimer = setTimeout(advanceRound, delay);
+}
+
+for (const button of quickBets) {
+  button.addEventListener('click', () => {
+    nodes.stake.value = (Number(button.dataset.amount) / 100).toFixed(2);
+    renderControls();
+  });
+}
+nodes.stake.addEventListener('input', renderControls);
+nodes.primary.addEventListener('click', () => {
+  if (balance < MIN_STAKE && !placed.size && !nextBets.size) {
+    balance = START_BALANCE;
+    nodes.stake.value = '10.00';
+    setResult('Demo balance refilled');
+  } else if (commitBets(draft)) {
+    draft.clear();
+  }
+  renderControls();
+});
+nodes.randomBet.addEventListener('click', () => {
+  const amount = stakeAmount();
+  if (amount < MIN_STAKE || amount > balance - total(draft)) return;
+  const fruit = keys[randomIndex(keys.length)];
+  commitBets(new Map([[fruit, amount]]));
+  renderControls();
+});
+nodes.motion.addEventListener('click', () => {
+  const reduced = document.body.classList.toggle('reduce-motion');
+  nodes.motion.setAttribute('aria-pressed', String(reduced));
+  if (reduced) {
+    for (const element of document.querySelectorAll('[data-feedback]')) {
+      feedback.get(element)?.animation?.cancel();
+    }
+  }
+});
+
+function syncVisibility() {
+  if (document.hidden) {
+    pausedFor = Math.max(0, deadline - performance.now());
+    clearTimeout(tickTimer);
+    clearInterval(countdownTimer);
+  } else if (pausedFor !== null) {
+    schedule(pausedFor);
+    pausedFor = null;
+    countdownTimer = setInterval(updateCountdown, 50);
+  }
+}
+
+makeWheel();
+makeFruitControls();
+slots.forEach((slot, index) => showRider(slot, newRider(index, true)));
+updatePins();
+renderControls();
+document.addEventListener('visibilitychange', syncVisibility);
+schedule(phaseDuration);
+countdownTimer = setInterval(updateCountdown, 50);
+if (document.hidden) syncVisibility();
+</script>
+</body>
+</html>

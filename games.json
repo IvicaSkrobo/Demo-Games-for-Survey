@@ -145,6 +145,14 @@
       "section": "In progress",
       "owner": "Patrik",
       "source": "game-discovery/prototypes/2026-11-climb-21"
+    },
+    {
+      "path": "orbit/",
+      "title": "Orbit",
+      "sub": "Pick your fruits, then watch the charge reveal and the wheel landing.",
+      "section": "In progress",
+      "owner": "Marko Matijevic",
+      "source": "game-discovery/prototypes/2026-11-orbit"
     }
   ]
 }
