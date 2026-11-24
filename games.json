@@ -171,6 +171,14 @@
       "section": "In progress",
       "owner": "Antonio",
       "source": "game-discovery/prototypes/2026-11-beat-the-dealer"
+    },
+    {
+      "path": "streak-blackjack/",
+      "title": "Streak Blackjack",
+      "sub": "Win to bank a bonus for your next hand",
+      "section": "Card games",
+      "owner": "Borna",
+      "source": "game-discovery/prototypes/2026-11-streak-blackjack"
     }
   ],
   "sectionRules": [
@@ -192,7 +200,8 @@
       ],
       "paths": [
         "remi-51/",
-        "collector-21/"
+        "collector-21/",
+        "beat-the-dealer/"
       ]
     },
     {

@@ -1,0 +1,704 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#11080d"><title>Streak Blackjack</title>
+<style>
+:root{--bg:#11080d;--table:#1a0913;--panel:#28121c;--btn:#39232d;--ribbon:#401628;--line:#361225;--pink:#e1549c;--pink-d:#941658;--pink-l:#c31870;--text:#edf4ee;--blue:#d5edff;--mute:#a6c3d7;--soft:#becdc4;--green:#50d573;--felt:#371a2a;--red:#e31246;--ink:#142a3a;
+--h1:#ffd23f;--h2:#ffbb2e;--h3:#ff9a2b;--h4:#ff6a33;--h5:#ff2e4d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,sans-serif}
+button{font:inherit;color:#f2f6ef;background:var(--btn);border:1px solid #35536a;border-radius:8px;min-height:44px;font-weight:700;cursor:pointer;padding:0 12px}
+button:disabled{opacity:.42;cursor:default}
+button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid #fff;outline-offset:2px}
+[hidden]{display:none!important}
+.app{max-width:1120px;margin:auto;padding:0 16px 28px}
+.top{height:68px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.top h1{margin:0;font:800 18px system-ui;letter-spacing:-.02em}
+.top-right{display:flex;align-items:center;gap:8px}
+.bal{background:var(--ribbon);padding:9px 12px;border-radius:8px;color:var(--blue);font-weight:800;font-variant-numeric:tabular-nums}
+.icon{width:40px;min-height:40px;padding:0;border-radius:50%;border-color:#70254c;background:var(--ribbon);color:#ffd0e6}
+
+/* layout */
+.layout{display:grid;gap:12px;grid-template-columns:1fr 1.25fr;grid-template-areas:"streak rail" "center center"}
+.streak{grid-area:streak}.rail{grid-area:rail}.center{grid-area:center;min-width:0}
+@media(min-width:900px){.layout{grid-template-columns:230px minmax(0,500px) 260px;grid-template-areas:"streak center rail";justify-content:center;align-items:start}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:12px}
+.panel h2{margin:0 0 10px;font-size:10px;letter-spacing:.16em;font-weight:750;color:var(--mute)}
+.panel .cap{margin:10px 0 0;font-size:11px;color:var(--soft);line-height:1.4}
+
+/* streak panel */
+.pips{display:flex;gap:7px;margin-bottom:10px}
+.pip{flex:1;aspect-ratio:1;max-width:34px;border-radius:50%;border:2px solid #70254c;background:#1a0913;transition:background .25s,box-shadow .25s,transform .25s}
+.pip.on{border-color:transparent;background:var(--c);box-shadow:0 0 12px var(--c);transform:scale(1.08)}
+.stat{display:flex;justify-content:space-between;font-size:13px;color:var(--soft);padding:3px 0}
+.stat b{color:var(--blue);font-variant-numeric:tabular-nums}
+.bank-chip{margin-top:8px;padding:8px 10px;border-radius:8px;background:var(--ribbon);border:1px solid #70254c;font-size:12px;color:#f5c6df}
+.bank-chip b{display:block;font-size:22px;color:#ffd23f;letter-spacing:-.02em}
+.bank-chip.empty b{color:#9a6d84}
+
+/* rail */
+.rail ol{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.rail li{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;background:var(--felt);border:1px solid transparent;font-size:13px;transition:background .2s,border-color .2s}
+.rail li span:first-child{color:var(--soft)}
+.rail li b{font-variant-numeric:tabular-nums;color:var(--blue)}
+.rail li.bj span:first-child{color:#ffb9df;font-weight:700}
+.rail li.live{border-color:var(--pink);background:var(--ribbon)}
+.rail li.banked{background:linear-gradient(90deg,#5a2a16,#7a3a12);border-color:#ffb02e;box-shadow:0 0 14px #ffb02e55}
+.rail li.banked b{color:#ffd23f}
+.rail li.banked span:first-child:after{content:" · BANKED";font-size:9px;letter-spacing:.1em;color:#ffd23f}
+.rail.cool{animation:cool 1s ease-out}
+.rail.cool li{animation:cool-row 1s ease-out}
+@keyframes cool{0%{box-shadow:0 0 24px #6fc3ff88}100%{box-shadow:none}}
+@keyframes cool-row{0%{filter:saturate(0) brightness(1.4);color:#6fc3ff}100%{filter:none}}
+.rail.dim li b{color:#9a6d84}
+
+/* table (original look) */
+.table{position:relative;text-align:center;overflow:hidden;border:1px solid var(--line);border-radius:22px;background:var(--table);padding:23px 12px 17px;box-shadow:inset 0 0 40px #0004}
+.table:before{content:"";position:absolute;inset:8px;border:1px solid #6fa9cb26;border-radius:16px;pointer-events:none}
+.shoe{position:absolute;top:20px;right:21px;width:37px;height:51px;border:3px solid #fff;border-radius:6px;background:repeating-linear-gradient(45deg,var(--pink-d) 0 3px,var(--pink-l) 3px 6px);color:#fff;display:grid;place-items:center;font:16px Georgia;box-shadow:0 3px #d4e4ef,0 6px #acbfce,0 9px #839bad,0 12px 14px #0006;transform:rotate(8deg)}
+.table-title{margin:0 44px;font:800 clamp(24px,7vw,34px) system-ui;letter-spacing:-.065em;color:#eef7ff}
+.rule{margin:9px auto 2px;background:#234052;border-radius:4px;width:max-content;padding:5px 10px;font-size:10px;letter-spacing:.16em;font-weight:750;color:var(--mute)}
+.label{display:flex;align-items:center;justify-content:center;gap:8px;margin:11px 0 7px;font-size:13px;font-weight:750;color:#f7edf2;min-height:24px}
+#playerLabel,#secondLabel{color:#ffb9df}
+.hand-total{min-width:24px;padding:2px 5px;border-radius:8px;background:var(--ribbon);color:#fff5fa;font-variant-numeric:tabular-nums}
+.row{min-height:98px;display:flex;align-items:center;justify-content:center;padding:3px 9px 0}
+.card{position:relative;flex:0 1 57px;min-width:30px;height:84px;border-radius:7px;background:#fcfdff;color:var(--ink);box-shadow:0 4px 8px #0005;display:grid;justify-items:start;padding:12px 0 0 8px;font:36px Georgia}
+.card+.card{margin-left:-10px}
+.card b{position:absolute;top:5px;left:6px;font:800 17px system-ui}
+.card.red{color:var(--red)}
+.card.back,.card.empty{justify-items:center;padding:0;place-items:center;font-size:18px}
+.card.back{border:4px solid #f7fbff;background:repeating-linear-gradient(45deg,var(--pink-d) 0 3px,var(--pink-l) 3px 6px);color:#e4f4ff}
+.card.empty{background:var(--felt);border:1px solid #8b536f;color:#9a6d84;box-shadow:none}
+.card.empty+.card.empty{margin-left:8px}
+.card.arrive{animation:deal-in 260ms cubic-bezier(.19,.73,.25,1) both}
+.card.flip{animation:flip-in 235ms ease-out both}
+@keyframes deal-in{from{transform:translate(110px,-120px) rotate(13deg) scale(.6);opacity:.3}to{transform:none;opacity:1}}
+@keyframes flip-in{from{transform:perspective(350px) rotateY(-90deg);filter:brightness(.65)}to{transform:perspective(350px) rotateY(0)}}
+.hands{display:flex;gap:8px}
+.hands>div{flex:1;min-width:0;border:1px solid transparent;border-radius:8px}
+.hands.split .active{border-color:var(--pink)}
+.hands.split .card{min-width:24px}
+.hands .label{color:#ffb9df}
+.hands.many .card{height:64px;flex-basis:40px;min-width:22px;font-size:26px;padding:10px 0 0 6px}
+.hands.many .card b{font-size:13px;top:4px;left:4px}
+.hands.many .card+.card{margin-left:-14px}
+.hands.many .row{min-height:74px;padding:3px 2px 0}
+.hands.many .label{font-size:11px;gap:4px}
+.hands.split .row{padding-left:2px;padding-right:2px}
+.status{margin:10px 0 0;min-height:22px;color:#e3f3ff;font-weight:700}
+.special{margin:12px 0 0;padding:12px;background:var(--panel);border-radius:8px}
+.special p{margin:0 0 8px}
+.choices{display:flex;gap:8px}.choices button{flex:1}
+
+/* result ribbon */
+.result{margin:10px auto 0;width:max-content;max-width:100%;padding:8px 14px;border-radius:10px;border:1px solid #70254c;background:var(--ribbon);color:#f5c6df;animation:pop .3s ease-out}
+.result b{display:block;font-size:18px;letter-spacing:.02em}
+.result small{display:block;margin-top:2px;color:var(--soft)}
+.result.win{border-color:var(--green);color:#c8f5d5;background:#12301f}
+.result.win b{color:var(--green)}
+.result.loss b{color:#ff8fb0}
+@keyframes pop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+
+/* controls */
+.controls{margin-top:12px;background:var(--panel);border-radius:15px;padding:12px}
+.controls h2{margin:0 0 4px;font-size:18px}
+.sub{color:var(--soft);font-size:12px;margin:0 0 10px}
+.field{display:flex;align-items:center;gap:8px;background:var(--felt);border:1px solid #8b536f;border-radius:8px;padding:0 12px}
+.field span{color:var(--mute);font-weight:700}
+.field input{flex:1;min-width:0;background:none;border:0;color:var(--text);font:800 22px system-ui;padding:10px 0;font-variant-numeric:tabular-nums}
+.field input:disabled{opacity:.6}
+.field em{font-style:normal;font-size:11px;color:#9a6d84;letter-spacing:.08em}
+.chips{display:flex;gap:7px;margin:9px 0}
+.chips button{flex:1;min-height:38px}
+.chips button[aria-pressed=true]{color:var(--blue);border-color:var(--pink)}
+.lines{margin:6px 0 10px}
+.lines div{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--soft)}
+.lines b{color:var(--blue);font-variant-numeric:tabular-nums}
+.lines .fee b{color:#ffb9df}
+.mode-switch{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:13px;cursor:pointer}
+.mode-switch input{appearance:none;width:30px;height:18px;margin:0;border:1px solid #9a6d84;border-radius:99px;background:var(--felt);cursor:inherit;flex:none}
+.mode-switch input::before{content:"";display:block;width:12px;height:12px;margin:2px;border-radius:50%;background:#ffe4f2;transition:transform .15s}
+.mode-switch input:checked{background:var(--pink-d);border-color:var(--pink)}
+.mode-switch input:checked::before{transform:translateX(12px)}
+.mode-switch:has(:disabled){opacity:.55;cursor:default}
+.cta{width:100%;min-height:52px;background:var(--green);color:#102117;border:0;border-radius:999px;font-size:17px;display:flex;align-items:center;justify-content:center;gap:10px}
+.bonus-tag{display:none;padding:3px 9px;border-radius:99px;background:#401628;color:#ffd23f;font-size:14px;font-weight:800}
+.bonus-tag.on{display:inline-block}
+.betcard{border:1px solid #70254c;border-radius:12px;padding:12px;background:#34101c;margin-bottom:10px;position:relative;overflow:hidden}
+.betcard .head{display:flex;justify-content:space-between;align-items:center}
+.betcard .head span{font-size:10px;letter-spacing:.16em;font-weight:750;color:var(--mute)}
+.betcard .lock{font-size:11px;color:#9a6d84}
+.betcard .big{font:800 26px system-ui;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.heater-bonus{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding:8px 10px;border-radius:8px;background:#1a0913;border:1px dashed #70254c;font-size:12px;color:var(--soft)}
+.heater-bonus b{font-size:22px;color:#9a6d84}
+.heater-bonus.active{border:1px solid #ffb02e;background:#3a1d0f;color:#ffe3b0}
+.heater-bonus.active b{color:var(--h1);text-shadow:0 0 10px #ffb02e}
+.betcard.ignite{animation:ignite 1.1s ease-out}
+.betcard.ignite .heater-bonus b{animation:ignite-num 1.1s ease-out}
+.betcard.lit{border-color:#ffb02e}
+@keyframes ignite{0%{box-shadow:0 0 0 0 #ff6a33}35%{box-shadow:0 0 34px 8px #ff9a2b99}100%{box-shadow:0 0 0 0 #ff6a3300}}
+@keyframes ignite-num{0%{transform:scale(2.2);color:#fff}100%{transform:none}}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.actions button{min-height:50px}
+.actions .hit{background:var(--pink-d);border-color:var(--pink)}
+.reset-row{margin-top:10px;display:flex;gap:8px}
+.reset-row button{flex:1;min-height:40px;font-size:13px;background:transparent;border-color:#70254c;color:#ffb9df}
+.confirm{margin-top:10px;padding:10px;border-radius:8px;background:#34101c;border:1px solid #9a3548;font-size:13px}
+.confirm p{margin:0 0 8px}.confirm div{display:flex;gap:8px}.confirm button{flex:1;min-height:40px}
+.confirm .danger{background:#9a3548;border-color:#e66a70}
+.note{font-size:12px;color:#e6a0b4;margin:8px 0 0;min-height:16px}
+
+/* history */
+.history{margin-top:14px}
+.history h2,.section-title{margin:0 0 8px;font-size:10px;letter-spacing:.16em;font-weight:750;color:var(--mute)}
+.strip{display:flex;gap:7px;overflow-x:auto;padding-bottom:6px;min-height:56px}
+.strip .empty-note{color:#9a6d84;font-size:13px;align-self:center}
+.chip{flex:none;min-width:68px;padding:7px 9px;border-radius:10px;background:var(--panel);border:1px solid var(--line);text-align:center;font-variant-numeric:tabular-nums}
+.chip b{display:block;font-size:14px}.chip small{display:block;color:var(--soft);font-size:11px;margin-top:1px}
+.chip.win{border-color:#2f7a48}.chip.win b{color:var(--green)}
+.chip.loss b{color:#ff8fb0}.chip.push b{color:var(--mute)}
+
+/* tabs */
+.tabs{margin-top:14px;background:var(--panel);border-radius:15px;padding:12px}
+.tab-list{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
+.tab-list button{flex:none;min-height:38px;background:transparent;border-color:transparent;color:var(--soft)}
+.tab-list button[aria-selected=true]{background:var(--ribbon);border-color:#70254c;color:#ffd0e6}
+.specs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.specs div{background:var(--felt);border-radius:8px;padding:10px;text-align:center}
+.specs b{display:block;font-size:20px;color:var(--blue)}.specs span{font-size:10px;letter-spacing:.1em;color:var(--mute)}
+.tabs p{margin:0;line-height:1.6;color:var(--soft);font-size:13px}
+.tabs table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.tabs th{text-align:left;font-size:10px;letter-spacing:.12em;color:var(--mute);padding:4px 6px}
+.tabs td{padding:7px 6px;border-top:1px solid var(--line)}
+.tabs td:last-child,.tabs th:last-child{text-align:right}
+
+/* dev panels */
+details.dev{margin-top:12px;background:var(--panel);border-radius:15px;padding:12px 14px;font-size:13px;color:#adbbb2}
+details.dev summary{cursor:pointer;font-weight:700;color:var(--soft)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;margin:10px 0;align-items:center}
+.kv span{color:var(--mute);font-size:12px}
+.kv code,.mono{font:12px ui-monospace,Menlo,monospace;word-break:break-all;color:var(--blue)}
+.kv input,.params input{background:var(--felt);border:1px solid #8b536f;border-radius:6px;color:var(--text);padding:7px 8px;font:inherit;min-width:0;width:100%}
+.params{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:10px 0}
+.params label{display:grid;gap:4px;font-size:12px;color:var(--mute)}
+.ranges{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px 8px;align-items:center;margin:10px 0;max-width:340px}
+.ok{color:var(--green)}.bad{color:#ff8fb0}
+.dev button{min-height:38px;font-size:13px}
+
+/* toasts + modal */
+#toasts{position:fixed;left:0;right:0;bottom:18px;display:grid;justify-items:center;gap:8px;pointer-events:none;z-index:20;padding:0 16px}
+.toast{max-width:420px;padding:10px 16px;border-radius:10px;background:var(--ribbon);border:1px solid #70254c;color:#ffe4f2;font-weight:700;box-shadow:0 8px 24px #0008;animation:toast-in .25s ease-out}
+.toast.bank{border-color:#ffb02e;color:#ffe3b0;background:#3a1d0f}
+.toast.out{opacity:0;transform:translateY(8px);transition:.3s}
+@keyframes toast-in{from{transform:translateY(12px);opacity:0}}
+dialog{width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:0;border:1px solid #70254c;border-radius:18px;background:var(--table);color:var(--text)}
+dialog::backdrop{background:#000b}
+.modal-in{padding:18px;overflow:auto;max-height:calc(100dvh - 26px)}
+.modal-in h2{margin:0 0 12px;font-size:20px}
+.objective{border:2px solid var(--green);border-radius:12px;padding:12px;background:#12301f;color:#d7f7e1;line-height:1.5;margin-bottom:12px}
+.steps{display:grid;gap:8px;margin-bottom:12px}
+.step{display:flex;gap:10px;background:var(--panel);border-radius:12px;padding:10px 12px}
+.step i{flex:none;width:26px;height:26px;border-radius:50%;background:var(--pink-d);display:grid;place-items:center;font-style:normal;font-weight:800;font-size:13px}
+.step b{display:block}.step span{font-size:13px;color:var(--soft);line-height:1.45}
+.ride{background:var(--panel);border-radius:12px;padding:12px;margin-bottom:12px}
+.ride .pips{margin:8px 0}
+.ride p{margin:0;font-size:13px;color:var(--soft);line-height:1.5}
+.modal-in details{border-top:1px solid var(--line);padding:9px 0;font-size:13px;color:var(--soft)}
+.modal-in summary{cursor:pointer;font-weight:700;color:var(--text)}
+.modal-in details p{line-height:1.55;margin:8px 0 0}
+.modal-foot{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:12px;font-size:12px;color:var(--mute)}
+.modal-foot .cta{width:auto;padding:0 28px;min-height:46px}
+
+.betcard.compact{padding:8px 12px;margin-bottom:8px}
+.betcard.compact .big{font-size:20px}
+.betcard.compact .stat{display:none}
+.betcard.compact .heater-bonus{margin-top:6px;padding:6px 10px}
+.betcard.compact .heater-bonus b{font-size:18px}
+.kv input,.params input{font-size:16px}
+@media(max-width:560px){
+  .app{padding:0 12px calc(24px + env(safe-area-inset-bottom))}
+  .top{height:56px}.bal{padding:8px 10px}
+  .layout{gap:8px}
+  .panel{padding:10px;border-radius:12px}
+  .pip{max-width:26px;border-width:1.5px}.pips{gap:5px;margin-bottom:8px}
+  .stat{font-size:12px}
+  .bank-chip{padding:6px 8px;font-size:10px}.bank-chip b{font-size:18px}
+  .rail li{padding:6px 8px;font-size:12px}.rail ol{gap:4px}
+  .rail li.banked span:first-child:after{content:""}
+  .table{border-radius:18px;padding:16px 8px 12px}
+  .table-title{display:none}
+  .shoe{top:12px;right:14px;width:30px;height:42px}
+  .row{min-height:92px}
+  .label{margin:8px 0 5px}
+  .status{margin-top:6px}
+  .controls{padding:10px;border-radius:12px}
+  .chips button{min-height:44px}
+  .tab-list button{min-height:44px}
+  .actions button{min-height:54px;font-size:16px}
+  .cta{min-height:56px}
+  .reset-row button,.confirm button{min-height:44px}
+  .mode-switch{min-height:48px}
+  .specs{gap:6px}.specs b{font-size:17px}
+  details.dev{padding:10px 12px}details.dev summary{min-height:44px;display:flex;align-items:center}
+  .dev button{min-height:44px}
+  #toasts{bottom:calc(16px + env(safe-area-inset-bottom))}
+}
+.rig{margin-top:12px;background:var(--panel);border:1px dashed #70254c;border-radius:15px;padding:10px 14px;font-size:13px;color:var(--soft)}
+.rig p{margin:2px 0 8px;line-height:1.5;font-size:12px}
+.rig-opts{display:flex;gap:16px;flex-wrap:wrap}.rig-opts label{display:flex;align-items:center;gap:6px;min-height:36px}
+.rig:has(#rigOn:checked){border-color:var(--h3);border-style:solid;background:#2f1810}
+.hint,.rail .sm{display:none}
+.rail .lg{font-style:normal}
+.stats{display:block}
+@media(max-width:899px){
+  .center{max-width:560px;width:100%;margin:0 auto}
+  .streak{max-width:560px;width:100%;margin:0 auto}
+  .top h1,.table-title{display:none}.top{justify-content:flex-end;height:52px}
+  .layout{grid-template-columns:1fr;grid-template-areas:"streak" "center"}
+  .streak{display:grid;grid-template-columns:1fr auto;grid-template-areas:"pips chip" "stats chip";gap:4px 10px;align-items:center;padding:8px 12px}
+  .streak h2,.stat.best{display:none}
+  .streak .pips{grid-area:pips;margin:0}
+  .pip{max-width:24px}
+  .streak .stats{grid-area:stats;display:flex;gap:12px}
+  .streak .stat{font-size:12px;gap:5px;justify-content:flex-start;padding:0}
+  .streak .bank-chip{grid-area:chip;margin:0;min-width:96px;text-align:center}
+  .table{padding-right:98px}
+  .rail.in-table{position:absolute;right:8px;top:50%;transform:translateY(-46%);width:84px;margin:0;padding:6px;background:#1a0913cc;border:1px solid var(--line);border-radius:10px;z-index:2;backdrop-filter:blur(2px)}
+  .rail.in-table h2{margin:0 0 5px;font-size:9px;text-align:center}
+  .rail.in-table .hint,.rail.in-table .cap{display:none}
+  .rail.in-table ol{gap:3px}
+  .rail.in-table li{padding:5px 6px;font-size:11px;border-radius:6px;white-space:nowrap;gap:4px}
+  .rail.in-table li b{font-size:12px}
+  .rail.in-table .lg{display:none}.rail.in-table .sm{display:inline;font-style:normal}
+  .rail.in-table li.banked span:first-child:after{content:""}
+  .rail.in-table li.banked{box-shadow:0 0 10px #ffb02e66}
+  .rule{max-width:100%;white-space:normal;line-height:1.4}
+  .hands.many .card{height:56px;flex-basis:34px;min-width:20px;font-size:22px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<main class="app">
+<header class="top"><h1>Streak Blackjack</h1><div class="top-right"><button class="icon" id="helpBtn" aria-label="How to play">?</button><span class="bal" id="balance"></span></div></header>
+
+<div class="layout">
+<aside class="panel streak" aria-label="Streak"><h2>STREAK</h2><div class="pips" id="pips"></div>
+  <div class="stats"><div class="stat"><span>Heat</span><b id="heatTxt"></b></div>
+  <div class="stat"><span>Streak</span><b id="streakTxt"></b></div>
+  <div class="stat best"><span>Best this session</span><b id="bestTxt"></b></div></div>
+  <div class="bank-chip empty" id="bankChip"><span>BANKED FOR NEXT HAND</span><b>None</b></div>
+</aside>
+
+<section class="center">
+<section class="table" id="table"><div class="shoe" id="shoe"><span>♠</span></div>
+<div class="table-title">Streak Blackjack</div>
+<div class="label" id="dealerLabel"></div><div class="row" id="dealerCards"></div>
+<div class="rule" id="ribbon">BLACKJACK PAYS 3 TO 2</div>
+<div class="hands" id="hands"></div>
+<div class="special" id="special" hidden><p id="specialText"></p><div class="choices" id="choices"></div></div>
+<div class="result" id="result" hidden></div>
+<div class="status" id="status" role="status"></div></section>
+
+<section class="controls" aria-label="Game controls">
+  <div id="stakePanel"><h2>Start your heater</h2><p class="sub">Your stake splits 50/50: half is the hand bet, half is the Heater Fee.</p>
+    <label class="field"><span>$</span><input id="stakeInput" type="number" inputmode="decimal" step="1" value="20" aria-label="Stake"><em id="minTag"></em></label>
+    <div class="chips" id="chips"></div>
+    <div class="lines"><div><span>Base Bet</span><b id="baseBet"></b></div><div class="fee"><span>Heater Fee</span><b id="feeAmt"></b></div></div>
+    <label class="mode-switch"><input id="freePlay" type="checkbox" role="switch"> Free Play ($0 stake)</label>
+    <button class="cta" id="startBtn">Start</button><p class="note" id="stakeNote"></p></div>
+  <div id="betPanel" hidden>
+    <div class="betcard" id="betCard"><div class="head"><span>BET</span><span class="lock" id="lockTag">🔒 LOCKED</span></div>
+      <div class="big" id="betStake"></div><div class="stat"><span id="betSplit"></span></div>
+      <div class="heater-bonus" id="heaterBonus"><span id="bonusLabel">Heater Bonus</span><b id="bonusVal">—</b></div></div>
+    <div id="betActions"><button class="cta" id="betBtn"><span id="betBtnTxt">Bet</span><span class="bonus-tag" id="betTag"></span></button>
+      <div class="reset-row"><button id="resetBtn">Reset streak</button></div>
+      <div class="confirm" id="confirm" hidden><p id="confirmTxt"></p><div><button class="danger" id="confirmYes">Yes, reset</button><button id="confirmNo">Keep streak</button></div></div>
+      <p class="note" id="betNote"></p></div>
+    <div class="actions" id="actions"><button class="hit" id="hit">Hit</button><button id="stand">Stand</button><button id="double">Double</button><button id="split">Split</button></div>
+  </div>
+</section>
+</section>
+
+<aside class="panel rail" id="railPanel" aria-label="Bonus rail"><h2>BONUS<span class="hint"> · win to bank for next hand</span></h2><ol id="railList"></ol><p class="cap">Win to bank bonus for next hand</p></aside>
+</div>
+
+<section class="history"><h2>RECENT ROUNDS</h2><div class="strip" id="strip"></div></section>
+
+<section class="tabs"><div class="tab-list" role="tablist" id="tabList"></div><div id="tabBody"></div></section>
+
+<details class="dev" id="fair"><summary>Provably fair</summary>
+  <div class="kv"><span>Server seed hash</span><code id="pfHash"></code><span>Client seed</span><input id="pfClient" aria-label="Client seed"><span>Next nonce</span><code id="pfNonce"></code></div>
+  <button id="pfRotate">Reveal &amp; rotate server seed</button>
+  <div id="pfRevealed" class="mono" style="margin-top:8px"></div>
+  <h3 class="section-title" style="margin-top:14px">VERIFY LAST ROUND</h3><div id="pfVerify"><p>Play a round to see its seeds, rail and card sequence.</p></div>
+  <p style="margin-top:10px;font-size:12px;line-height:1.5">Draw <i>n</i> = HMAC-SHA256(server seed, <code>clientSeed:nonce:n</code>). Draws 0–5 roll the six rail multipliers, draws 6+ are the cards in deal order. Prototype note: the server seed stays in memory so rounds can be re-derived here; a live game would reveal it only on rotation.</p></details>
+
+<details class="dev" id="paramsPanel"><summary>Parameters</summary><label class="mode-switch" style="margin-top:8px"><input id="forceAce" type="checkbox" role="switch"> Test: dealer always shows an Ace (to try insurance)</label><div class="params" id="params"></div><div class="section-title">RAIL RANGES (x, low / high per heat)</div><div class="ranges" id="ranges"></div><button id="paramReset">Reset to defaults</button><p style="font-size:12px">Changes apply from the next round. Rail values are placeholders; they are not tuned.</p></details>
+<section class="rig" id="rigPanel"><label class="mode-switch"><input id="rigOn" type="checkbox" role="switch"> <b>Rigged flow (testing)</b></label>
+  <p>Every round is dealt so you win. Stay on Stand and the heat climbs to 5 so you can watch each bonus bank and pay.</p>
+  <div class="rig-opts"><label><input type="radio" name="rigType" value="win" checked> Win every round (stand to win)</label><label><input type="radio" name="rigType" value="bj"> Blackjack every round</label></div></section>
+</main>
+<div id="toasts" aria-live="polite"></div>
+
+<dialog id="howto"><div class="modal-in"><h2>How to Play</h2>
+<div class="objective">Blackjack where every win banks a bonus multiplier for your next hand. Keep winning and the multipliers climb with your streak, all the way up to 100x on a Blackjack.</div>
+<div class="steps">
+<div class="step"><i>1</i><div><b>Start a heater</b><span>Your stake splits 50/50. Half rides on the hand, half is the Heater Fee.</span></div></div>
+<div class="step"><i>2</i><div><b>Win to bank a multiplier</b><span>Each round rolls six multipliers, one per winning total. The one for your total is banked.</span></div></div>
+<div class="step"><i>3</i><div><b>Win again to cash in</b><span>The banked bonus ignites onto your bet as the next hand starts, and a win is paid at it. For example 5x on $10 pays $50 plus your bet back.</span></div></div></div>
+<div class="ride"><b>Ride the heater</b><div class="pips" id="howPips"></div><p>Heat builds with each won round, up to 5. Your bet is locked while a heater runs. It ends on a loss, push, dealer blackjack or when you reset.</p></div>
+<details><summary>Heater Fee</summary><p>Half of your stake is the Heater Fee. It is never returned, whether you win, push or lose. Double and split add only the extra bet, never an extra fee. The fee pays for the multipliers.</p></details>
+<details><summary>Bonus Multipliers</summary><p>Before every hand the game rolls six multipliers for your heat: 4–17, 18, 19, 20, 21 and Blackjack. They never decrease going up the list, and Blackjack is always at least 1.5x the 21 row. Higher heat means higher multipliers, up to 100x. A banked multiplier replaces the normal 1:1 payout on your next winning hand, and is used once. On a blackjack you get the multiplier or 3:2, whichever is higher. A loss, push or dealer blackjack forfeits it.</p></details>
+<details><summary>Splits, Doubles and Insurance</summary><p>Double on any first two cards, including after a split; the multiplier pays on your original bet and the extra pays 1:1. Split once only; split Aces get one card each, and 21 after a split counts as 21, not blackjack. A split round counts as one win if either hand wins, and a multiplier pays on one winning hand only. Insurance is offered when the dealer shows an Ace, costs half your bet and pays 2:1. It never counts as a win and the streak still resets if the dealer has blackjack.</p></details>
+<details><summary>Table Rules</summary><p>Unlimited decks. Dealer stands on all 17s. A dealer blackjack ends the round immediately. Blackjack pays 3:2, or the active multiplier if that is higher. One hand per round, no side bets.</p></details>
+<details><summary>Return to Player</summary><p>Target RTP is 99%. In this prototype the multiplier values are placeholders and have not been tuned.</p></details>
+<div class="modal-foot"><span id="howLimits"></span><button class="cta" id="howClose">Continue</button></div></div></dialog>
+
+<script src="engine.js?v=1"></script>
+<script>
+const $ = id => document.getElementById(id);
+const params = HB.cloneParams(HB.DEFAULTS);
+const SUITS = ['♠','♥','♣','♦'], RANKS = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const HEAT_COLORS = ['var(--h1)','var(--h2)','var(--h3)','var(--h4)','var(--h5)'];
+const QUICK = [5, 10, 25, 50, 100];
+const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const pause = ms => new Promise(r => setTimeout(r, reduced.matches ? 0 : ms));
+const r2 = HB.round2;
+const money = n => { n = r2(n); return (n < 0 ? '−$' : '$') + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits: Number.isInteger(n) ? 0 : 2, maximumFractionDigits: 2}); };
+const xs = m => m + 'x';
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const rndHex = n => HB.toHex(crypto.getRandomValues(new Uint8Array(n)));
+
+const handEls = [0, 1, 2, 3].map(i => { const d = document.createElement('div'); d.hidden = i > 0; d.innerHTML = '<div class="label"></div><div class="row"></div>'; $('hands').appendChild(d); return d; });
+const G = {
+  balance: 1000, freePlay: false, stake: 20, lockedStake: 0,
+  heaterOn: false, heat: 0, count: 0, best: 0, active: null, bankSlot: -1,
+  round: null, rid: 0, lastRail: null, busy: false, confirm: false, ignite: false,
+  history: [], wins: store.get('streakbj.wins', []), tab: 'details', note: '',
+  server: rndHex(16), client: rndHex(4), nonce: 0, log: null, revealed: ''
+};
+G.hash = HB.sha256Hex(G.server);
+
+/* ---------- helpers ---------- */
+function toast(msg, kind) {
+  const t = document.createElement('div'); t.className = 'toast ' + (kind || ''); t.textContent = msg; $('toasts').appendChild(t);
+  setTimeout(() => t.classList.add('out'), 2600); setTimeout(() => t.remove(), 3000);
+}
+const stakeNow = () => G.freePlay ? 0 : G.heaterOn ? G.lockedStake : (+$('stakeInput').value || 0);
+const maxHeat = () => params.maxHeat;
+const inPlay = () => G.round && G.round.phase !== 'done';
+
+function liveSlot() {
+  const r = G.round; if (!r) return -1;
+  let best = -1;
+  for (const h of r.hands) {
+    const t = HB.handValue(h.cards).total; if (t > 21) continue;
+    const nat = r.hands.length === 1 && h.cards.length === 2 && t === 21 && r.phase !== 'insurance';
+    best = Math.max(best, nat ? 5 : HB.slotFor(t));
+  }
+  return best;
+}
+
+/* ---------- rendering ---------- */
+function cardEl(c, isNew, delay, flip) {
+  const d = document.createElement('div');
+  d.className = 'card' + (c.s % 2 ? ' red' : '') + (isNew ? ' arrive' : '') + (flip ? ' flip' : '');
+  if (isNew) d.style.animationDelay = delay + 'ms';
+  d.innerHTML = '<b>' + RANKS[c.r - 1] + '</b>' + SUITS[c.s];
+  return d;
+}
+function fillRow(el, cards, hideIdx) {
+  const rid = String(G.rid), old = el.dataset.rid === rid ? +el.dataset.n || 0 : 0, wasHidden = el.dataset.rid === rid && el.dataset.hid === '1';
+  el.replaceChildren();
+  if (!cards.length) { for (let i = 0; i < 2; i++) { const e = document.createElement('div'); e.className = 'card empty'; e.textContent = '♠'; el.appendChild(e); } }
+  cards.forEach((c, i) => {
+    if (i === hideIdx) { const b = document.createElement('div'); b.className = 'card back' + (i >= old ? ' arrive' : ''); b.textContent = '♠'; el.appendChild(b); return; }
+    el.appendChild(cardEl(c, i >= old, (i - old) * 130, wasHidden && i === 1));
+  });
+  el.dataset.rid = rid; el.dataset.n = cards.length; el.dataset.hid = hideIdx >= 0 ? '1' : '0';
+}
+function label(el, name, total) { el.innerHTML = name + (total != null ? ' <span class="hand-total">' + total + '</span>' : ''); }
+
+function render() {
+  const r = G.round, phase = r ? r.phase : 'idle', S = stakeNow(), split = HB.splitStake(params, S);
+  $('balance').textContent = G.freePlay ? 'Free play ' + money(params.freePlayStartBalance) : money(G.balance);
+
+  // streak panel
+  const mh = maxHeat();
+  $('pips').innerHTML = Array.from({length: mh}, (_, i) => '<span class="pip' + (i < G.heat ? ' on' : '') + '" style="--c:' + HEAT_COLORS[Math.min(i, 4)] + '"></span>').join('');
+  $('heatTxt').textContent = G.heat + ' / ' + mh;
+  $('streakTxt').textContent = G.count + (G.count === 1 ? ' win' : ' wins');
+  $('bestTxt').textContent = G.best;
+  const chip = $('bankChip'); chip.classList.toggle('empty', G.active == null);
+  chip.querySelector('b').textContent = G.active == null ? 'None' : xs(G.active);
+
+  // rail
+  const rail = r ? r.rail : G.lastRail, live = inPlay() ? liveSlot() : -1;
+  $('railList').innerHTML = [5, 4, 3, 2, 1, 0].map(i => {
+    const cls = (i === 5 ? 'bj ' : '') + (i === live ? 'live ' : '') + (i === G.bankSlot && !inPlay() ? 'banked' : '');
+    return '<li class="' + cls + '"><span>' + (i === 5 ? '<i class="lg">Blackjack</i><i class="sm">BJ</i>' : HB.SLOT_LABELS[i]) + '</span><b>' + (rail ? xs(rail[i]) : '—') + '</b></li>';
+  }).join('');
+  $('railPanel').classList.toggle('dim', !rail);
+
+  // table
+  const dealer = r ? r.dealer : [], hide = r && (phase === 'insurance' || phase === 'player') ? 1 : -1;
+  fillRow($('dealerCards'), dealer, hide);
+  label($('dealerLabel'), 'DEALER', dealer.length ? (hide === 1 ? HB.cardVal(dealer[0]) === 1 ? 11 : HB.cardVal(dealer[0]) : HB.handValue(dealer).total) : null);
+  const hands = r ? r.hands : [];
+  $('hands').classList.toggle('split', hands.length > 1); $('hands').classList.toggle('many', hands.length > 2);
+  handEls.forEach((el, i) => {
+    el.hidden = i >= Math.max(1, hands.length);
+    const hd = hands[i];
+    if (hd) { fillRow(el.children[1], hd.cards, -1); label(el.children[0], hands.length > 1 ? 'HAND ' + (i + 1) : 'YOU', HB.handValue(hd.cards).total); }
+    else if (i === 0) { fillRow(el.children[1], [], -1); label(el.children[0], 'YOU', null); }
+    el.classList.toggle('active', phase === 'player' && r.cur === i && !G.busy);
+  });
+  $('ribbon').textContent = G.active != null && (phase === 'idle' || phase === 'done') ? 'NEXT WIN PAYS ' + xs(G.active) + ' (BLACKJACK: BEST OF ' + xs(G.active) + ' / 1.5x)' : r && phase !== 'done' && r.active != null ? 'HEATER BONUS ' + xs(r.active) + ' IN PLAY' : 'BLACKJACK PAYS 3 TO 2';
+
+  // insurance prompt
+  const sp = $('special'); sp.hidden = phase !== 'insurance' || G.busy;
+  if (!sp.hidden) {
+    const cost = r2(r.handBet / 2);
+    $('specialText').textContent = 'Dealer shows an Ace. Insurance costs ' + money(cost) + ' and pays 2 to 1.';
+    $('choices').innerHTML = '<button id="insYes">Take insurance</button><button id="insNo">No thanks</button>';
+    $('insYes').disabled = !G.freePlay && G.balance < cost;
+    $('insYes').onclick = () => takeInsurance(true); $('insNo').onclick = () => takeInsurance(false);
+  }
+
+  // result
+  const rb = $('result'), res = r && r.result;
+  rb.hidden = !(phase === 'done' && res && !G.busy);
+  if (!rb.hidden) {
+    const profit = r2(res.hands.reduce((s, h) => s + h.profit, 0)), used = res.multUsed;
+    const names = { blackjack: 'BLACKJACK', win: 'YOU WIN', loss: 'YOU LOSE', push: 'PUSH', dealerBJ: 'DEALER BLACKJACK' };
+    rb.className = 'result ' + (res.roundWin ? 'win' : 'loss');
+    let sub = res.roundWin ? 'Paid ' + money(res.totalReturned) + (used != null ? ' · ' + xs(used) + ' applied' : '') + ' · banked ' + xs(res.bankedMult) + ' for next hand'
+      : res.multForfeited != null ? 'Streak over · ' + xs(res.multForfeited) + ' bonus lost' : 'Streak over';
+    if (res.insurance.bet) sub += ' · insurance ' + (res.insurance.returned ? 'paid ' + money(res.insurance.returned) : 'lost');
+    rb.innerHTML = '<b>' + names[res.outcome] + (res.roundWin ? ' +' + money(profit) : '') + '</b><small>' + sub + '</small>';
+  }
+  $('status').textContent = G.busy && phase !== 'dealer' ? '' : ({ idle: G.heaterOn ? 'Press Bet to continue your heater' : 'Set your stake to start a heater',
+    insurance: 'Insurance?', player: hands.length > 1 ? 'Play hand ' + (r.cur + 1) : 'Your move', dealer: 'Dealer’s turn', done: '' })[phase];
+  if (G.busy && phase === 'dealer') $('status').textContent = 'Dealer’s turn';
+
+  // controls
+  const playing = r && phase !== 'done';
+  $('stakePanel').hidden = G.heaterOn || playing;
+  $('betPanel').hidden = !(G.heaterOn || playing);
+  // stake panel
+  $('stakeInput').disabled = G.freePlay; if (G.freePlay) $('stakeInput').value = 0;
+  $('freePlay').checked = G.freePlay;
+  $('minTag').textContent = 'MIN ' + money(params.minStake);
+  $('chips').innerHTML = QUICK.map(v => '<button aria-pressed="' + (!G.freePlay && +$('stakeInput').value === v) + '" data-v="' + v + '"' + (G.freePlay ? ' disabled' : '') + '>' + v + '</button>').join('');
+  $('baseBet').textContent = money(split.handBet); $('feeAmt').textContent = money(split.fee);
+  $('startBtn').textContent = G.freePlay ? 'Start free play' : 'Start · ' + money(S);
+  $('stakeNote').textContent = G.note;
+  // bet card
+  const lockedSplit = HB.splitStake(params, G.lockedStake);
+  $('betStake').textContent = G.freePlay ? 'Free play' : money(G.lockedStake);
+  $('betSplit').textContent = 'Hand bet ' + money(lockedSplit.handBet) + ' · Fee ' + money(lockedSplit.fee);
+  const shown = playing ? r.active : G.active;
+  $('heaterBonus').classList.toggle('active', shown != null);
+  $('bonusLabel').textContent = playing ? (r.active != null ? 'Heater Bonus ignited' : 'No bonus this hand') : shown != null ? 'Heater Bonus · next hand pays' : 'Heater Bonus';
+  $('bonusVal').textContent = shown != null ? xs(shown) : '—';
+  $('betCard').classList.toggle('lit', playing && r.active != null);
+  $('betCard').classList.toggle('ignite', G.ignite);
+  $('betActions').hidden = !!playing;
+  const broke = !G.freePlay && G.balance < G.lockedStake;
+  $('betBtn').disabled = G.busy || broke;
+  $('betBtnTxt').textContent = broke ? 'Not enough balance' : 'Bet ' + (G.freePlay ? '' : money(G.lockedStake));
+  const tag = $('betTag'); tag.classList.toggle('on', G.active != null && !broke); tag.textContent = G.active != null ? '🔥 ' + xs(G.active) : '';
+  $('resetBtn').disabled = G.busy;
+  $('confirm').hidden = !G.confirm;
+  $('confirmTxt').textContent = G.active != null ? 'Reset your streak? The banked ' + xs(G.active) + ' is given up and the next hand starts at heat 0.' : 'Reset your streak? The next hand starts at heat 0.';
+  $('betNote').textContent = broke ? 'Reset the streak to change your stake.' : '';
+  // actions
+  const lg = playing && !G.busy ? r.legal() : {}, h = playing ? r.hand : null;
+  const can = c => G.freePlay || G.balance >= c;
+  $('actions').hidden = !playing || phase === 'insurance';
+  $('hit').hidden = !lg.hit; $('stand').hidden = !lg.stand;
+  $('double').hidden = !(lg.double && h && can(h.bet)); $('split').hidden = !(lg.split && can(r.handBet));
+  const vis = ['hit', 'stand', 'double', 'split'].map($).filter(b => !b.hidden);
+  ['hit', 'stand', 'double', 'split'].forEach(k => $(k).style.gridColumn = '');
+  if (vis.length % 2) vis[vis.length - 1].style.gridColumn = '1 / -1';
+  const pl = !!playing; $('betCard').classList.toggle('compact', pl);
+
+  renderStrip(); renderTab(); renderFair();
+}
+function renderStrip() {
+  $('strip').innerHTML = G.history.length ? G.history.map(h =>
+    '<div class="chip ' + h.cls + '"><b>' + h.label + '</b><small>' + (h.mult != null ? xs(h.mult) + ' · ' : '') + money(h.returned) + '</small></div>').join('')
+    : '<span class="empty-note">No rounds yet</span>';
+}
+const TABS = [['details', 'Details'], ['biggest', 'Biggest Wins'], ['lucky', 'Luckiest Wins'], ['mine', 'My Wins']];
+function renderTab() {
+  $('tabList').innerHTML = TABS.map(([k, t]) => '<button role="tab" data-t="' + k + '" aria-selected="' + (G.tab === k) + '">' + t + '</button>').join('');
+  const tb = $('tabBody');
+  if (G.tab === 'details') {
+    tb.innerHTML = '<div class="specs"><div><b>' + params.maxMultiplier + 'x</b><span>MAX MULTIPLIER</span></div><div><b>99%</b><span>RTP</span></div><div><b>25%</b><span>REWARDS CONTRIBUTION</span></div></div>' +
+      '<p>Single-hand blackjack where every win banks a bonus multiplier for your next hand. Win in a row to raise your heat and the multipliers climb, up to ' + params.maxMultiplier + 'x for a blackjack at heat 5. Half of your stake is the Heater Fee that pays for the multipliers.</p>';
+    return;
+  }
+  let rows = G.wins.slice();
+  if (G.tab === 'biggest') rows.sort((a, b) => b.returned - a.returned);
+  else if (G.tab === 'lucky') rows = rows.filter(w => w.mult != null).sort((a, b) => b.mult - a.mult);
+  else rows.reverse();
+  rows = rows.slice(0, 10);
+  tb.innerHTML = rows.length ? '<table><thead><tr><th>Time</th><th>Stake</th><th>Bonus</th><th>Payout</th></tr></thead><tbody>' + rows.map(w =>
+    '<tr><td>' + new Date(w.t).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) + '</td><td>' + money(w.stake) + '</td><td>' + (w.mult != null ? xs(w.mult) : '—') + '</td><td>' + money(w.returned) + '</td></tr>').join('') + '</tbody></table><p style="margin-top:8px;font-size:12px">Wins on this device only.</p>'
+    : '<p>No wins yet. Win a round and it shows up here.</p>';
+}
+function cardTxt(c) { return RANKS[c.r - 1] + SUITS[c.s]; }
+function renderFair() {
+  $('pfHash').textContent = G.hash;
+  if (document.activeElement !== $('pfClient')) $('pfClient').value = G.client;
+  $('pfClient').disabled = !!inPlay();
+  $('pfNonce').textContent = G.nonce;
+  $('pfRotate').disabled = !!inPlay();
+  $('pfRevealed').innerHTML = G.revealed;
+  const L = G.log;
+  $('pfVerify').innerHTML = L ? '<div class="kv"><span>Server seed hash</span><code>' + L.hash + '</code><span>Client seed</span><code>' + L.client + '</code><span>Nonce</span><code>' + L.nonce + '</code><span>Heat</span><code>' + L.heat + '</code><span>Rail rolled</span><code>' + L.rail.map(xs).join(' ≤ ') + ' (4–17 … Blackjack)</code><span>Card sequence</span><code>' + L.cards.map(cardTxt).join(' ') + '</code></div><button id="pfCheck">Verify this round</button> <span id="pfResult"></span>' : '<p>Play a round to see its seeds, rail and card sequence.</p>';
+  if (L) $('pfCheck').onclick = () => {
+    if (L.forced) { $('pfResult').innerHTML = '<span class="bad">Test round (Ace forced), not derivable from the seeds</span>'; return; }
+    const v = HB.verifyRound(L.params, L.server, L.client, L.nonce, L.heat, L.cards.length);
+    const ok = JSON.stringify(v.rail) === JSON.stringify(L.rail) && JSON.stringify(v.cards) === JSON.stringify(L.cards) && HB.sha256Hex(L.server) === L.hash;
+    $('pfResult').innerHTML = ok ? '<span class="ok">✓ Rail and all ' + L.cards.length + ' cards re-derived from the seeds</span>' : '<span class="bad">✗ Mismatch</span>';
+  };
+}
+
+/* ---------- game flow ---------- */
+function startRound() {
+  if (G.busy || inPlay()) return;
+  G.note = ''; G.confirm = false;
+  let S;
+  if (G.freePlay) S = 0;
+  else if (G.heaterOn) S = G.lockedStake;
+  else {
+    S = r2(+$('stakeInput').value || 0);
+    if (S < params.minStake) { G.note = 'Minimum stake is ' + money(params.minStake) + '.'; return render(); }
+    if (S > params.maxStake) { G.note = 'Maximum stake is ' + money(params.maxStake) + '.'; return render(); }
+    if (S > G.balance) { G.note = 'Not enough balance.'; return render(); }
+  }
+  if (!G.heaterOn) { G.heat = 0; G.count = 0; G.active = null; G.bankSlot = -1; G.lockedStake = S; G.heaterOn = true; }
+  const sp = HB.splitStake(params, S);
+  let src = HB.pfSource(G.server, G.client, G.nonce), forced = $('forceAce').checked;
+  const rig = $('rigOn').checked ? document.querySelector('input[name=rigType]:checked').value : null;
+  if (rig) {
+    const base = src, script = rig === 'bj' ? [1, 6, 13, 9] : [10, 6, 9, 10]; let n = 0; // win: player 19 vs 6+10, dealer then busts
+    const tens = [10, 11, 12, 13];
+    src = { rand: () => base.rand(), cardLog: base.cardLog, card() {
+      const k = n++; let r = k < script.length ? script[k] : (G.round && G.round.phase === 'dealer' ? 10 : 2);
+      if (r === 10) r = tens[k % 4];
+      const c = { r, s: k % 4 }; base.cardLog.push(c); return c; } };
+    forced = true;
+  } else if (forced) { const base = src; let n = 0; src = { rand: () => base.rand(), cardLog: base.cardLog, card() { const c = base.card(); if (n++ !== 1) return c; const a = { r: 1, s: 0 }; base.cardLog[base.cardLog.length - 1] = a; return a; } }; }
+  G.balance = r2(G.balance - S);
+  G.rid++;
+  G.round = new HB.Round(params, src, { handBet: sp.handBet, fee: sp.fee, heat: G.heat, active: G.active });
+  G.round.src = src; G.round.forced = forced; G.round.nonce = G.nonce; G.round.stake = S;
+  G.nonce++;
+  $('betCard').classList.remove('ignite'); void $('betCard').offsetWidth; G.ignite = G.round.active != null;
+  if (G.ignite) toast('🔥 ' + xs(G.round.active) + ' ignites on your bet', 'bank');
+  G.busy = true; render();
+  if (innerWidth < 900) $('table').scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' });
+  after();
+}
+async function after() {
+  const r = G.round;
+  if (r.phase === 'insurance') { G.busy = false; return render(); }
+  if (r.phase === 'player') { G.busy = false; return render(); }
+  G.busy = true; render();
+  await pause(r.phase === 'done' ? 900 : 650);
+  if (r.phase === 'dealer') {
+    render(); await pause(450);
+    while (r.dealerStep()) { render(); await pause(550); }
+  }
+  finalize(); G.busy = false; render();
+}
+function finalize() {
+  const r = G.round, res = r.result; if (!res || r.settled) return; r.settled = true;
+  G.balance = r2(G.balance + res.totalReturned);
+  const prev = { heat: G.heat, active: G.active };
+  const nx = HB.nextStreak(params, { heat: G.heat, count: G.count }, res);
+  G.heat = nx.heat; G.count = nx.count; G.active = nx.active; G.best = Math.max(G.best, G.count);
+  G.bankSlot = res.roundWin ? res.bankSlot : -1; G.lastRail = r.rail;
+  const label = { blackjack: 'BJ win', win: 'Win', loss: 'Loss', push: 'Push', dealerBJ: 'Dealer BJ' }[res.outcome];
+  G.history.unshift({ label, cls: res.roundWin ? 'win' : res.outcome === 'push' ? 'push' : 'loss', mult: res.multUsed, returned: res.totalReturned });
+  G.history = G.history.slice(0, 14);
+  if (res.roundWin) {
+    G.wins.push({ t: Date.now(), stake: r.stake, mult: res.multUsed, returned: res.totalReturned }); G.wins = G.wins.slice(-200); store.set('streakbj.wins', G.wins);
+    toast('Banked ' + xs(res.bankedMult) + ' for your next hand', 'bank');
+  } else {
+    G.heaterOn = false;
+    if (prev.heat > 0 || prev.active != null) {
+      toast(prev.active != null ? 'Streak over · ' + xs(prev.active) + ' bonus lost' : 'Streak over');
+      const rp = $('railPanel'); rp.classList.remove('cool'); void rp.offsetWidth; rp.classList.add('cool');
+    }
+    if (!G.freePlay && G.balance < params.minStake) { G.balance = 1000; toast('Balance reloaded to $1,000'); }
+  }
+  G.log = { hash: G.hash, server: G.server, client: r.src.client || G.client, nonce: r.nonce, heat: r.heat, params: HB.cloneParams(params), rail: r.rail.slice(), cards: r.src.cardLog.slice(), forced: r.forced };
+}
+function act(name) {
+  const r = G.round; if (!r || G.busy || r.phase !== 'player') return;
+  if (name === 'double') G.balance = r2(G.balance - r.hand.bet);
+  if (name === 'split') G.balance = r2(G.balance - r.handBet);
+  r[name](); G.busy = r.phase === 'dealer' || r.phase === 'done'; render(); after();
+}
+function takeInsurance(take) {
+  const r = G.round; if (!r || r.phase !== 'insurance') return;
+  r.insure(take); if (take) G.balance = r2(G.balance - r.insBet);
+  G.busy = true; render(); after();
+}
+function resetStreak() {
+  G.heaterOn = false; G.heat = 0; G.count = 0; G.active = null; G.bankSlot = -1; G.confirm = false; G.round = null; G.rid++;
+  const rp = $('railPanel'); rp.classList.remove('cool'); void rp.offsetWidth; rp.classList.add('cool');
+  toast('Streak reset'); render();
+}
+
+/* ---------- wiring ---------- */
+$('startBtn').onclick = startRound; $('betBtn').onclick = startRound;
+$('hit').onclick = () => act('hit'); $('stand').onclick = () => act('stand'); $('double').onclick = () => act('double'); $('split').onclick = () => act('split');
+$('stakeInput').oninput = () => { G.note = ''; render(); };
+$('chips').onclick = e => { const v = e.target.closest('button')?.dataset.v; if (v) { $('stakeInput').value = v; render(); } };
+$('freePlay').onchange = e => { if (G.heaterOn || inPlay()) { e.target.checked = G.freePlay; return; } G.freePlay = e.target.checked; if (!G.freePlay) $('stakeInput').value = G.stake; render(); };
+$('resetBtn').onclick = () => { G.confirm = true; render(); };
+$('confirmNo').onclick = () => { G.confirm = false; render(); };
+$('confirmYes').onclick = resetStreak;
+$('tabList').onclick = e => { const t = e.target.closest('button')?.dataset.t; if (t) { G.tab = t; renderTab(); } };
+$('pfClient').onchange = e => { if (!inPlay()) { G.client = e.target.value.trim() || G.client; renderFair(); } };
+$('pfRotate').onclick = () => {
+  const old = G.server, oldHash = G.hash;
+  G.server = rndHex(16); G.hash = HB.sha256Hex(G.server); G.nonce = 0;
+  G.revealed = 'Previous server seed: ' + old + '<br>SHA-256 matches earlier hash: ' + (HB.sha256Hex(old) === oldHash ? '<span class="ok">✓ yes</span>' : '<span class="bad">✗ no</span>');
+  render();
+};
+
+/* params panel */
+const PFIELDS = [['feePctOfHandBet', 'Fee % of hand bet'], ['maxHeat', 'Max heat (1–5)'], ['maxMultiplier', 'Max multiplier'], ['maxSplits', 'Max splits (2 = re-split once)'], ['blackjackPayoutNoMultiplier', 'Blackjack payout (no multiplier)'], ['insurancePayout', 'Insurance payout'], ['minStake', 'Min stake'], ['maxStake', 'Max stake'], ['maxPayout', 'Max payout'], ['freePlayStartBalance', 'Free play start balance']];
+function buildParams() {
+  $('params').innerHTML = PFIELDS.map(([k, l]) => '<label>' + l + '<input type="number" step="any" data-k="' + k + '" value="' + params[k] + '"></label>').join('');
+  $('ranges').innerHTML = params.railRanges.map((rg, i) => '<span>Heat ' + i + '</span><input type="number" step="any" data-h="' + i + '" data-i="0" value="' + rg[0] + '"><input type="number" step="any" data-h="' + i + '" data-i="1" value="' + rg[1] + '">').join('');
+}
+$('params').onchange = e => { const k = e.target.dataset.k, v = +e.target.value; if (!k || !(v >= 0)) return; params[k] = k === 'maxHeat' ? Math.min(5, Math.max(1, Math.round(v))) : v; buildParams(); render(); };
+$('ranges').onchange = e => { const t = e.target, h = +t.dataset.h, i = +t.dataset.i, v = +t.value; if (isNaN(h) || !(v >= 1)) return buildParams(); const rg = params.railRanges[h].slice(); rg[i] = v; if (rg[0] < rg[1]) params.railRanges[h] = rg; buildParams(); };
+$('paramReset').onclick = () => { Object.assign(params, HB.cloneParams(HB.DEFAULTS)); buildParams(); render(); };
+buildParams();
+
+/* how to play */
+const dlg = $('howto');
+function openHow() {
+  $('howPips').innerHTML = Array.from({length: 5}, (_, i) => '<span class="pip on" style="--c:' + HEAT_COLORS[i] + '"></span>').join('');
+  $('howLimits').textContent = 'Max bet ' + money(params.maxStake) + ' · Max payout ' + money(params.maxPayout);
+  if (!dlg.open) dlg.showModal();
+}
+$('helpBtn').onclick = openHow;
+$('howClose').onclick = () => { dlg.close(); store.set('streakbj.seen', true); };
+dlg.onclose = () => store.set('streakbj.seen', true);
+
+const mq = matchMedia('(max-width:899px)');
+function placeRail() {
+  const rp = $('railPanel');
+  if (mq.matches) { $('table').insertBefore(rp, $('ribbon')); rp.classList.add('in-table'); }
+  else { document.querySelector('.layout').appendChild(rp); rp.classList.remove('in-table'); }
+}
+mq.addEventListener('change', placeRail); placeRail();
+render();
+if (!store.get('streakbj.seen', false)) openHow();
+</script>
