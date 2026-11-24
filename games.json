@@ -2,8 +2,8 @@
   "sections": [
     "Published",
     "Card games",
-    "Prototypes",
-    "Other demos"
+    "In progress",
+    "AI slop"
   ],
   "games": [
     {
@@ -42,7 +42,7 @@
       "path": "wheel/",
       "title": "Wheel",
       "sub": "Printed pays · skull sweep · spin the wheel or the flapper",
-      "section": "Prototypes",
+      "section": "In progress",
       "owner": "Ivica",
       "source": "game-discovery/prototypes/2026-11-wheel"
     },
@@ -50,28 +50,43 @@
       "path": "ski-v4/",
       "title": "SkiJump 4.0",
       "sub": "Candidate preview",
-      "section": "Prototypes",
+      "section": "In progress",
       "owner": "Ivica"
+    },
+    {
+      "path": "free2play-daily-spin/",
+      "title": "F2P — Money Machine",
+      "sub": "Main game · Ante reels + Blender streak/button",
+      "section": "In progress",
+      "owner": "Ante",
+      "source": "IvicaSkrobo/f2p-daily-spin"
     },
     {
       "path": "manager-spin/",
       "title": "ManagerSpin",
       "sub": "Slot manager game",
-      "section": "Prototypes",
+      "section": "In progress",
       "owner": "Ivica"
     },
     {
       "path": "superbet-penalty/FreeMode/",
       "title": "Superbet Penalty",
       "sub": "Free mode",
-      "section": "Prototypes",
+      "section": "In progress",
       "owner": "Ivica"
+    },
+    {
+      "path": "comoara-dacilor/",
+      "title": "Comoara Dacilor",
+      "sub": "Playable demo",
+      "section": "AI slop",
+      "owner": "Niki"
     },
     {
       "path": "circle/study/risk/",
       "title": "Circle — Study 1",
       "sub": "Classic: standard vs daredevil",
-      "section": "Other demos",
+      "section": "Hidden",
       "owner": "Ivica",
       "hidden": true
     },
@@ -79,7 +94,7 @@
       "path": "circle/study/mechanic/",
       "title": "Circle — Study 2",
       "sub": "Classic vs timer cashout",
-      "section": "Other demos",
+      "section": "Hidden",
       "owner": "Ivica",
       "hidden": true
     },
@@ -87,31 +102,17 @@
       "path": "circle-star-comparison/",
       "title": "Circle — Star comparison",
       "sub": "Stars variants side by side",
-      "section": "Other demos",
+      "section": "Hidden",
       "owner": "Ivica",
       "hidden": true
-    },
-    {
-      "path": "comoara-dacilor/",
-      "title": "Comoara Dacilor",
-      "sub": "Playable demo",
-      "section": "Other demos",
-      "owner": "Niki"
-    },
-    {
-      "path": "free2play-daily-spin/",
-      "title": "F2P — Money Machine",
-      "sub": "Main game · Ante reels + Blender streak/button",
-      "section": "Other demos",
-      "owner": "Ante",
-      "source": "IvicaSkrobo/f2p-daily-spin"
     },
     {
       "path": "free2play-daily-spin/money-machine-handoff/money.html",
       "title": "Money Machine — Animation Handoff",
       "sub": "Ante's playable collector route · Patrik reference",
-      "section": "Other demos",
-      "owner": "Ante"
+      "section": "Hidden",
+      "owner": "Ante",
+      "hidden": true
     }
   ]
 }
