@@ -54,7 +54,7 @@ button{font:inherit}
 #go.cash{background:var(--accent-deep)}#go:disabled{opacity:.42;cursor:default}
 details{margin-top:12px;color:#adbbb2;font-size:12px}summary{cursor:pointer;min-height:24px}details p{line-height:1.6}
 button:focus-visible,summary:focus-visible{outline:2px solid #fff;outline-offset:2px}
-.tests{display:flex;gap:6px;margin-top:8px}.tests button{flex:1;min-height:40px;border:1px solid #35536a;border-radius:8px;background:var(--button);color:var(--text)}
+.tests{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.tests button{flex:1;min-height:40px;border:1px solid #35536a;border-radius:8px;background:var(--button);color:var(--text)}
 [hidden]{display:none!important}
 main{display:flex;flex-direction:column}
 .side{display:contents}
@@ -128,7 +128,7 @@ main>details{grid-column:1/-1}
 </aside>
 <section class="rounds"><span class="label">Last rounds</span><div class="hist" id="hist"></div></section>
 <details><summary>How to play</summary><p>Each step you hold three cards and the dealer draws one hidden card. Tap a card to duel the dealer. Each card shows the multiplier you reach if it wins; the riskier the card, the bigger the jump. A higher card wins, a tie goes to the dealer, and the Ace beats everything except the 2, which beats only the Ace. Win and your multiplier grows, lose and the round ends. Cash out any time after your first win. A round ends automatically after 10 duels.<br><br>Every cash out of 1x or more counts as a win. Every 5 wins drops a Royal card: Jacks are common, Aces are rare. Collect all four suits of a rank to open that rank's Royal Run, a bonus of up to five duels that pays a share of the pool. A higher rank pays more. A loss ends the run but keeps what you reached.</p></details>
-<details id="tests" hidden><summary>Demo tools</summary><div class="tests" id="testBtns"></div></details>
+<details id="tests" open hidden><summary>Demo tools</summary><div class="tests" id="testBtns"></div></details>
 </main>
 <script>
 const $=id=>document.getElementById(id);
@@ -241,8 +241,13 @@ $('more').addEventListener('click',()=>{document.body.classList.toggle('showRoya
 $('hand').addEventListener('click',e=>{const t=e.target.closest('[data-i]');if(t)pick(+t.dataset.i)});
 $('bets').addEventListener('click',e=>{const t=e.target.closest('[data-bet]');if(t&&!t.disabled){S.bet=+t.dataset.bet;render()}});
 $('go').addEventListener('click',()=>{if(S.status==='playing')cashout();else start()});
-if(/[?&]test/.test(location.search)){$('tests').hidden=false;$('testBtns').innerHTML=RNAME.map((n,i)=>'<button data-r="'+i+'">+'+n[0]+'</button>').join('');
-  $('testBtns').addEventListener('click',e=>{const t=e.target.closest('[data-r]');if(!t||inRoundNow())return;const ri=+t.dataset.r,miss=[0,1,2,3].filter(k=>!S.royal[ri*4+k]);if(miss.length){S.royal[ri*4+miss[0]]=true;S.flash=ri*4+miss[0]}render();afterRound('Demo card.')});}
+const SHOW_TESTS=true; // set to false before the survey release
+if(SHOW_TESTS||/[?&]test/.test(location.search)){$('tests').hidden=false;
+  $('testBtns').innerHTML=RNAME.map((n,i)=>'<button data-run="'+i+'">Test '+n+' Run</button>').join('')+RNAME.map((n,i)=>'<button data-r="'+i+'">+'+n[0]+' card</button>').join('');
+  $('testBtns').addEventListener('click',e=>{
+    const u=e.target.closest('[data-run]');
+    if(u){if(inRoundNow())return;const ri=+u.dataset.run;for(let k=0;k<4;k++)S.royal[ri*4+k]=true;S.flash=-1;render();afterRound('Demo.');return}
+    const t=e.target.closest('[data-r]');if(!t||inRoundNow())return;const ri=+t.dataset.r,miss=[0,1,2,3].filter(k=>!S.royal[ri*4+k]);if(miss.length){S.royal[ri*4+miss[0]]=true;S.flash=ri*4+miss[0]}render();afterRound('Demo card.')});}
 function inRoundNow(){return ['playing','reveal','bonus','bonusReveal','bonusLost'].includes(S.status)||S.pending}
 render();
 </script>
