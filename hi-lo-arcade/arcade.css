@@ -183,14 +183,59 @@ h1 {
   .status { min-height:33px; }
 }
 
-.round-actions { grid-template-columns:44px 44px; justify-content:space-between; }
+/* The stake strip and utility buttons share the same bottom baseline. */
+.controls { display:grid; grid-template-columns:minmax(0,1fr); gap:9px; padding:9px; }
+.guess-actions { gap:6px; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) minmax(0,1fr) 44px; }
+.guess-actions button { height:54px; padding-inline:3px; }
+.utility-row {
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr) 44px;
+  gap:8px;
+  align-items:end;
+  padding-top:7px;
+  border-top:1px solid var(--tile);
+}
+.utility-row > button { min-height:44px; }
+#bet-panel { display:grid; grid-column:auto; justify-content:stretch; gap:4px; padding:0; }
+#bet-panel label {
+  text-align:center;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font:750 10px/1.2 var(--arcade-font);
+}
 .stake-stepper {
   display:grid;
-  grid-template-columns:44px minmax(0, 1fr) 44px;
-  gap:4px;
-  width:min(75%,230px);
+  grid-template-columns:44px minmax(0,1fr) 44px;
+  gap:0;
 }
-.stake-stepper button { min-height:44px; font-size:21px; }
-.stake-stepper #bet { width:100%; text-align:center; appearance:textfield; }
+.stake-stepper button { min-height:44px; font-size:20px; }
+.stake-stepper #stake-minus { border-radius:5px 0 0 5px; }
+.stake-stepper #stake-plus { border-radius:0 5px 5px 0; }
+.stake-stepper #bet {
+  width:100%;
+  min-width:0;
+  padding-inline:3px;
+  background:#1b122f;
+  border-inline:0;
+  border-radius:0;
+  text-align:center;
+  appearance:textfield;
+}
 .stake-stepper #bet::-webkit-inner-spin-button,
 .stake-stepper #bet::-webkit-outer-spin-button { appearance:none; margin:0; }
+.showdown {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:0 0 8px;
+  padding:10px;
+}
+.showdown .card-slot {
+  display:grid;
+  grid-template-rows:auto 1fr;
+  gap:8px;
+  min-width:0;
+}
+.card-slot > div { display:grid; width:100%; place-items:center; perspective:500px; }
+.showdown #next-label { max-width:none; }
+.order { letter-spacing:.08em; }
+.status { font-size:13px; }

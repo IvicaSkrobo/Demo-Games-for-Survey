@@ -81,13 +81,11 @@
       <p class="sr-only" id="familiar-state"></p>
     </section>
     <section aria-labelledby="current-label">
-      <h2 class="label" id="current-label">Current card</h2>
       <div class="showdown">
-        <div id="current"></div>
-        <span class="next-label label" id="next-label">Next</span>
-        <div id="next"></div>
+        <div class="card-slot"><h2 class="label" id="current-label">Current</h2><div id="current"></div></div>
+        <div class="card-slot"><p class="next-label label" id="next-label">Next</p><div id="next"></div></div>
       </div>
-      <p class="order label">2 low · Ace high · Both choices include ties</p>
+      <p class="order label">Ace high · Ties win either way</p>
     </section>
     <p class="status" id="status" role="status"></p>
   </div>
@@ -98,17 +96,17 @@
       <button id="higher" type="button">Higher ↑</button>
       <button id="redraw" type="button" aria-label="Redraw starter">↻</button>
     </div>
-    <div class="round-actions">
+    <div class="utility-row">
       <button id="sound" type="button" aria-label="Sound off" aria-pressed="false">♪</button>
-      <button id="options-button" type="button" aria-label="Menu" aria-expanded="false" aria-controls="options">☰</button>
-    </div>
-    <div id="bet-panel">
-      <label for="bet">Stake</label>
-      <div class="stake-stepper">
-        <button id="stake-minus" type="button" aria-label="Decrease stake">−</button>
-        <input id="bet" type="number" inputmode="decimal" min="1" max="10000" step="0.01" value="100" required>
-        <button id="stake-plus" type="button" aria-label="Increase stake">+</button>
+      <div id="bet-panel">
+        <label for="bet">Stake</label>
+        <div class="stake-stepper">
+          <button id="stake-minus" type="button" aria-label="Decrease stake">−</button>
+          <input id="bet" type="number" inputmode="decimal" min="1" max="10000" step="0.01" value="100" required>
+          <button id="stake-plus" type="button" aria-label="Increase stake">+</button>
+        </div>
       </div>
+      <button id="options-button" type="button" aria-label="Menu" aria-expanded="false" aria-controls="options">☰</button>
     </div>
     <div id="options" hidden>
       <p>Win to build a round payout. Take Win to collect, or risk it on the next card. This survey game uses simulated stakes and payouts.</p>
