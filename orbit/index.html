@@ -46,8 +46,8 @@ h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacin
 .last-bets{padding:0;margin:0 0 8px;list-style:none}
 .last-bets li{display:grid;grid-template-columns:1fr auto auto;gap:12px;padding:5px 0;border-top:1px solid var(--chip);font-variant-numeric:tabular-nums}
 .last-bets strong{color:var(--text)}
-.wheel{position:relative;isolation:isolate;width:clamp(162px,50vw,242px);aspect-ratio:1;margin:8px auto 5px;border-radius:50%;background:linear-gradient(145deg,var(--accent),var(--accent-dark) 20%,var(--chip) 50%,var(--accent-deep) 84%,var(--accent));box-shadow:0 5px 16px var(--bg),0 0 0 2px var(--bg),0 0 0 3px var(--accent-dark)}
-.wheel::before{content:"";position:absolute;inset:2px;border-radius:50%;border:1px solid color-mix(in srgb,var(--card) 35%,transparent);pointer-events:none}
+.wheel{position:relative;isolation:isolate;width:clamp(174px,53vw,264px);aspect-ratio:1;margin:8px auto 5px;border-radius:50%;background:linear-gradient(145deg,var(--accent),var(--accent-dark) 20%,var(--chip) 50%,var(--accent-deep) 84%,var(--accent));box-shadow:0 5px 16px var(--bg),0 0 0 2px var(--bg),0 0 0 3px var(--accent-dark)}
+.wheel::before{content:"";position:absolute;inset:2px;border-radius:50%;border:1px solid color-mix(in srgb,var(--card) 55%,transparent);pointer-events:none}
 .timer-ring{position:absolute;inset:0;border-radius:50%;background:conic-gradient(var(--accent) var(--elapsed,0%),transparent 0);mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 0);pointer-events:none}
 .rotor{position:absolute;inset:5%;border-radius:50%;background:var(--table);box-shadow:0 0 0 1px var(--bg),0 0 0 3px var(--accent-dark);transform:rotate(var(--angle,0deg));transition:transform 560ms cubic-bezier(.22,.68,.25,1)}
 .dial,.pockets,.pins{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -57,11 +57,11 @@ h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacin
 [data-fruit=lemon] .sprite{background-position:100% 0}
 [data-fruit=plum] .sprite{background-position:0 100%}
 [data-fruit=melon] .sprite{background-position:100% 100%}
-.pocket{transform:translate(-50%,-50%) rotate(var(--slice));--size:clamp(22px,6.5vw,34px)}
+.pocket{transform:translate(-50%,-50%) rotate(var(--slice));--size:clamp(24px,7.4vw,38px)}
 .pocket .sprite{filter:drop-shadow(0 2px 1px var(--bg))}
 .pocket .harvest-mark{font-size:22px;line-height:1;color:#f8cf79;text-shadow:0 1px 4px var(--bg)}
 .pocket.charged::before{content:"";position:absolute;inset:-2px;border:1px solid var(--accent);border-radius:6px;box-shadow:0 0 8px var(--accent)}
-.hub .charge-multiplier{font-size:clamp(18px,6.4vw,30px);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.hub .charge-multiplier{font-size:clamp(20px,7.1vw,34px);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
 .hub[data-multiplier=true] .sprite{--size:clamp(24px,7.4vw,34px)}
 .hub[data-multiplier=true] .hub-idle{font-size:21px;line-height:1}
 .hub[data-state=paid] .charge-multiplier{color:var(--win)}
@@ -71,7 +71,7 @@ h1{margin:0;font:italic bold clamp(34px,10vw,52px)/1 Georgia,serif;letter-spacin
 .result[data-tone=charge] strong{color:var(--accent)}
 .fruit .payout[data-tone=win]{color:var(--win)}
 .fruit .payout[data-tone=loss]{color:var(--text)}
-.pointer{position:absolute;z-index:3;left:50%;top:-3px;width:22px;height:21px;transform:translateX(-50%);background:linear-gradient(var(--text),var(--accent));clip-path:polygon(0 0,100% 0,50% 100%)}
+.pointer{position:absolute;z-index:3;left:50%;top:-3px;width:27px;height:23px;transform:translateX(-50%);background:linear-gradient(var(--card) 30%,var(--accent));clip-path:polygon(0 0,100% 0,50% 100%)}
 .hub{position:absolute;z-index:1;inset:28%;display:grid;place-content:center;justify-items:center;gap:1px;border-radius:50%;border:1px solid var(--accent);background:radial-gradient(ellipse at 48% 24%,var(--chip),var(--bg) 73%);box-shadow:0 0 0 3px var(--table),0 0 0 4px var(--accent-dark);pointer-events:none}
 .hub .sprite{--size:clamp(31px,10vw,48px)}
 .hub strong{font-size:10px;color:var(--text-cool);font-weight:800}
@@ -160,8 +160,14 @@ summary{min-height:44px;padding:11px 0;cursor:pointer}
 details p{margin:0 0 9px}
 .motion{flex:none;padding-inline:4px;border:0;background:transparent;color:var(--muted);font-size:11px}
 @media(min-width:420px){main{padding-inline:16px}.rider{--size:25px}.rider .bet{font-size:10px}}
-@media(max-height:690px) and (min-width:360px){.wheel{width:clamp(158px,43.5vw,210px)}}
-@media(max-height:620px) and (min-width:360px){.wheel{width:162px}}
+@media(max-height:690px) and (min-width:360px){
+  .table-heading{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px}
+  .table-heading .round-flow{display:flex;margin-top:0}
+  .table-heading .round-flow li{flex:1;min-width:0}
+  .table-heading .round-flow li[aria-current=step]{flex:1.4}
+  .wheel{width:clamp(184px,51.5vw,232px);margin-top:7px}
+}
+@media(max-height:620px) and (min-width:360px){.wheel{width:174px}}
 @media(prefers-reduced-motion:reduce){
   .rotor,.pin{transition:none}.wheel.win .hub,.wheel.win .spark,.table.win .result,.table.loss .result,.rider.leaving{animation:none}
 }
@@ -176,12 +182,14 @@ body.reduce-motion .wheel.win .hub,body.reduce-motion .wheel.win .spark,body.red
     <div class="balance"><span class="label">Demo balance</span> <span id="balance">€500.00</span></div>
   </header>
   <section class="table" id="table" aria-labelledby="title">
-    <h1 id="title">Orbit</h1>
-    <ol class="round-flow" aria-label="Round steps">
-      <li id="stepBet" aria-current="step">1 Bet <span class="countdown" id="countdown" aria-hidden="true">5.0s</span></li>
-      <li id="stepCharge">2 Charge</li>
-      <li id="stepResult">3 <span id="resultStepLabel">Result</span></li>
-    </ol>
+    <div class="table-heading">
+      <h1 id="title">Orbit</h1>
+      <ol class="round-flow" aria-label="Round steps">
+        <li id="stepBet" aria-current="step">1 Bet <span class="countdown" id="countdown" aria-hidden="true">5.0s</span></li>
+        <li id="stepCharge">2 Charge</li>
+        <li id="stepResult">3 <span id="resultStepLabel">Result</span></li>
+      </ol>
+    </div>
     <div class="wheel" id="wheel" aria-hidden="true">
       <div class="timer-ring"></div>
       <div class="rotor" id="rotor">
@@ -430,12 +438,12 @@ function makeWheel() {
     ctx.fillStyle = gradient;
     ctx.fill();
     ctx.strokeStyle = '#11080d';
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 4;
     ctx.stroke();
     ctx.beginPath();
     ctx.arc(0, 0, 240, start + .012, end - .012);
     ctx.strokeStyle = style.edge;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 2.5;
     ctx.stroke();
 
     const pocket = document.createElement('span');
